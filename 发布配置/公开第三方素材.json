@@ -1,0 +1,30 @@
+{
+  "description": "第三方工具图标；与用户个人资料无关，来源和使用边界见图标文档",
+  "files": [
+    {
+      "path": "public/ai-tools/codex.png",
+      "sha256": "2b001fb1f4e7d76e4d459c2ad8f9739e963ffc1c2137abcfffe8da3ee7775f7c",
+      "source": "docs/AI工具图标来源.md"
+    },
+    {
+      "path": "public/ai-tools/doubao.png",
+      "sha256": "dabb2abd94e3a6c11e7f1a42c9343839b6ef643c086751b71afbc68f615aec38",
+      "source": "docs/AI工具图标来源.md"
+    },
+    {
+      "path": "public/ai-tools/kimi.png",
+      "sha256": "6c14f9c3062e953b3ed57ae3e19db931c1c1bba38d4d8d55550544f31d55e469",
+      "source": "docs/AI工具图标来源.md"
+    },
+    {
+      "path": "public/ai-tools/qianwen.png",
+      "sha256": "cd9390bc4209c319121d111f3a1f535b3c7dd909b8f860d41acc9744138d58df",
+      "source": "docs/AI工具图标来源.md"
+    },
+    {
+      "path": "public/ai-tools/yuanbao.png",
+      "sha256": "8f3ae0d03e06de5e3f3179d05045f0915e9548d3e74bd8bfe2969d2ddea902c5",
+      "source": "docs/AI工具图标来源.md"
+    }
+  ]
+}

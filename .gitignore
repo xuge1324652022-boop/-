@@ -1,0 +1,124 @@
+# 依赖与构建产物
+node_modules/
+本机私有资料/
+outputs/
+docs/历史说明/
+dist/
+# 本机交付含完整作品原件与压缩包，不能当源码提交或自动发布。
+上线交付/
+网站部署文件/
+# Python 缓存和素材处理暂存件可以重建；正式导出仍保留在本机“作品”目录。
+__pycache__/
+*.py[cod]
+tmp/
+# 本机环境变量、代理和账号凭据不属于可发布源码。
+.env
+.env.*
+!.env.example
+.codex/
+# 绕 node-safe-delete-shim 用的临时出产物目录（build → cp → 删差集 → 删它）
+# ⚠️ 通配而不是只写 dist-new/：每次构建都得换个**没被用过**的新名字（旧的
+#    清不掉，会一直留在磁盘上），逐个登记等于每次都要改 .gitignore。
+dist-*/
+
+# AI 记忆目录：项目约定与工作日志。
+# ⚠️ 只在本机磁盘上，不入库 —— 它是「这个工作区」的上下文，不是交付物；
+#    换机器/换人之后这些约定不成立，进仓库只会变成没人维护的过期注释。
+#    目录本身不能删（删了就丢失全部项目判据）。
+.workbuddy-ai/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+outputs/_preview.log
+outputs/_log-*.txt
+outputs/*-log.txt
+
+# 作品原件统一管理：视频、摄影、海报、私人简历均只留本机。
+作品/
+# 兼容旧目录，避免迁移过程中把旧原件纳入仓库。
+# 个人文件（简历 PDF / 个人照片）不入仓库
+个人简历/
+
+# 校验脚本的运行产物，可重新生成
+outputs/*.json
+
+# 验收截图批次目录（每次验收重出一批，共 ~50MB）。它们是**运行产物**，
+# 不是交付物：判据在 `outputs/verify-*.cjs` 里，截图只是给人看的旁证。
+# 需要留档时单独 `git add -f`。
+outputs/_*-accept/
+
+# 探针/调试脚本的运行截图（_probe-* / _shot-*），按需生成，不需要入库
+outputs/_*.png
+
+# /about 指针轨迹的验收录屏（.webm）与关键帧（.png）：由 verify-about-trail.cjs
+# 重跑生成，每次换一批（共 ~2.6MB）。判据在脚本里，这些只是给人看的旁证。
+outputs/about-trail-*
+
+# 摄影 / 海报的**原始大图**（共 ~386MB）：只留磁盘，不入库。
+# 网页尺寸版本由 `scripts/build-portfolio-images.py` 从它们生成到
+# `public/portfolio/`（那才是站点真正要发的资源）。源目录只读、可重跑。
+摄影-照片/
+海报-设计/
+
+# 归档到本地的历史研究材料（40M），只留磁盘不入库
+outputs/_archived-20260920/
+
+# 上一批退役的章节校验脚本（与 _archived 同样处理：只留磁盘不入库）
+outputs/_retired-chapter-20260920/
+
+# 调色视频的网页压缩版：不入库，也不进 dist。
+# 中间件优先读这里，原片统一从作品/调色-成片/读取。文件名保持原样。
+media/color/
+调色-成片/
+
+# 非本项目的目录，都是工具/驱动自己建的（两边都是空目录，本来也进不了 git，
+# 写在这里是为了它们哪天开始落文件时不会被误提交）：
+#   .uploads/              —— 上传暂存
+#   NVIDIA Corporation/    —— Edge 无头启动时驱动写的 umdlogs
+.uploads/
+NVIDIA Corporation/
+
+# 参考站逆向采样原始证据留本机，开发规则与参数报告可单独入库。
+outputs/reference-analysis/**/captures/
+outputs/reference-analysis/**/rea-evidence.json
+outputs/reference-analysis/**/static/*.js
+outputs/reference-analysis/**/static/*.css
+outputs/reference-analysis/**/static/*.html
+
+# 完整参考站研究档案：保存在本机，含原始 REA 证据和截图。
+参考资料/Squarespace-Foundations/
+参考资料/实习原始转换预览/
+参考资料/头像源文件/
+
+# 动画优化的本地基线、浏览器截图和 REA 验证记录。
+outputs/reference-refinement-2026-10-14/
+outputs/poster-choreography-qa/
+
+# 子页地基与关于我设计的本地备份和浏览器验收截图
+outputs/subpage-foundations-2026-10-15/
+outputs/foundation-pages-2026-10-15/
+outputs/about-campaign-2026-10-15/
+outputs/about-experience-2026-10-15/
+outputs/about-editorial-2026-10-15/
+outputs/page-curtain-2026-10-16/
+outputs/color-entry-2026-10-16/
+outputs/text-performance-2026-10-16/
+outputs/poster-motion-2026-10-18/
+outputs/photo-frame-fit-2026-10-18/
+# 新一轮手机验收与交付采样留本机；首页回归源脚本仍纳入版本控制。
+outputs/color-method-2026-10-18/
+outputs/mobile-release-audit-2026-10-19/
+outputs/profile-inset-2026-10-19/
+outputs/wechat-mobile-audit-2026-10-19/
+outputs/home-introduction-2026-10-18/*
+!outputs/home-introduction-2026-10-18/verify-home-introduction.mjs
+outputs/start-preview-5174.cjs
+outputs/dev-preview-5174*.log
+
+# 从 Codex 迁出的 REA 工具和完整依赖，仅作本机项目归档
+逆向工程工具/
+参考资料/简历源文件/

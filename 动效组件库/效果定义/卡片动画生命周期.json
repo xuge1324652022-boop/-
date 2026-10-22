@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "card-animation-lifecycle",
+  "title": {
+    "zh": "卡内动画生命周期与注册表",
+    "en": "Card animation lifecycle and registry"
+  },
+  "category": "card",
+  "status": "active",
+  "summary": "BaseAnimation把可选的一次性intro与环境循环tl分开管理；注册表按CHAPTERS稳定key创建六类实例，CardVisual负责宿主挂载与播放转发。",
+  "entryFiles": [
+    "src/cardAnimations/base.ts",
+    "src/cardAnimations/types.ts",
+    "src/cardAnimations/index.ts",
+    "src/components/CardVisual.vue"
+  ],
+  "integrationFiles": [
+    "src/components/ThreeHome.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/cardAnimations/base.ts",
+      "symbols": [
+        "BaseAnimation",
+        "mount",
+        "introDone",
+        "restart",
+        "kill"
+      ],
+      "purpose": "两条时间线及可重挂载实例的状态。"
+    },
+    {
+      "file": "src/cardAnimations/index.ts",
+      "symbols": [
+        "CARD_ANIMATION_REGISTRY",
+        "createCardAnimation"
+      ],
+      "purpose": "按章节数据生成实例工厂。"
+    },
+    {
+      "file": "src/components/CardVisual.vue",
+      "symbols": [
+        "build",
+        "remount",
+        "sizeKey"
+      ],
+      "purpose": "模板与动画实例桥接，尺寸指纹避免无效重建。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "CardVisual挂载build创建实例；ThreeHome调用play/pause/restart/remount。",
+    "stages": [
+      {
+        "name": "构建环境循环",
+        "description": "基类创建paused/repeat:-1的tl，调用子类build；延迟来自CHAPTERS。",
+        "properties": [
+          "tl"
+        ],
+        "timing": "延迟按章节delay配置；具体循环由子类定义"
+      },
+      {
+        "name": "可选入场",
+        "description": "introDelay>=0才创建paused intro；restart触发，introDone只在同一实例重挂时有效。",
+        "properties": [
+          "intro"
+        ],
+        "timing": "由子类buildIntro决定"
+      },
+      {
+        "name": "播放与销毁",
+        "description": "play只恢复tl；pause冻结两线；destroy杀两线并清host。",
+        "properties": [
+          "timeline playhead"
+        ],
+        "timing": "按调用方事件，无统一时长"
+      }
+    ],
+    "state": [
+      "host/tl/intro",
+      "introDone",
+      "CardVisual.playing/lastSizeKey"
+    ],
+    "propertyOwnership": [
+      "仅允许操作host子树，不得改.card-position/.card-plane",
+      "active指针门闩与playing时间线门闩分别控制"
+    ],
+    "interruption": [
+      "重建前destroy旧实例",
+      "0x0隐藏宿主不重建",
+      "同实例mount保留introDone，但CardVisual build创建新实例不继承"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "模板保持各章节稳定class，章节顺序统一从CHAPTERS读取。",
+      "自定义子类继承BaseAnimation并实现build；有入场时提供introDelay和buildIntro。",
+      "将类按稳定key加入映射，使用CardVisual暴露句柄协调播放。"
+    ],
+    "inputs": [
+      "index/kind/active",
+      "host:HTMLElement",
+      "CardMedia"
+    ],
+    "outputs": [
+      "play/pause/reset/restart/setMedia/remount句柄",
+      "每次createCardAnimation返回独立实例"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "CHAPTERS"
+    ],
+    "assets": [
+      "不同卡内真实媒体通过setMedia注入；默认部分保留排版占位"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "基类只提供reduced()查询，不会自动静止全部子类；逐卡查看实际实现。",
+    "touch": "指针输入由子类决定；框架本身不接管触摸。",
+    "keyboard": "实际卡片role/button键盘触发位于ThreeHome。"
+  },
+  "lifecycle": {
+    "setup": [
+      "mount建两线并绑定host",
+      "子类可额外建quickTo、观察器和监听"
+    ],
+    "cleanup": [
+      "destroy杀intro/tl并清host",
+      "子类自己负责quickTo和其他资源，基类不会自动回收它们"
+    ],
+    "knownLimitations": [
+      "当前多张指针卡destroy没有显式kill quickTo tween，不能声称完整自动回收所有补间。",
+      "CardVisual按index找类、kind找模板，两值必须一致。"
+    ]
+  },
+  "agentNotes": [
+    "不要让卡内transform与galleryMotion的空间transform共写。",
+    "空环境循环在某些卡上是有意设计，不应为其强加呼吸动画。"
+  ],
+  "relatedEffects": [
+    "gallery-focus",
+    "card-about",
+    "card-edit",
+    "card-color",
+    "card-news",
+    "card-poster",
+    "card-photo"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck",
+      "npm run test:deployment"
+    ],
+    "manualChecks": [
+      "切换六卡与连续resize，模板及对应动效保持一致。",
+      "聚焦隐藏其他卡后应暂停其循环，返回画廊再继续。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "lifecycle",
+    "registry",
+    "vue",
+    "ownership"
+  ]
+}

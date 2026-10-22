@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "poster-depth",
+  "title": { "zh": "海报色域收缩、空间叠层与侧转离场", "en": "Poster field contraction and depth composition" },
+  "category": "scroll",
+  "status": "active",
+  "summary": "为V10L原稿12–15构建连续滚动场景：满屏色域、实字和原图先收为首张海报，再让三张附属稿依次从下方进入，正面停留阅读后侧转65度随页面离场。纸张空间运动可倒放，纸内碎片标题通过introduced/settled记忆只揭示一次。",
+  "entryFiles": ["src/components/about/InternshipDepthComposition.vue"],
+  "integrationFiles": ["src/components/about/InternshipPosterGallery.vue", "src/components/about/InternshipAnimatedArtwork.vue", "src/components/ReferenceIntroduction.vue", "src/views/PosterView.vue"],
+  "sourceSections": [
+    { "file": "src/components/about/InternshipDepthComposition.vue", "symbols": ["compositionBounds", "measure", "fieldBounds", "imageStart", "typeStart", "layers"], "purpose": "按完整正面构图拟合纸张尺寸，批量缓存FLIP起点，避免滚动更新时交错读取布局。" },
+    { "file": "src/components/about/InternshipDepthComposition.vue", "symbols": ["timeline", "shrinkEnd", "entryStart", "entryDuration", "readingStart", "turnStart", "releaseTime", "timelineEnd"], "purpose": "建立收缩、入场、阅读与侧转的可逆相对时间线。" },
+    { "file": "src/components/about/InternshipDepthComposition.vue", "symbols": ["updatePresentation", "warmArtwork", "introduced", "settled", "resetInteraction", "resetImmediately", "refreshPresentation"], "purpose": "近屏预解码、首见纸内标题门禁、读图区指针微移，以及阶段倒退时同步归位。" }
+  ],
+  "mechanism": {
+    "trigger": "媒体条件为允许动态且视口高>=501px，并要求CSS支持cqw。CSS序列高6.6个稳定视口，stage sticky。ScrollTrigger从top top到(序列高-舞台高)×4.20/3.58的滚动距离，scrub:true。以下时标是滚动映射的相对时间，不是实际秒数。",
+    "stages": [
+      { "name": "contract", "description": "纯色域用scaleX/scaleY和位移收成首稿矩形；同一张完整图与同一组实字从大版式迁到纸面位置。", "properties": ["field.x/y/scaleX/scaleY", "mainImage.x/y/scale", "mainTitle.x/y/scale", "mainDescription.x/y/scale"], "timing": "时标0→0.90，power2.inOut；0.90隐藏field；heading于0.75开始0.25的淡入上移。" },
+      { "name": "layers-enter", "description": "三张附属纸从舞台下方依次进入各自固定锚点；以原稿比例计算完整构图。", "properties": ["wrapper.y", "wrapper.xPercent/yPercent", "wrapper.width/zIndex"], "timing": "第i张从0.80+(i-1)×0.30开始，持续0.60，sine.inOut，i=1/2/3。" },
+      { "name": "read-and-pointer", "description": "正面读图；细指针可微移相机，悬停/焦点可将对应纸张上移6px并放大至1.02。", "properties": ["scene.x:±6px", "scene.y:±4px", "sheet.y", "sheet.scaleX/scaleY"], "timing": "相机仅时标2.00≤time<3.40时响应，quickTo0.32秒；纸张highlight在收缩完成至侧转前允许，quickTo0.28秒。" },
+      { "name": "turn-and-release", "description": "保持纸张锚点，只对perspective层旋转；sticky释放后场景随文档继续离开，outro保持正常文档流。", "properties": ["plane.rotationY:0→-65deg", "plane.transformPerspective:2000"], "timing": "时标3.40→4.20，power1.inOut；sticky在3.58时标对应的文档位置释放。" }
+    ],
+    "state": ["highlighted", "introduced:Set", "settled:Set", "pageGate", "supportsContainerUnits", "imageOrigin", "typeOrigins", "previousPointerPhase", "dead"],
+    "propertyOwnership": ["wrapper负责滚动空间锚点；perspective按钮层只负责侧转；sheet只负责hover/focus抬升；scene负责读图区指针相机。", "field、mainImage与实字同一测量批次缓存起点；field使用合成变换而非逐帧整屏clip-path。", "InternshipAnimatedArtwork管理纸内碎片揭示，外部introduced/settled只提供首次可播及强制完成信号。", "outro为ReferenceIntroduction正常文档流，不加入空间scrub时间线。"],
+    "interruption": ["阶段倒退或进入侧转时pause所有pointerTweens并gsap.set同步归位，防止quickTo缓存将旧位移写回满屏色域。", "introduced/settled不随倒滚清空；加载幕gate未放行时不消耗纸内首次标题。", "已完成附属纸入场会同时标记introduced与settled，使内部标题立即终态；快滚时不延迟挖走文字。", "小视口、减少动态或不支持cqw时撤销空间分支，呈现完整原图栅格。"]
+  },
+  "integration": {
+    "steps": ["原集成从demo-measure组筛选四张id为12–15的作品，按原序传items；主纸面采用0.787比例的实字版式。", "监听open接入查看器，并通过referenceIntroductionGate关联加载幕。", "保留四层DOM、motionLayout、InternshipAnimatedArtwork及ReferenceIntroduction依赖；换成通用作品需重新设计layers、首稿实字与比例。"],
+    "inputs": ["items:readonly VisualAsset[]（当前编排四张V10L 12–15）", "lang:Lang", "注入referenceIntroductionGate", "CSS cqw能力与稳定视口高度变量"],
+    "outputs": ["open(item:VisualAsset,trigger:HTMLElement)", "introduced/settled传给纸内Artwork组件"],
+    "dependencies": ["vue", "gsap", "gsap/ScrollTrigger", "src/components/about/InternshipAnimatedArtwork.vue", "src/components/ReferenceIntroduction.vue", "src/components/ReferenceIntroduction.ts", "src/utils/motionLayout.ts", "src/data/aboutProfile.ts", "src/data/visualPortfolio.ts", "ResizeObserver", "IntersectionObserver", "CSS.supports"],
+    "assets": ["items[].src/large对应原稿；首稿产品标题和说明为组件内实字版面。"]
+  },
+  "accessibility": {
+    "reducedMotion": "减少动态或高度<=500px采用完整作品栅格；不支持容器单位时能力回退同样成立，无空间时间线。",
+    "touch": "相机明确忽略touch，滚动保持原生；触屏仍能点击作品或底部导航打开原图。",
+    "keyboard": "作品和导航都是带标签的原生按钮；细指针媒体分支也为focus/blur提供highlight；底部导航直接打开作品。"
+  },
+  "lifecycle": {
+    "setup": ["onMounted等待nextTick后进入prepareMotionLayout，scoped matchMedia创建测量缓存、时间线和触发器。", "500px近屏观察器预解码图片；ResizeObserver仅尺寸键变化时在准备队列内refresh；语言变更申请共享刷新。"],
+    "cleanup": ["媒体分支退出移除全部pointer/focus监听、kill指针补间，断开预热与尺寸观察器，取消局部测量任务，移除scene位置与wrapper宽度/z-index。", "卸载设置dead，取消准备/刷新任务并media.revert撤销滚动动画。"],
+    "knownLimitations": ["layers固定四个锚点，首稿文字和0.787画幅为特定V10L内容设计；不能直接声称支持任意数量和任意产品。", "首稿整图、实字与色域共享起点换算，裁掉其中任一层或独立缩放会破坏边界对齐。"]
+  },
+  "agentNotes": ["3.58表示释放相对时标，3.40才开始侧转；阅读阶段保持正面，65度是离场角度。", "introduced控制开始，settled控制完成；两者不能合为随滚动可逆的一个布尔值。"],
+  "relatedEffects": ["poster-stack", "poster-artwork-reveal", "text-line-reveal"],
+  "verification": { "commands": ["npm run typecheck", "node scripts/verify-mobile-artwork.mjs", "npm run build"], "manualChecks": ["收缩终点色域与主纸面严格重合，实字与图像迁移比例正确。", "前三张附属稿入场后正面可读，侧转只在离场阶段发生。", "保持鼠标在舞台内快速倒滚，满屏色域不遗留hover位移；关闭门禁时纸内标题不提前消耗。", "减少动态、短视口及cqw回退展示全部原图和后文。"] },
+  "tags": ["vue", "gsap", "ScrollTrigger", "sticky", "3d", "FLIP", "cqw", "one-shot-artwork"]
+}

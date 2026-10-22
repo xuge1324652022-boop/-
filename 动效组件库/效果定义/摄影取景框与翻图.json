@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "photo-runway",
+  "title": { "zh": "摄影取景框展开、翻图与指针视差", "en": "Photo runway, slide wipe and pointer parallax" },
+  "category": "media",
+  "status": "active",
+  "summary": "保留原图比例的摄影展示舞台，整合可选宽屏滚动展开、左右裁切翻图、横拖切换和轻微鼠标视差。frame、surface、track和item分层分别承接滚动裁切、指针倾斜、拖动反馈和切图，避免同一transform被多个控制器争用。",
+  "entryFiles": ["src/components/about/PhotoRunway.vue"],
+  "integrationFiles": ["src/components/about/BeyondWork.vue", "src/views/AboutView.vue", "src/data/visualPortfolio.ts"],
+  "sourceSections": [
+    { "file": "src/components/about/PhotoRunway.vue", "symbols": ["goTo", "step", "animateSwitch", "CLIP_FROM", "CLIP_TO"], "purpose": "循环或直接选择照片，取消旧切图补间并按方向擦入下一张；可选滚动展开共享裁切终态。" },
+    { "file": "src/components/about/PhotoRunway.vue", "symbols": ["onPointerDown", "onPointerMove", "onPointerUp", "cancelDrag", "measurePointerBounds", "moveSurface", "moveTrack"], "purpose": "判断横拖意图，保留纵向手势；未变换舞台用于指针坐标，surface与track分别显示视差和拖动位移。" },
+    { "file": "src/components/about/PhotoRunway.vue", "symbols": ["onKeydown", "openPhoto", "resetInteraction", "onLoad", "mm"], "purpose": "键盘选择、拖后点击抑制、滚动/失焦归位与媒体条件生命周期。" }
+  ],
+  "mechanism": {
+    "trigger": "翻图来自箭头、分页、键盘或横拖。非compact且宽度>=900px且允许动态时，runway的top top到bottom bottom通过scrub:true展开frame；鼠标细指针才建立视差quickTo。",
+    "stages": [
+      { "name": "scroll-expand", "description": "取景框从上下12%、左右14%的内裁切展开至完整。", "properties": ["frame.clipPath:inset(12% 14% 12% 14%)→inset(0% 0% 0% 0%)"], "timing": "ease:none，直接跟随滚动行程，非定时播放；compact禁用该分支。" },
+      { "name": "slide-switch", "description": "先冻结出场图当前透明度、隐藏无关图，再将旧图轻移淡出、新图从对应边14%的裁切擦入。", "properties": ["outgoing.xPercent:→direction×-5", "outgoing.autoAlpha:→0", "incoming.xPercent:direction×7→0", "incoming.opacity:0→1", "incoming.clipPath:14%边裁切→完整"], "timing": "同时开始：旧图0.65秒，新图0.85秒，均power3.inOut。" },
+      { "name": "drag", "description": "横向超过10px且超过纵向1.2倍后才capture指针；track反馈为dx×0.28、限制±70px，放手达到48px才翻图。", "properties": ["track.x", "dragging", "ignoreClickUntil"], "timing": "quickTo0.32秒 power3.out；拖后400ms只抑制指针click。" },
+      { "name": "pointer-parallax", "description": "从未变换舞台计算归一化指针位置，映射到小范围位移与旋转。", "properties": ["surface.x:±7px", "surface.y:±5px", "surface.rotationX:±1.25deg", "surface.rotationY:±1.8deg"], "timing": "位移quickTo0.7秒，旋转0.85秒，power3.out；离开、切图、页面滚动与失焦时归位。" }
+    ],
+    "state": ["index", "current", "drag", "dragging", "pointerBounds", "ignoreClickUntil", "animateSwitch", "mm"],
+    "propertyOwnership": ["frame只拥有滚动clipPath；surface拥有指针x/y/rotation；track拥有拖动x；item拥有翻图xPercent/autoAlpha/clipPath。", "控制条位于被裁frame外侧，确保按钮在收框起始态仍可见。", "CSS is-on决定当前项指针命中与默认可见性，GSAP负责过渡期间的局部内联状态。"],
+    "interruption": ["新切图先killTweensOf(slides)，冻结真实出场透明度，避免快速连续点击的旧补间继续写。", "纵向意图超过10px且大于横向时取消drag，触摸纵向滚动仍可用。", "媒体条件退出将交互动画函数设为空操作并取消拖动；切为减少动态后Vue即时切图。"]
+  },
+  "integration": {
+    "steps": ["导入PhotoRunway，提供非空readonly VisualAsset[]与lang；About页BeyondWork以compact使用，当前实例不安装滚动展开。", "监听open(item,trigger)接入页面查看器与关闭后焦点还原；change(item)可同步作品说明。", "需要长sticky展开时不传compact，并保留完整CSS与父页面横向溢出裁切。"],
+    "inputs": ["items:readonly VisualAsset[]", "lang:Lang", "compact?:boolean"],
+    "outputs": ["open(item:VisualAsset,trigger:HTMLElement)", "change(item:VisualAsset)"],
+    "dependencies": ["vue", "gsap", "gsap/ScrollTrigger", "src/data/aboutProfile.ts:pick/Lang", "src/data/visualPortfolio.ts:VisualAsset", "Pointer Events", "window.matchMedia"],
+    "assets": ["items[].src提供的摄影图像；按item.width/height和object-fit:contain保留完整画幅。"]
+  },
+  "accessibility": {
+    "reducedMotion": "不建立翻图、拖动反馈、指针视差或滚动展开补间；照片切换功能保留并即时呈现。",
+    "touch": "touch-action:pan-y pinch-zoom；明确横拖后才capture，保留纵向滚动与缩放，拖动结束不会顺带打开图片。",
+    "keyboard": "ArrowLeft/ArrowRight循环，Home/End选首尾；只有当前图片按钮tabindex=0，已聚焦图片切换后把焦点移到新图；计数与标题使用aria-live:polite。"
+  },
+  "lifecycle": {
+    "setup": ["onMounted建立scoped matchMedia，按motion/finePointer与可选宽屏条件安装分支。", "另一onMounted添加load刷新、被动scroll归位和blur归位监听。"],
+    "cleanup": ["卸载移除load/scroll/blur监听，取消drag并释放capture，调用mm.revert。", "宽屏展开分支退出额外清除frame的clipPath，回到完整CSS状态；交互分支释放函数与坐标缓存。"],
+    "knownLimitations": ["items必须非空，模板会读取current.title；源码没有为空数据提供占位分支。", "compact是初始化时决定是否登记滚动媒体分支的选项，当前实现不监视其运行中改变。", "这不是查看器；全屏显示、关闭及恢复外部焦点由open事件的页面接收者负责。"]
+  },
+  "agentNotes": ["当前直接用例为BeyondWork的compact模式；完整滚动展开代码仍存在但不要声称当前About页正在使用该分支。", "不要把frame、surface、track合为一个节点，否则滚动、视差和拖动的属性所有权会冲突。"],
+  "relatedEffects": ["photo-chapter-wipe", "about-scroll-reveal"],
+  "verification": { "commands": ["npm run typecheck", "npm run build"], "manualChecks": ["连续快速点选、左右横拖、Home/End后当前图、标题和焦点一致。", "竖向触摸仍能滚页面，横拖后400ms内不会误开查看器。", "非compact宽屏完整展开，窄屏/减少动态无裁切残留；compact始终没有滚动展开。"] },
+  "tags": ["vue", "gsap", "ScrollTrigger", "clip-path", "carousel", "pointer", "drag", "keyboard"]
+}

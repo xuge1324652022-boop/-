@@ -1,0 +1,400 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "card-animation-lifecycle",
+  "title": {
+    "zh": "卡内动画生命周期与注册表",
+    "en": "Card animation lifecycle and registry"
+  },
+  "category": "card",
+  "status": "active",
+  "summary": "BaseAnimation把可选的一次性intro与环境循环tl分开管理；注册表按CHAPTERS稳定key创建六类实例，CardVisual负责宿主挂载与播放转发。",
+  "entryFiles": [
+    "src/cardAnimations/base.ts",
+    "src/cardAnimations/types.ts",
+    "src/cardAnimations/index.ts",
+    "src/components/CardVisual.vue"
+  ],
+  "integrationFiles": [
+    "src/components/ThreeHome.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/cardAnimations/base.ts",
+      "symbols": [
+        "BaseAnimation",
+        "mount",
+        "introDone",
+        "restart",
+        "kill"
+      ],
+      "purpose": "两条时间线及可重挂载实例的状态。"
+    },
+    {
+      "file": "src/cardAnimations/index.ts",
+      "symbols": [
+        "CARD_ANIMATION_REGISTRY",
+        "createCardAnimation"
+      ],
+      "purpose": "按章节数据生成实例工厂。"
+    },
+    {
+      "file": "src/components/CardVisual.vue",
+      "symbols": [
+        "build",
+        "remount",
+        "sizeKey"
+      ],
+      "purpose": "模板与动画实例桥接，尺寸指纹避免无效重建。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "CardVisual挂载build创建实例；ThreeHome调用play/pause/restart/remount。",
+    "stages": [
+      {
+        "name": "构建环境循环",
+        "description": "基类创建paused/repeat:-1的tl，调用子类build；延迟来自CHAPTERS。",
+        "properties": [
+          "tl"
+        ],
+        "timing": "延迟按章节delay配置；具体循环由子类定义"
+      },
+      {
+        "name": "可选入场",
+        "description": "introDelay>=0才创建paused intro；restart触发，introDone只在同一实例重挂时有效。",
+        "properties": [
+          "intro"
+        ],
+        "timing": "由子类buildIntro决定"
+      },
+      {
+        "name": "播放与销毁",
+        "description": "play只恢复tl；pause冻结两线；destroy杀两线并清host。",
+        "properties": [
+          "timeline playhead"
+        ],
+        "timing": "按调用方事件，无统一时长"
+      }
+    ],
+    "state": [
+      "host/tl/intro",
+      "introDone",
+      "CardVisual.playing/lastSizeKey"
+    ],
+    "propertyOwnership": [
+      "仅允许操作host子树，不得改.card-position/.card-plane",
+      "active指针门闩与playing时间线门闩分别控制"
+    ],
+    "interruption": [
+      "重建前destroy旧实例",
+      "0x0隐藏宿主不重建",
+      "同实例mount保留introDone，但CardVisual build创建新实例不继承"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "模板保持各章节稳定class，章节顺序统一从CHAPTERS读取。",
+      "自定义子类继承BaseAnimation并实现build；有入场时提供introDelay和buildIntro。",
+      "将类按稳定key加入映射，使用CardVisual暴露句柄协调播放。"
+    ],
+    "inputs": [
+      "index/kind/active",
+      "host:HTMLElement",
+      "CardMedia"
+    ],
+    "outputs": [
+      "play/pause/reset/restart/setMedia/remount句柄",
+      "每次createCardAnimation返回独立实例"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "CHAPTERS"
+    ],
+    "assets": [
+      "不同卡内真实媒体通过setMedia注入；默认部分保留排版占位"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "基类只提供reduced()查询，不会自动静止全部子类；逐卡查看实际实现。",
+    "touch": "指针输入由子类决定；框架本身不接管触摸。",
+    "keyboard": "实际卡片role/button键盘触发位于ThreeHome。"
+  },
+  "lifecycle": {
+    "setup": [
+      "mount建两线并绑定host",
+      "子类可额外建quickTo、观察器和监听"
+    ],
+    "cleanup": [
+      "destroy杀intro/tl并清host",
+      "子类自己负责quickTo和其他资源，基类不会自动回收它们"
+    ],
+    "knownLimitations": [
+      "当前多张指针卡destroy没有显式kill quickTo tween，不能声称完整自动回收所有补间。",
+      "CardVisual按index找类、kind找模板，两值必须一致。"
+    ]
+  },
+  "agentNotes": [
+    "不要让卡内transform与galleryMotion的空间transform共写。",
+    "空环境循环在某些卡上是有意设计，不应为其强加呼吸动画。"
+  ],
+  "relatedEffects": [
+    "gallery-focus",
+    "card-about",
+    "card-edit",
+    "card-color",
+    "card-news",
+    "card-poster",
+    "card-photo"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck",
+      "npm run test:deployment"
+    ],
+    "manualChecks": [
+      "切换六卡与连续resize，模板及对应动效保持一致。",
+      "聚焦隐藏其他卡后应暂停其循环，返回画廊再继续。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "lifecycle",
+    "registry",
+    "vue",
+    "ownership"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/卡片动画/卡片动画基础.ts",
+      "源码/项目源码/卡片动画/卡片动画类型.ts",
+      "源码/项目源码/卡片动画/卡片动画注册表.ts",
+      "源码/项目源码/组件/卡片视觉.vue"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/cardAnimations/about.ts",
+      "path": "源码/项目源码/卡片动画/关于我卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "4d7af532350c269c3c3b1c7bd7458fcd389d2baec743c27f57ad5c0cd2c2d548",
+      "originalBytes": 1718,
+      "sha256": "70b1b47c419c034e6cbb6d28dd79993793705a2d3cf688bd30e24edc199d0718",
+      "bytes": 1732
+    },
+    {
+      "original": "src/cardAnimations/base.ts",
+      "path": "源码/项目源码/卡片动画/卡片动画基础.ts",
+      "role": "entry",
+      "originalSha256": "224b9d5f83d4610d948d34efe803b4013dc032fcfa759966265419a639f40057",
+      "originalBytes": 7501,
+      "sha256": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+      "bytes": 7514
+    },
+    {
+      "original": "src/cardAnimations/color.ts",
+      "path": "源码/项目源码/卡片动画/调色卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "4243fae7e25d96cf85b112b7d4efa89cd05bef11f2b8e1d0cbac2c57ed42291d",
+      "originalBytes": 5877,
+      "sha256": "763629d958a17b1d6cfa8de0f2e3ba047778e747f061fc5cff9c2a827b132324",
+      "bytes": 5891
+    },
+    {
+      "original": "src/cardAnimations/edit.ts",
+      "path": "源码/项目源码/卡片动画/剪辑卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "5e1f16002b6531fd2364dfaa69dc22766745850c9df31fa50c76f8baa4e19f4b",
+      "originalBytes": 4808,
+      "sha256": "d77847030de999501877aebb8f698f4a8a3bc021ab048a1693356e87aa9df994",
+      "bytes": 4822
+    },
+    {
+      "original": "src/cardAnimations/index.ts",
+      "path": "源码/项目源码/卡片动画/卡片动画注册表.ts",
+      "role": "entry",
+      "originalSha256": "70536b9618e6241816e960e3226771d92aa21fb0056c527b6d186f0e924c1c65",
+      "originalBytes": 2116,
+      "sha256": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+      "bytes": 2218
+    },
+    {
+      "original": "src/cardAnimations/news.ts",
+      "path": "源码/项目源码/卡片动画/新闻卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "04cc0740f7e318c09e4aa4bb93160061871d7620d0523f93b6b7e374e8b3c89e",
+      "originalBytes": 8829,
+      "sha256": "ffaf4abf23a66a131389e334f21f76cf6ac46016681769a1a63f71a81433c64b",
+      "bytes": 8843
+    },
+    {
+      "original": "src/cardAnimations/photo.ts",
+      "path": "源码/项目源码/卡片动画/摄影卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "8921221c9efc68d7d32e128511f4d0ef89aa7a706c2bc131047cf23602dc14a7",
+      "originalBytes": 7955,
+      "sha256": "478223c2996478337d062ef345a3dabc692691b8c1adf95fc291329d612f0be1",
+      "bytes": 7982
+    },
+    {
+      "original": "src/cardAnimations/poster.ts",
+      "path": "源码/项目源码/卡片动画/海报卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "ee93448e65f7c574fd22a4359dcdaa3cc6579af1caa7e953bda5f3aba9dfe839",
+      "originalBytes": 7477,
+      "sha256": "5b59d074ebef0e2d0d1a044b2c746dde682c0df3dd3765125117383bd587afc9",
+      "bytes": 7504
+    },
+    {
+      "original": "src/cardAnimations/types.ts",
+      "path": "源码/项目源码/卡片动画/卡片动画类型.ts",
+      "role": "entry",
+      "originalSha256": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+      "originalBytes": 1600,
+      "sha256": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+      "bytes": 1600
+    },
+    {
+      "original": "src/components/CardVisual.vue",
+      "path": "源码/项目源码/组件/卡片视觉.vue",
+      "role": "entry",
+      "originalSha256": "8c7356656c704ff4a48f1469202d9f580ffaa3300adfe6e697a82ece98afcee4",
+      "originalBytes": 8038,
+      "sha256": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+      "bytes": 8076
+    },
+    {
+      "original": "src/components/about/AboutExperience.vue",
+      "path": "源码/项目源码/组件/人物与作品/人物经历.vue",
+      "role": "dependency",
+      "originalSha256": "9a504f3050d9a0e753e970392a8b2479dcae196379a0d92291e7c8fc97a01a2a",
+      "originalBytes": 1993,
+      "sha256": "acd4d0a54dde3c5f76f259d0f7edb7ca6e9af3e8d6fab22123ccb09dca7c38b7",
+      "bytes": 1996
+    },
+    {
+      "original": "src/components/about/TemplateMark.vue",
+      "path": "源码/项目源码/组件/人物与作品/个人标志扫描.vue",
+      "role": "dependency",
+      "originalSha256": "ea2546bb4743e4f707d8a0e3fdd253e5ab72ed08d582fad14e049223419a172b",
+      "originalBytes": 5668,
+      "sha256": "ea2546bb4743e4f707d8a0e3fdd253e5ab72ed08d582fad14e049223419a172b",
+      "bytes": 5668
+    },
+    {
+      "original": "src/components/about/aboutExperience.css",
+      "path": "源码/项目源码/组件/人物与作品/人物经历样式.css",
+      "role": "dependency",
+      "originalSha256": "65465badc19c441516ea68615ffdd6b8402e081182fd7c94616e150ada9a2faa",
+      "originalBytes": 5139,
+      "sha256": "65465badc19c441516ea68615ffdd6b8402e081182fd7c94616e150ada9a2faa",
+      "bytes": 5139
+    },
+    {
+      "original": "src/components/about/aboutExperienceAnimation.ts",
+      "path": "源码/项目源码/组件/人物与作品/人物经历动画.ts",
+      "role": "dependency",
+      "originalSha256": "49128b6f718d1dfbc2bac98e4ba27490e92c920f61381aee4262f041b007c300",
+      "originalBytes": 4694,
+      "sha256": "49128b6f718d1dfbc2bac98e4ba27490e92c920f61381aee4262f041b007c300",
+      "bytes": 4694
+    },
+    {
+      "original": "src/components/cards/ColorCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/调色卡面.vue",
+      "role": "dependency",
+      "originalSha256": "f5b8425f010748c28f01c7487e1c2069683d3f0d2fb7ee1290c3f85a5074f55e",
+      "originalBytes": 8440,
+      "sha256": "f5b8425f010748c28f01c7487e1c2069683d3f0d2fb7ee1290c3f85a5074f55e",
+      "bytes": 8440
+    },
+    {
+      "original": "src/components/cards/EditCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/剪辑卡面.vue",
+      "role": "dependency",
+      "originalSha256": "9f239ae04c036b1219bcb50fe84b64541124633bc8da8f9d5c4afe733d414016",
+      "originalBytes": 5189,
+      "sha256": "9f239ae04c036b1219bcb50fe84b64541124633bc8da8f9d5c4afe733d414016",
+      "bytes": 5189
+    },
+    {
+      "original": "src/components/cards/NewsCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/新闻卡面.vue",
+      "role": "dependency",
+      "originalSha256": "571dafae0aeba0a0ef208fb5ed9d9a8382aa55ff67622e957464bad8964cb6de",
+      "originalBytes": 5952,
+      "sha256": "571dafae0aeba0a0ef208fb5ed9d9a8382aa55ff67622e957464bad8964cb6de",
+      "bytes": 5952
+    },
+    {
+      "original": "src/components/cards/PhotoCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/摄影卡面.vue",
+      "role": "dependency",
+      "originalSha256": "3ff57d55d8e14fd04a70334e965323bdc8f8af05c0e774602da39c64c482d11c",
+      "originalBytes": 4971,
+      "sha256": "3ff57d55d8e14fd04a70334e965323bdc8f8af05c0e774602da39c64c482d11c",
+      "bytes": 4971
+    },
+    {
+      "original": "src/components/cards/PosterCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/海报卡面.vue",
+      "role": "dependency",
+      "originalSha256": "baff294398f4f829d54da083f0d5cda7bf68a6b78b1623834a3374d02243847e",
+      "originalBytes": 6977,
+      "sha256": "baff294398f4f829d54da083f0d5cda7bf68a6b78b1623834a3374d02243847e",
+      "bytes": 6977
+    },
+    {
+      "original": "src/data/chapters.ts",
+      "path": "源码/项目源码/数据/作品章节资料.ts",
+      "role": "dependency",
+      "originalSha256": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+      "originalBytes": 1417,
+      "sha256": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+      "bytes": 1417
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/components/ThreeHome.vue",
+      "path": "集成示例/项目源码/组件/六卡空间首页.vue",
+      "role": "integration-context",
+      "originalSha256": "ec5e4d12a10f2e255da4bd6fb1ba5a46487cbc4830ef60410d4ad3635ac8d461",
+      "originalBytes": 55655,
+      "sha256": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+      "bytes": 55720
+    }
+  ]
+}

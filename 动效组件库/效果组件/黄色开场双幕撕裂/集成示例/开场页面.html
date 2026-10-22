@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- viewport-fit=cover is what actually makes env(safe-area-inset-*) report
+         a non-zero value; without it every safe-area rule below is dead code. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- route-head:start -->
+    <title>示例求职者的求职作品集｜影像、设计与创意</title>
+    <meta name="description" content="示例求职者的求职作品集：了解个人经历，浏览视频剪辑、影像调色、新闻影像、海报设计与摄影作品。" />
+    <!-- route-head:end -->
+  </head>
+  <body>
+    <!--
+      静态黄幕：浏览器解析完 HTML 就会先画一次（first paint），那时 Vue
+      还没接管，<div id="app"> 是空的，露出 body 的 #0a0a0a —— 这就是
+      用户看到的「刷新闪黑」。
+
+      ⚠️ 样式必须内联写在这里，不能放进 style.css：
+         实测（outputs/_probe-boot-flash.cjs）首屏 +229ms 时
+         <link rel="stylesheet"> 还没落地，那时 #boot-splash 的
+         background 仍是 transparent，黄幕等于不存在，黑底照闪。
+         内联 style 随 HTML 一起解析，first paint 之前就已生效。
+
+      main.ts 的摘除时机（三条路，谁先到谁生效）：
+        · router.isReady() + 双 rAF —— 主力。等首屏视图真的画上屏再摘，
+          所以慢网下也不会露出空窗（早期版本盲等 1500ms 就会露）
+        · 'preloader-complete' 事件 —— Preloader 撕裂结束时再喊一次
+        · 8s 硬兜底 —— 万一上面全失灵，也不能把用户永久挡在黄幕后面
+      摘除必须从 DOM 里 .remove()，不能用 display:none / v-if ——
+      否则后续再渲染 Preloader 会和它叠在一起。
+    -->
+    <div
+      id="boot-splash"
+      aria-hidden="true"
+      style="position: fixed; inset: 0; z-index: 10001; background: #ffd700; pointer-events: none"
+    ></div>
+    <script>
+      /*
+       * 黄幕只属于首页（/）。
+       *
+       * 它是「第一阶段：开场撕裂」的标志。子页面（/cards、/card/:id）是独立
+       * 子页，由 App 的全局 PageCurtain 接管加载，刷新时应停在对应章节转场上；
+       * 若黄幕照旧出现，刷新一下就像「又回到了第一阶段」。
+       *
+       * ⚠️ 必须内联、且紧跟在黄幕之后解析执行：等外部 JS 或 Vue 起来再摘，
+       *    黄幕早就被画出来了，摘了也等于闪了一下。
+       */
+      if (location.pathname !== '/' && location.pathname !== '') {
+        var splash = document.getElementById('boot-splash')
+        if (splash) splash.remove()
+      }
+    </script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

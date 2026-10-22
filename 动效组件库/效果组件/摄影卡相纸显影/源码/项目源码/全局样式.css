@@ -1,0 +1,110 @@
+/*
+ * 全局基础样式：重置、字体、共享纸色色板、滚动条与页面滚动边界。
+ * 组件自己的样式都在各自的 <style scoped> 里，这里只放真正全局的东西。
+ */
+
+/* ==================== 全局重置 ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* 稳定滚动舞台保留 svh；旧微信内核用 vh，避免未知单位令整段高度失效。 */
+  --stable-viewport-height: 100vh;
+  --dynamic-viewport-height: 100vh;
+  /*
+    滚动条滑块的默认不透明度。
+    ⚠️ 这里原来是 0 —— 只有 Preloader 撕裂结束时才补间到 0.6，于是任何
+       **不经过 Preloader** 的入口（直接进 /color、/cards、/card/NN，或刷新
+       子页）滚动条滑块都是 rgba(255,255,255,0)，等于永久隐形。
+       开场黄幕本来就盖着整个视口，滑块可见不会露馅，所以直接给到 0.6；
+       Preloader 里那段把它从 0 补到 0.6 的 tween 因此也一并删了。
+  */
+  --scrollbar-opacity: 0.6;
+
+  /*
+      ==================== /about 页面色板 ====================
+      为什么放在 `:root` 而不是 `.about-page` 上：
+      ⚠️ 作品查看器（`WorkViewer.vue`）用 `<Teleport to="body">` 挂到 body 下 ——
+         它**不在** `.about-page` 子树里，定义在页面根容器上的变量继承不到它，
+         只能到处写 `var(--ab-accent, #d6f34a)` 这样的兜底字面量，
+         于是同一套颜色有两个来源，改一处忘一处。
+         放到 `:root` 之后，页面内、Teleport 出去、将来新增的浮层都能直接拿到。
+
+      关于我使用纸白底、墨黑、中性灰与细分隔线，首屏与内容共用这组变量。
+      **只有这里定义字面量**，
+      复用组件读取 `var(--ab-*)`；海报 / 基础页可在各自根节点覆盖，
+      避免把局部暖色纸写回全局。未引用这组变量的画廊 / 调色页不受影响。
+    */
+    --ab-bg: #f7f7f5;
+    --ab-ink: #252525;
+    --ab-soft: #626262;
+    --ab-dim: #9a9a94;
+    --ab-line: #d7d7d3;
+    --ab-accent: #252525;
+}
+
+@supports (height: 100svh) {
+  :root { --stable-viewport-height: 100svh; }
+}
+@supports (height: 100dvh) {
+  :root { --dynamic-viewport-height: 100dvh; }
+}
+
+body {
+  background: #0a0a0a;
+  color: #fff;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 注：#boot-splash（首屏黄幕）的样式内联在 index.html 里，不在这里 ——
+   它必须在 <link> 加载前就生效，放进本文件会在首屏留下一段黑闪。 */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, var(--scrollbar-opacity));
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+html {
+  /* iOS/微信横竖屏切换时不自动放大正文，否则已测量的双语分行会错位。 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* html 的 overflow 会冒泡到视口 —— 视口本来就是滚动容器，这里怎么写都不影响 sticky */
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+/*
+ * ⚠️ body 必须是 `clip` 不能是 `hidden`：
+ *    `overflow-x: hidden` 会让 body 变成**滚动容器**，于是页面里的
+ *    `position: sticky` 改为相对 body 吸附 —— 而 body 的 height 是 auto、
+ *    自己从不滚动，sticky 就永远不生效（/about 01 章的 sticky 舞台就是这样失效的）。
+ *    `clip` 只裁剪、不建滚动容器，裁剪效果和 hidden 一致，sticky 仍然相对视口吸附。
+ */
+body {
+  overflow-x: clip;
+}
+
+html.no-scroll {
+  overflow: hidden;
+}
+
+/* 路由曲面遮罩由 PageCurtain 管理；is-jumping 只限制画廊输入，不再生成额外黑层。 */

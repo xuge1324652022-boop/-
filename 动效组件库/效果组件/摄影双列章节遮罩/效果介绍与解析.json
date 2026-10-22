@@ -1,0 +1,325 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "photo-chapter-wipe",
+  "title": {
+    "zh": "摄影双列章节与纵向遮罩接力",
+    "en": "Photo chapter and dual lane wipe"
+  },
+  "category": "mask",
+  "status": "active",
+  "summary": "摄影页按色彩分章，每章将横图与竖图分为两个等高窗口，滚动时同一位置推进两列照片。横列从底向上揭开、竖列从顶向下揭开；一章末张完成并停留后，下一章整屏从下方揭入。该效果使用scrollY、requestAnimationFrame和纯数学日程，不由GSAP时间线驱动。",
+  "entryFiles": [
+    "src/components/about/PhotoSets.vue",
+    "src/utils/photoStory.ts"
+  ],
+  "integrationFiles": [
+    "src/views/PhotoView.vue",
+    "src/data/photoPage.ts",
+    "src/composables/usePhotoDrag.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/PhotoSets.vue",
+      "symbols": [
+        "lanes",
+        "steps",
+        "laneRatios",
+        "laneSums",
+        "measure"
+      ],
+      "purpose": "按真实宽高分列、选取每章最长列步数，并测量共享舞台与滚动起点。"
+    },
+    {
+      "file": "src/components/about/PhotoSets.vue",
+      "symbols": [
+        "render",
+        "scroll",
+        "move",
+        "configure",
+        "lastCurtain",
+        "lastPosition",
+        "lastVisible"
+      ],
+      "purpose": "由单一文档位置计算章/槽遮罩，跳过未变化样式；按钮仅改变文档滚动位置。"
+    },
+    {
+      "file": "src/utils/photoStory.ts",
+      "symbols": [
+        "chapterSchedule",
+        "unit"
+      ],
+      "purpose": "纯函数排出进入、首张停留、照片行程、末张停留与下一章擦入时间，并统一钳制进度。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "CSS sticky舞台配合window.scrollY；rAF合并scroll事件。measure将舞台高度H换算为stride=max(260px,0.48H)，根高度为H+最后章节finish。所有阶段单位为滚动像素，不是秒。",
+    "stages": [
+      {
+        "name": "chapter-enter",
+        "description": "第一章直接可见；后续章的clip-path上边从100%降至0%，覆盖前章。",
+        "properties": [
+          "chapter.clipPath",
+          "chapter.visibility",
+          "active"
+        ],
+        "timing": "chapterSchedule传入0.65H，内部wipe为其0.8倍，即0.52H；进度达到0.5后更新active。"
+      },
+      {
+        "name": "first-read",
+        "description": "整章完整揭开后先保留首图阅读距离，再推进列内切图。",
+        "properties": [
+          "chapterSchedule.start"
+        ],
+        "timing": "hold为传入0.65H的0.3倍，即0.195H；第一章没有wipe，但同样保留hold。"
+      },
+      {
+        "name": "lane-wipes",
+        "description": "左右列共用position；新槽覆盖旧槽、不移动整条轨道；较短列停在末张。",
+        "properties": [
+          "wide-slot.clipPath:inset(hidden% 0 0)",
+          "tall-slot.clipPath:inset(0 0 hidden%)",
+          "slot.visibility",
+          "progress.scaleX",
+          "photoIndices"
+        ],
+        "timing": "每步stride像素，照片行程为(max(两列长度)-1)×stride；图片标题取round(position)。"
+      },
+      {
+        "name": "last-read-and-handoff",
+        "description": "每章最后照片完整显示并停留后，下一章才开始进入；被完全覆盖的旧章及其槽隐藏。",
+        "properties": [
+          "chapterSchedule.end",
+          "chapterSchedule.finish",
+          "visibility"
+        ],
+        "timing": "末张停留0.195H；下一章enter严格等于上一章finish。"
+      }
+    ],
+    "state": [
+      "active",
+      "photoIndices",
+      "staticMode",
+      "schedule",
+      "origin",
+      "stride",
+      "lastCurtain",
+      "lastPosition",
+      "lastVisible",
+      "dirty"
+    ],
+    "propertyOwnership": [
+      "PhotoSets只写章与槽的clipPath/visibility、进度条transform及根高度。",
+      "usePhotoDrag只写.ps__card的transform；槽的裁切与卡片的拖动分层，不能合并。",
+      "图片名称放在裁切窗口外，footer以active管理inert/aria-hidden，图片按钮以tabindex管理当前键盘入口。"
+    ],
+    "interruption": [
+      "反向滚动重新计算同一纯函数状态，无待完成的补间或额外追赶阻尼。",
+      "切换减少动态时detach拖动、取消rAF并清除章/槽的clip-path、transform和visibility，改为所有原图自然流。",
+      "语言变化nextTick后重新measure，重置样式读数缓存，避免首帧被跳过。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "从PhotoView模式页面传非空PhotoSet[]，每章保留palette与VisualAsset数组；源项目先通过assertPhotoSets检查数据。",
+      "保留sticky舞台、章、双列lane、slot和card的DOM层次；横图窗口3:2、竖图窗口2:3。",
+      "监听open(item,trigger)接入页面查看器；需要查看完整原构图时使用该事件，展示窗内横图通常以cover填满。",
+      "同步复制photoStory、usePhotoDrag及数据类型；该组件没有外部GSAP初始化句柄。"
+    ],
+    "inputs": [
+      "sets:readonly PhotoSet[]",
+      "lang:Lang",
+      "PhotoSet.palette.background/foreground/accent",
+      "VisualAsset.width/height/src/thumb/large/title/alt"
+    ],
+    "outputs": [
+      "open(item:VisualAsset,trigger:HTMLElement)",
+      "dirty/reset拖动恢复状态仅在组件内部使用"
+    ],
+    "dependencies": [
+      "vue",
+      "src/utils/photoStory.ts",
+      "src/composables/usePhotoDrag.ts",
+      "src/data/aboutProfile.ts",
+      "src/data/photoPage.ts",
+      "src/data/visualPortfolio.ts",
+      "ResizeObserver",
+      "requestAnimationFrame",
+      "document.fonts.ready",
+      "window.matchMedia"
+    ],
+    "assets": [
+      "sets[].items[]中的thumb/src/large摄影资源；不在组件内嵌入图片。",
+      "主题CSS变量--stable-viewport-height来自站点视口体系。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "减少动态使用完整普通照片流，显示所有图注并移除章节进度和上下切换控制；仍可点开完整作品。",
+    "touch": "照片拖动依赖usePhotoDrag，仅接管鼠标；触摸保留pan-y/pinch-zoom与点击查看。760px以下两列上下排，短横屏恢复并排。",
+    "keyboard": "动态模式仅active章和当前索引照片按钮可Tab进入；非当前章footer设inert/aria-hidden，上一张和下一张为原生按钮。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted配置媒体偏好与拖动，ResizeObserver监视stage，字体ready/窗口resize/语言更新后measure。",
+      "scroll监听只登记一帧render，不自行启动永动循环。"
+    ],
+    "cleanup": [
+      "卸载标记dead，断开ResizeObserver，取消rAF，detach拖动，移除scroll/resize/matchMedia change监听。",
+      "usePhotoDrag自身也在卸载detach，负责拖动中window监听回收。"
+    ],
+    "knownLimitations": [
+      "动态展示横图常以固定3:2窗口cover裁切；完整原图由查看器或静态流呈现。",
+      "章与素材数量按初始数据建立；当前组件监视lang和布局，不提供实时替换sets的完整重建协议。"
+    ]
+  },
+  "agentNotes": [
+    "本效果的运动主体不是GSAP；不要为了统一目录把scrollY渲染器误写为ScrollTrigger scrub。",
+    "chapterSchedule参数名height并非直接的舞台高：组件传入0.65H，因此实际hold/wipe需再乘该比例。",
+    "drag transform必须继续保留在card层，不能在render中清除。",
+    "图片宽度描述符已统一使用responsiveImage.ts与imageVariants.json，竖图按实际像素宽度声明，修改资源后需重新生成尺寸清单。"
+  ],
+  "relatedEffects": [
+    "photo-runway",
+    "poster-stack",
+    "about-scroll-reveal"
+  ],
+  "verification": {
+    "commands": [
+      "node scripts/verify-photo-story.mjs",
+      "npm run typecheck",
+      "npm run build"
+    ],
+    "manualChecks": [
+      "每章末图完整停留后下一章才开始覆盖；快速倒滚按原路恢复。",
+      "左右列长度不等时较短列保持末张，进度条与当前名称一致。",
+      "拖动某卡片后遮罩仍在槽内正确推进，恢复排布只清卡片位移。",
+      "检查竖图srcset真实像素宽度与显示清晰度，已知错配不得被目录说明掩盖。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "clip-path",
+    "sticky",
+    "requestAnimationFrame",
+    "scrollY",
+    "photo",
+    "dual-lane",
+    "non-gsap"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/人物与作品/摄影双列章节.vue",
+      "源码/项目源码/工具/摄影叙事计算.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/about/PhotoSets.vue",
+      "path": "源码/项目源码/组件/人物与作品/摄影双列章节.vue",
+      "role": "entry",
+      "originalSha256": "971a10015a398342fc7ae203375b3aca9c4524fe20bce665164bd13bc3b66ee5",
+      "originalBytes": 20715,
+      "sha256": "fb108f7b5a243a50dc65d807a6c71e7410d17703df904dd3fa4afbd8c23f3b0c",
+      "bytes": 20747
+    },
+    {
+      "original": "src/composables/usePhotoDrag.ts",
+      "path": "源码/项目源码/组合函数/摄影拖拽控制.ts",
+      "role": "dependency",
+      "originalSha256": "8acd9e67a5fc2cce4086137e73e15a3060ddbf31d6c255b992c3efa2c1a51105",
+      "originalBytes": 10660,
+      "sha256": "8acd9e67a5fc2cce4086137e73e15a3060ddbf31d6c255b992c3efa2c1a51105",
+      "bytes": 10660
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/imageVariants.json",
+      "path": "源码/项目源码/数据/图片实际尺寸.json",
+      "role": "dependency",
+      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "originalBytes": 12182,
+      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "bytes": 12182
+    },
+    {
+      "original": "src/data/photoPage.ts",
+      "path": "源码/项目源码/数据/摄影页资料.ts",
+      "role": "dependency",
+      "originalSha256": "674cd6bb0840b123d0dfe80a4d3adedb51b15a0e0517b1edf8fdc431e9b07ba1",
+      "originalBytes": 10237,
+      "sha256": "77e68863647cc5f7e377cbdf51fc863ba30f4ccedd84bbe5ce892976103b8476",
+      "bytes": 10240
+    },
+    {
+      "original": "src/data/visualPortfolio.ts",
+      "path": "源码/项目源码/数据/视觉作品资料.ts",
+      "role": "dependency",
+      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
+      "originalBytes": 22342,
+      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+      "bytes": 22342
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/photoStory.ts",
+      "path": "源码/项目源码/工具/摄影叙事计算.ts",
+      "role": "entry",
+      "originalSha256": "839f1df4f236004ab157959522aa6edeeaef59ea55279a56d1aa73c2cda595fe",
+      "originalBytes": 593,
+      "sha256": "839f1df4f236004ab157959522aa6edeeaef59ea55279a56d1aa73c2cda595fe",
+      "bytes": 593
+    },
+    {
+      "original": "src/utils/responsiveImage.ts",
+      "path": "源码/项目源码/工具/响应式图片.ts",
+      "role": "dependency",
+      "originalSha256": "3f4f4a263ee92ff55c4048446ad55eaaf37a31d6c83f1905c3027f85f02b0714",
+      "originalBytes": 1118,
+      "sha256": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+      "bytes": 1125
+    },
+    {
+      "original": "src/views/PhotoView.vue",
+      "path": "集成示例/项目源码/页面/摄影作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "1def0b25e43fde58989fd906e1e38e7d8c5f5591e265ca9195ec9800cd1535a3",
+      "originalBytes": 18541,
+      "sha256": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+      "bytes": 18629
+    }
+  ]
+}

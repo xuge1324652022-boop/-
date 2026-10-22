@@ -1,0 +1,394 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "poster-depth",
+  "title": {
+    "zh": "海报色域收缩、空间叠层与侧转离场",
+    "en": "Poster field contraction and depth composition"
+  },
+  "category": "scroll",
+  "status": "active",
+  "summary": "为V10L原稿12–15构建连续滚动场景：满屏色域、实字和原图先收为首张海报，再让三张附属稿依次从下方进入，正面停留阅读后侧转65度随页面离场。纸张空间运动可倒放，纸内碎片标题通过introduced/settled记忆只揭示一次。",
+  "entryFiles": [
+    "src/components/about/InternshipDepthComposition.vue"
+  ],
+  "integrationFiles": [
+    "src/components/about/InternshipPosterGallery.vue",
+    "src/components/about/InternshipAnimatedArtwork.vue",
+    "src/components/ReferenceIntroduction.vue",
+    "src/views/PosterView.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/InternshipDepthComposition.vue",
+      "symbols": [
+        "compositionBounds",
+        "measure",
+        "fieldBounds",
+        "imageStart",
+        "typeStart",
+        "layers"
+      ],
+      "purpose": "按完整正面构图拟合纸张尺寸，批量缓存FLIP起点，避免滚动更新时交错读取布局。"
+    },
+    {
+      "file": "src/components/about/InternshipDepthComposition.vue",
+      "symbols": [
+        "timeline",
+        "shrinkEnd",
+        "entryStart",
+        "entryDuration",
+        "readingStart",
+        "turnStart",
+        "releaseTime",
+        "timelineEnd"
+      ],
+      "purpose": "建立收缩、入场、阅读与侧转的可逆相对时间线。"
+    },
+    {
+      "file": "src/components/about/InternshipDepthComposition.vue",
+      "symbols": [
+        "updatePresentation",
+        "warmArtwork",
+        "introduced",
+        "settled",
+        "resetInteraction",
+        "resetImmediately",
+        "refreshPresentation"
+      ],
+      "purpose": "近屏预解码、首见纸内标题门禁、读图区指针微移，以及阶段倒退时同步归位。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "媒体条件为允许动态且视口高>=501px，并要求CSS支持cqw。CSS序列高6.6个稳定视口，stage sticky。ScrollTrigger从top top到(序列高-舞台高)×4.20/3.58的滚动距离，scrub:true。以下时标是滚动映射的相对时间，不是实际秒数。",
+    "stages": [
+      {
+        "name": "contract",
+        "description": "纯色域用scaleX/scaleY和位移收成首稿矩形；同一张完整图与同一组实字从大版式迁到纸面位置。",
+        "properties": [
+          "field.x/y/scaleX/scaleY",
+          "mainImage.x/y/scale",
+          "mainTitle.x/y/scale",
+          "mainDescription.x/y/scale"
+        ],
+        "timing": "时标0→0.90，power2.inOut；0.90隐藏field；heading于0.75开始0.25的淡入上移。"
+      },
+      {
+        "name": "layers-enter",
+        "description": "三张附属纸从舞台下方依次进入各自固定锚点；以原稿比例计算完整构图。",
+        "properties": [
+          "wrapper.y",
+          "wrapper.xPercent/yPercent",
+          "wrapper.width/zIndex"
+        ],
+        "timing": "第i张从0.80+(i-1)×0.30开始，持续0.60，sine.inOut，i=1/2/3。"
+      },
+      {
+        "name": "read-and-pointer",
+        "description": "正面读图；细指针可微移相机，悬停/焦点可将对应纸张上移6px并放大至1.02。",
+        "properties": [
+          "scene.x:±6px",
+          "scene.y:±4px",
+          "sheet.y",
+          "sheet.scaleX/scaleY"
+        ],
+        "timing": "相机仅时标2.00≤time<3.40时响应，quickTo0.32秒；纸张highlight在收缩完成至侧转前允许，quickTo0.28秒。"
+      },
+      {
+        "name": "turn-and-release",
+        "description": "保持纸张锚点，只对perspective层旋转；sticky释放后场景随文档继续离开，outro保持正常文档流。",
+        "properties": [
+          "plane.rotationY:0→-65deg",
+          "plane.transformPerspective:2000"
+        ],
+        "timing": "时标3.40→4.20，power1.inOut；sticky在3.58时标对应的文档位置释放。"
+      }
+    ],
+    "state": [
+      "highlighted",
+      "introduced:Set",
+      "settled:Set",
+      "pageGate",
+      "supportsContainerUnits",
+      "imageOrigin",
+      "typeOrigins",
+      "previousPointerPhase",
+      "dead"
+    ],
+    "propertyOwnership": [
+      "wrapper负责滚动空间锚点；perspective按钮层只负责侧转；sheet只负责hover/focus抬升；scene负责读图区指针相机。",
+      "field、mainImage与实字同一测量批次缓存起点；field使用合成变换而非逐帧整屏clip-path。",
+      "InternshipAnimatedArtwork管理纸内碎片揭示，外部introduced/settled只提供首次可播及强制完成信号。",
+      "outro为ReferenceIntroduction正常文档流，不加入空间scrub时间线。"
+    ],
+    "interruption": [
+      "阶段倒退或进入侧转时pause所有pointerTweens并gsap.set同步归位，防止quickTo缓存将旧位移写回满屏色域。",
+      "introduced/settled不随倒滚清空；加载幕gate未放行时不消耗纸内首次标题。",
+      "已完成附属纸入场会同时标记introduced与settled，使内部标题立即终态；快滚时不延迟挖走文字。",
+      "小视口、减少动态或不支持cqw时撤销空间分支，呈现完整原图栅格。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "原集成从demo-measure组筛选四张id为12–15的作品，按原序传items；主纸面采用0.787比例的实字版式。",
+      "监听open接入查看器，并通过referenceIntroductionGate关联加载幕。",
+      "保留四层DOM、motionLayout、InternshipAnimatedArtwork及ReferenceIntroduction依赖；换成通用作品需重新设计layers、首稿实字与比例。"
+    ],
+    "inputs": [
+      "items:readonly VisualAsset[]（当前编排四张V10L 12–15）",
+      "lang:Lang",
+      "注入referenceIntroductionGate",
+      "CSS cqw能力与稳定视口高度变量"
+    ],
+    "outputs": [
+      "open(item:VisualAsset,trigger:HTMLElement)",
+      "introduced/settled传给纸内Artwork组件"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "gsap/ScrollTrigger",
+      "src/components/about/InternshipAnimatedArtwork.vue",
+      "src/components/ReferenceIntroduction.vue",
+      "src/components/ReferenceIntroduction.ts",
+      "src/utils/motionLayout.ts",
+      "src/data/aboutProfile.ts",
+      "src/data/visualPortfolio.ts",
+      "ResizeObserver",
+      "IntersectionObserver",
+      "CSS.supports"
+    ],
+    "assets": [
+      "items[].src/large对应原稿；首稿产品标题和说明为组件内实字版面。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "减少动态或高度<=500px采用完整作品栅格；不支持容器单位时能力回退同样成立，无空间时间线。",
+    "touch": "相机明确忽略touch，滚动保持原生；触屏仍能点击作品或底部导航打开原图。",
+    "keyboard": "作品和导航都是带标签的原生按钮；细指针媒体分支也为focus/blur提供highlight；底部导航直接打开作品。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted等待nextTick后进入prepareMotionLayout，scoped matchMedia创建测量缓存、时间线和触发器。",
+      "500px近屏观察器预解码图片；ResizeObserver仅尺寸键变化时在准备队列内refresh；语言变更申请共享刷新。"
+    ],
+    "cleanup": [
+      "媒体分支退出移除全部pointer/focus监听、kill指针补间，断开预热与尺寸观察器，取消局部测量任务，移除scene位置与wrapper宽度/z-index。",
+      "卸载设置dead，取消准备/刷新任务并media.revert撤销滚动动画。"
+    ],
+    "knownLimitations": [
+      "layers固定四个锚点，首稿文字和0.787画幅为特定V10L内容设计；不能直接声称支持任意数量和任意产品。",
+      "首稿整图、实字与色域共享起点换算，裁掉其中任一层或独立缩放会破坏边界对齐。"
+    ]
+  },
+  "agentNotes": [
+    "3.58表示释放相对时标，3.40才开始侧转；阅读阶段保持正面，65度是离场角度。",
+    "introduced控制开始，settled控制完成；两者不能合为随滚动可逆的一个布尔值。"
+  ],
+  "relatedEffects": [
+    "poster-stack",
+    "poster-artwork-reveal",
+    "text-line-reveal"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-mobile-artwork.mjs",
+      "npm run build"
+    ],
+    "manualChecks": [
+      "收缩终点色域与主纸面严格重合，实字与图像迁移比例正确。",
+      "前三张附属稿入场后正面可读，侧转只在离场阶段发生。",
+      "保持鼠标在舞台内快速倒滚，满屏色域不遗留hover位移；关闭门禁时纸内标题不提前消耗。",
+      "减少动态、短视口及cqw回退展示全部原图和后文。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "gsap",
+    "ScrollTrigger",
+    "sticky",
+    "3d",
+    "FLIP",
+    "cqw",
+    "one-shot-artwork"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/人物与作品/实习海报空间构图.vue"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/SplitText",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/ReferenceIntroduction.ts",
+      "path": "源码/项目源码/组件/引导文字状态.ts",
+      "role": "dependency",
+      "originalSha256": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+      "originalBytes": 678,
+      "sha256": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+      "bytes": 678
+    },
+    {
+      "original": "src/components/ReferenceIntroduction.vue",
+      "path": "源码/项目源码/组件/引导文字揭示.vue",
+      "role": "dependency",
+      "originalSha256": "96d05f989179d82ecb2a7d18bef925d254c2e7cf680e3cb95fcf2d122560cf74",
+      "originalBytes": 17515,
+      "sha256": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+      "bytes": 17524
+    },
+    {
+      "original": "src/components/about/InternshipAnimatedArtwork.vue",
+      "path": "源码/项目源码/组件/人物与作品/实习海报碎片动效.vue",
+      "role": "dependency",
+      "originalSha256": "6aaaddf5cf18e1489febfe8944fa581f810b24656eea9363b466fb45b9afde1b",
+      "originalBytes": 5891,
+      "sha256": "344e2873c874e6beb0d5933d5f12dfa6b965776618b5428236f0840ea40990c4",
+      "bytes": 5904
+    },
+    {
+      "original": "src/components/about/InternshipDepthComposition.vue",
+      "path": "源码/项目源码/组件/人物与作品/实习海报空间构图.vue",
+      "role": "entry",
+      "originalSha256": "8c27cefacf9597b0536b4c12315ad11ef1ba8d024f303a22e7fff22a7df02bbb",
+      "originalBytes": 30298,
+      "sha256": "1ad6559e8fe11557079da3fa94bcc275dfe8b1f6b3f1affa88d93ad76accf2a5",
+      "bytes": 30306
+    },
+    {
+      "original": "src/components/about/internshipArtworkMotion.ts",
+      "path": "源码/项目源码/组件/人物与作品/实习海报碎片控制.ts",
+      "role": "dependency",
+      "originalSha256": "9f13cee9b4b8757f67ff1f91a6d9c4ade1356fbd5b6915b64e01cdde0d98a6b2",
+      "originalBytes": 1021,
+      "sha256": "9f13cee9b4b8757f67ff1f91a6d9c4ade1356fbd5b6915b64e01cdde0d98a6b2",
+      "bytes": 1021
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/imageVariants.json",
+      "path": "源码/项目源码/数据/图片实际尺寸.json",
+      "role": "dependency",
+      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "originalBytes": 12182,
+      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "bytes": 12182
+    },
+    {
+      "original": "src/data/internshipPosterMotion.ts",
+      "path": "源码/项目源码/数据/实习海报动效数据.ts",
+      "role": "dependency",
+      "originalSha256": "1d93a8cf7792abd7f18a52bffc94ea5e9d64f50d69b6ecf53d0b88013f9a0eaa",
+      "originalBytes": 4015,
+      "sha256": "37eaf14fb8fc4d2175c78567bf823b773dd85f3221313eab5589273e0f70b204",
+      "bytes": 4018
+    },
+    {
+      "original": "src/data/visualPortfolio.ts",
+      "path": "源码/项目源码/数据/视觉作品资料.ts",
+      "role": "dependency",
+      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
+      "originalBytes": 22342,
+      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+      "bytes": 22342
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/motionLayout.ts",
+      "path": "源码/项目源码/工具/动效布局调度.ts",
+      "role": "dependency",
+      "originalSha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "originalBytes": 3222,
+      "sha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "bytes": 3222
+    },
+    {
+      "original": "src/utils/responsiveImage.ts",
+      "path": "源码/项目源码/工具/响应式图片.ts",
+      "role": "dependency",
+      "originalSha256": "3f4f4a263ee92ff55c4048446ad55eaaf37a31d6c83f1905c3027f85f02b0714",
+      "originalBytes": 1118,
+      "sha256": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+      "bytes": 1125
+    },
+    {
+      "original": "src/utils/viewportEntrance.ts",
+      "path": "源码/项目源码/工具/视口入场控制.ts",
+      "role": "dependency",
+      "originalSha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "originalBytes": 1233,
+      "sha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "bytes": 1233
+    },
+    {
+      "original": "src/components/about/InternshipPosterGallery.vue",
+      "path": "集成示例/项目源码/组件/人物与作品/实习海报画廊.vue",
+      "role": "integration-context",
+      "originalSha256": "4e080a008b1fb3b5be3daa5589858b62b43d56ab56c04f1a08490f99543501b7",
+      "originalBytes": 10805,
+      "sha256": "50380d9d28f073a99422b86ae643059ab759185cad7524553eee4f1d2938e247",
+      "bytes": 10826
+    },
+    {
+      "original": "src/views/PosterView.vue",
+      "path": "集成示例/项目源码/页面/海报作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "61cb26ac58819bcc1deb631a6ac6d60765e63670f712ff28f426ab19517137fd",
+      "originalBytes": 12143,
+      "sha256": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+      "bytes": 12234
+    }
+  ]
+}

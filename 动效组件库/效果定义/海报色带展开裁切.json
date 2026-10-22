@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "poster-palette",
+  "title": { "zh": "海报色带展开与裁切", "en": "Poster colour strip accordion" },
+  "category": "layout",
+  "status": "active",
+  "summary": "海报页的色带舞台按滚动段或按钮选择展开作品，以一个 GSAP 标量补间同时更新所有色带权重，保证权重和为一。内部画幅保持固定尺寸，CSS 按权重控制色带占比、遮罩和面板透明度，避免图像随展开被挤压。短视口和减少动态切换为普通流手动阅读。",
+  "entryFiles": ["src/components/about/PosterPalette.vue"],
+  "integrationFiles": ["src/views/PosterView.vue", "src/data/posterPage.ts", "src/data/visualPortfolio.ts", "src/data/aboutProfile.ts", "src/utils/motionLayout.ts"],
+  "sourceSections": [
+    { "file": "src/components/about/PosterPalette.vue", "symbols": ["unfoldTo", "setActive", "select", "render"], "purpose": "展开权重、视觉激活项与用户显式语义选择分离，滚动和按钮共用同一段位置。" },
+    { "file": "src/components/about/PosterPalette.vue", "symbols": ["measure", "queueMeasure", "preference", "visibility"], "purpose": "固定内部画幅测量、sticky 行程、普通流回退与可见性节能。" },
+    { "file": "src/views/PosterView.vue", "symbols": ["onOpenSeries"], "purpose": "将效果输出的原列表索引接到统一的大图查看器。" }
+  ],
+  "mechanism": {
+    "trigger": "舞台临近视口时，原生 scroll 按步长选择段落；色带、前后按钮与左右键也可显式选择。",
+    "stages": [
+      { "name": "测量", "description": "固定面板宽高，预留最长说明高度，色带基准宽为容器 3.8%。每件作品分配 max(480,stageHeight) 的滚动行程。", "properties": ["--tab-width", "--panel-width", "--panel-height", "--description-height", "root.height"], "timing": "布局队列按需执行；尺寸、语言或全局 refresh 后更新。" },
+      { "name": "展开", "description": "kill 上一标量 tween，从当前 weights 出发将目标权重拉到 1、其余拉到 0；CSS 用同一个 --band-weight 推导 flex-basis、clip-path 与 opacity，内部 img 保持 contain。", "properties": ["progress.value", "--band-weight", "flex-basis", "clip-path", "opacity"], "timing": "0.92s、power2.inOut；reduce、显式 immediate 或离章节时直接落位。" },
+      { "name": "显式选择", "description": "chosen 记录用户点选并发送 change，视觉 active 仍可随后跟滚动走。正常 sticky 模式按钮用 instant scroll 定位到目标段中点，再由展开补间续接。", "properties": ["active", "chosen", "window.scrollY", "aria-expanded", "inert"], "timing": "定位立即；展开遵循同一 0.92s 补间，不添加第二套宽度 transition。" }
+    ],
+    "state": ["active 视觉展开项 / chosen 显式对外选择", "bands / weights / unfold", "origin / step / nearViewport", "reduced / compact / raf / measuredWidth / measuredHeight / measuredLang"],
+    "propertyOwnership": ["unfoldTo 的 paint 独占每条 --band-weight，CSS 独占由其派生的布局与遮罩表达式。", "色带控制外侧占比，内部面板保持固定尺寸；不可直接缩放作品图模拟展开。", "chosen 非 null 后滚动不再发 change；active 仍可变化，这两个状态承担不同语义。"],
+    "interruption": ["快速反选从当前 weights 续接，kill 旧 tween，避免多个宽度动画临时总和超过舞台。", "后台或离开章节时直接同步；滚动只在临近 120px 预热区且页面可见时排 RAF。", "偏好或短视口变化先停止 RAF 和现有展开，再 nextTick 重量布局，撤掉长滚动轨道。"]
+  },
+  "integration": {
+    "steps": ["传固定序列的 VisualAsset items 与 lang，确保每项 id 唯一。", "监听 open(index,trigger) 并用原 items 索引打开大图；可选监听 change 与页面同步语义选择。", "保留 prepareMotionLayout/requestMotionLayoutRefresh 调度，避免前序 sticky 段改变高度后 origin 失真。", "主题内容位于 tones 与 posterPage 的系列标题/说明，移植到新素材时更新对应数据。"],
+    "inputs": ["items: readonly VisualAsset[]", "lang: zh | en", "当前滚动位置、容器尺寸、运动与短视口媒体查询"],
+    "outputs": ["change(index)：未显式选择前可由滚动发出，点选后只报告显式选择。", "open(index,trigger)：由作品按钮触发，查看器不在此创建。"],
+    "dependencies": ["vue", "gsap", "gsap/ScrollTrigger 的 refresh 事件", "motionLayout 工具", "aboutProfile.pick", "posterPage 系列标题与说明", "ResizeObserver", "IntersectionObserver"],
+    "assets": ["VisualAsset.src，当前为个人海报 /portfolio/<id>-1600.webp。", "颜色 tones 为手写舞台配色，不是修改作品图片的滤镜。"]
+  },
+  "accessibility": { "reducedMotion": "使用普通流、立即切权重、取消 sticky 长轨道；全部选择入口仍可点击。", "touch": "原生页面滚动选择段落，窄屏色带改纵向；短视口改手动展开的普通流，不拦触屏事件。", "keyboard": "色带是 button，左右键选择并聚焦对应 tab；aria-expanded/aria-controls 描述展开关系，非活动 panel inert 且 aria-hidden，作品按钮 tabindex 随 active。" },
+  "lifecycle": {
+    "setup": ["挂载排测量队列，建立 stage 尺寸及 120px 预热区观察器。", "监听 scroll/resize、document.visibilitychange、ScrollTrigger.refresh 和两类媒体查询；字体完成后重测说明高度。"],
+    "cleanup": ["卸载取消布局与刷新请求、断开观察器、取消 RAF 并 kill unfold tween。", "移除所有滚动、尺寸、可见性、refresh 和偏好监听。"],
+    "knownLimitations": ["当前按固定 items 初始化 bands 并缓存，未对动态替换整个 items 列表做完整重建；复用时不能假设任意增删无需处理。", "内部依赖军事海报系列文案和配色，通用化需要抽离内容数据。", "是 CSS sticky 加原生 scroll 段落计算，不是 ScrollTrigger pin；ScrollTrigger 用来协调全站布局刷新。"]
+  },
+  "agentNotes": ["权重总和保持 1 是展开稳定性的核心；不要给每条色带分别挂独立 width tween。", "DOM 中 fixed 内画幅与外侧裁切不可合并，否则作品会随展开变形。", "当前页面只消费 open；change 是保留接口，不应声称已驱动另一个页面组件。"],
+  "relatedEffects": ["poster-color-chapters", "visual-viewer-overlay", "action-cursor"],
+  "verification": { "commands": ["npm run typecheck", "node scripts/verify-about-mobile-runtime.mjs"], "manualChecks": ["快速在不同色带间切换并反向滚动，检查占比连续、总宽不溢出，图片不变形。", "左右键、前后按钮与查看大图后返回，确认激活项和焦点可用。", "测试 320px、短横屏、语言切换与系统 reduce，说明可读且没有遗留长轨道。"] },
+  "tags": ["vue", "gsap", "accordion", "clip-path", "sticky", "weighted-layout", "poster"]
+}

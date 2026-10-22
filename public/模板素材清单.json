@@ -1,0 +1,2092 @@
+{
+  "description": "公开模板素材全部由程序生成，不含真实人物、作品、履历或音轨。",
+  "files": [
+    {
+      "path": "public/about/portrait-1448.webp",
+      "sha256": "36caace6c4ed5d73da02c829df97aeafe5a9cba65cfc82f297a63b27c243622e",
+      "bytes": 33660,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "public/about/portrait-400.webp",
+      "sha256": "d8d964b03cc163f409e1b2fdd65426791168dad1b8831654f816bd7ac1a9b545",
+      "bytes": 9420,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        300
+      ]
+    },
+    {
+      "path": "public/about/portrait-900.webp",
+      "sha256": "4bf0c9710bc58a27a473267706f977d314ddf3fc546f789f33b3981602550b87",
+      "bytes": 19292,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        900,
+        675
+      ]
+    },
+    {
+      "path": "public/about/portrait.webp",
+      "sha256": "d6bbe4b99741f8eec0fbfcb374f4c70953788b55b39c8b31fab6bd1062148c5f",
+      "bytes": 27200,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1200,
+        900
+      ]
+    },
+    {
+      "path": "public/about/work-01.webp",
+      "sha256": "ddaf3007809ef2216a8063c9e11d96e200021118457619848a7d3458cef2532c",
+      "bytes": 21070,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1200,
+        675
+      ]
+    },
+    {
+      "path": "public/about/work-02.webp",
+      "sha256": "6383eae364f024834c3490fdaa30908a942e82052b3870b078aa3404488d1966",
+      "bytes": 24960,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1200,
+        675
+      ]
+    },
+    {
+      "path": "public/about/work-03.webp",
+      "sha256": "ddaf3007809ef2216a8063c9e11d96e200021118457619848a7d3458cef2532c",
+      "bytes": 21070,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1200,
+        675
+      ]
+    },
+    {
+      "path": "public/about/work-04.webp",
+      "sha256": "6383eae364f024834c3490fdaa30908a942e82052b3870b078aa3404488d1966",
+      "bytes": 24960,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1200,
+        675
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-1.jpg",
+      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
+      "bytes": 33800,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-1.mp4",
+      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
+      "bytes": 20228,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-10.jpg",
+      "sha256": "8eaa6626aa03e60d1f90b7df0e974a55089d6119841a05f42e1a2e8d63bd45fe",
+      "bytes": 32266,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-10.mp4",
+      "sha256": "f4bf2f8b28a6a5380108e9994caffdb5230a8222b8ef22c1a3a5583fd1bff3da",
+      "bytes": 18258,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-11.jpg",
+      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
+      "bytes": 33800,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-11.mp4",
+      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
+      "bytes": 20228,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-12.jpg",
+      "sha256": "9fd7f6fe3bf9508284741113dee3913a4d9cd2228fc696afc26294dd5b79b34a",
+      "bytes": 33958,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-12.mp4",
+      "sha256": "d58aaca2cb87616eea8526d8e16605c5d9a0f360ff817b22dbf99382cbb9e4c0",
+      "bytes": 19581,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-13.jpg",
+      "sha256": "8eaa6626aa03e60d1f90b7df0e974a55089d6119841a05f42e1a2e8d63bd45fe",
+      "bytes": 32266,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-13.mp4",
+      "sha256": "f4bf2f8b28a6a5380108e9994caffdb5230a8222b8ef22c1a3a5583fd1bff3da",
+      "bytes": 18258,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-14.jpg",
+      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
+      "bytes": 33800,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-14.mp4",
+      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
+      "bytes": 20228,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-15.jpg",
+      "sha256": "8eaa6626aa03e60d1f90b7df0e974a55089d6119841a05f42e1a2e8d63bd45fe",
+      "bytes": 32266,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-15.mp4",
+      "sha256": "f4bf2f8b28a6a5380108e9994caffdb5230a8222b8ef22c1a3a5583fd1bff3da",
+      "bytes": 18258,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-2.jpg",
+      "sha256": "7781189ed980a10bd6b90e6380a673ea761f3fe03fb57f912309bcb3953885d1",
+      "bytes": 37245,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-2.mp4",
+      "sha256": "5b4c86f8ba9c169a439886fb82b2e1115d776cd655743026abbb5647af148af6",
+      "bytes": 22492,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-3.jpg",
+      "sha256": "8eaa6626aa03e60d1f90b7df0e974a55089d6119841a05f42e1a2e8d63bd45fe",
+      "bytes": 32266,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-3.mp4",
+      "sha256": "f4bf2f8b28a6a5380108e9994caffdb5230a8222b8ef22c1a3a5583fd1bff3da",
+      "bytes": 18258,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-4.jpg",
+      "sha256": "7781189ed980a10bd6b90e6380a673ea761f3fe03fb57f912309bcb3953885d1",
+      "bytes": 37245,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-4.mp4",
+      "sha256": "5b4c86f8ba9c169a439886fb82b2e1115d776cd655743026abbb5647af148af6",
+      "bytes": 22492,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-5.jpg",
+      "sha256": "9fd7f6fe3bf9508284741113dee3913a4d9cd2228fc696afc26294dd5b79b34a",
+      "bytes": 33958,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-5.mp4",
+      "sha256": "d58aaca2cb87616eea8526d8e16605c5d9a0f360ff817b22dbf99382cbb9e4c0",
+      "bytes": 19581,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-6.jpg",
+      "sha256": "9fd7f6fe3bf9508284741113dee3913a4d9cd2228fc696afc26294dd5b79b34a",
+      "bytes": 33958,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-6.mp4",
+      "sha256": "d58aaca2cb87616eea8526d8e16605c5d9a0f360ff817b22dbf99382cbb9e4c0",
+      "bytes": 19581,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-7.jpg",
+      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
+      "bytes": 33800,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-7.mp4",
+      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
+      "bytes": 20228,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-8.jpg",
+      "sha256": "7781189ed980a10bd6b90e6380a673ea761f3fe03fb57f912309bcb3953885d1",
+      "bytes": 37245,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-8.mp4",
+      "sha256": "5b4c86f8ba9c169a439886fb82b2e1115d776cd655743026abbb5647af148af6",
+      "bytes": 22492,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-9.jpg",
+      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
+      "bytes": 33800,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color-previews/clip-9.mp4",
+      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
+      "bytes": 20228,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "public/color/color grade-1.mp4",
+      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
+      "bytes": 52302,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-10.mp4",
+      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
+      "bytes": 52302,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-11.mp4",
+      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
+      "bytes": 52302,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-12.mp4",
+      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
+      "bytes": 52629,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-13.mp4",
+      "sha256": "521d63b25aa6ae9aad34748f31526afe30109086eb0fb11de192ee13c7df3e7a",
+      "bytes": 50248,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-14.mp4",
+      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
+      "bytes": 52302,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-15.mp4",
+      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
+      "bytes": 52629,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-2.mp4",
+      "sha256": "521d63b25aa6ae9aad34748f31526afe30109086eb0fb11de192ee13c7df3e7a",
+      "bytes": 50248,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-3.mp4",
+      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
+      "bytes": 52629,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-4.mp4",
+      "sha256": "5141cfb535bc7d65ec3b26efb6fb8bbf64aa7fae8dfc718f93e9cc42f60c40b6",
+      "bytes": 57700,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-5.mp4",
+      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
+      "bytes": 52302,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-6.mp4",
+      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
+      "bytes": 52302,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-7.mp4",
+      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
+      "bytes": 52629,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-8.mp4",
+      "sha256": "5141cfb535bc7d65ec3b26efb6fb8bbf64aa7fae8dfc718f93e9cc42f60c40b6",
+      "bytes": 57700,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/color/color grade-9.mp4",
+      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
+      "bytes": 52629,
+      "kind": "generated-silent-geometric-video",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-garden-01-1600.webp",
+      "sha256": "3ca840fbe636075317372a0fe3ea478d186969909d24c6fbd69c7cdd47a8c116",
+      "bytes": 42520,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1178,
+        1600
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-garden-01-2560.webp",
+      "sha256": "603a57189614a00e9229f4e0b981472b78c40b2e43824576b1e85ac123d87e22",
+      "bytes": 71290,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1885,
+        2560
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-garden-01-400.webp",
+      "sha256": "7ba5fad5fcf943b935d6dfa7c80b7f3fe909d640681d90cd130f453cbd6c741e",
+      "bytes": 10504,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        295,
+        400
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-01-1600.webp",
+      "sha256": "37b3ee813176e2af28769c8fa718c2d5a8fbb6672d56c36499310637e6a26c8c",
+      "bytes": 30776,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        838
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-01-2560.webp",
+      "sha256": "208aba3e670e8478893113258565808e78f16e1040f551bae041e478f7c27c92",
+      "bytes": 53674,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1340
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-01-400.webp",
+      "sha256": "5d762b0f8bbd97be8404302b376ba1d5e34ea9347a6e9f53b1ae2f26d24ad4a7",
+      "bytes": 9324,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        209
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-02-1600.webp",
+      "sha256": "87e9085f19bbb7f0e36aa118baa07f12b4cb5db86c91f066b44180189a6e57a9",
+      "bytes": 25936,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        838
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-02-2560.webp",
+      "sha256": "defb3064fe99fe5050e3f3e388ce7c44a559a5769e7cd57dca859b75b14acaf2",
+      "bytes": 46050,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1340
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-02-400.webp",
+      "sha256": "6119236fb7a5f80a5641738d96b05df10f06aa79d5a3f1e9560dc814e201c1bc",
+      "bytes": 7674,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        209
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-03-1600.webp",
+      "sha256": "104583425c2336181b88977c7ef0ba929fde7495b9cb79d2bcbb92f1486a0cdb",
+      "bytes": 26258,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        838
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-03-2560.webp",
+      "sha256": "721b0c509dc9f8b99186de17ba41bb4548d8678705ac95cc505886f1771bcfda",
+      "bytes": 47278,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1340
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-guidance-03-400.webp",
+      "sha256": "fdbc7d5feb71f6a4696370b0963f135b4bcbc925abc4df91a70763713a0d4cfe",
+      "bytes": 8074,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        209
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-01-1600.webp",
+      "sha256": "c3dc5321678ee54b2a5966c70109b9fa9b3de70d8e66bc2f3a9a51b2b966c1fc",
+      "bytes": 44418,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1600
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-01-2560.webp",
+      "sha256": "d50cb33439e0fecff6e03556e179e6ed5a1e7e75a5fdc8573e0519d3d9212e43",
+      "bytes": 73858,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        2560
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-01-400.webp",
+      "sha256": "b7f5b472d852d4bfbf674a969e3b6439c86648c0ee19d06fbd631830882708ef",
+      "bytes": 11434,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        400
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-02-1600.webp",
+      "sha256": "c60c3c229209ba762cffca10dae1cddb3b840b27d1b7db6f8b2c23b29f21e306",
+      "bytes": 45542,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1600
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-02-2560.webp",
+      "sha256": "e4112751cd210e28b10205a66ca418e08827882ed5430026330c9a37f6a8d6b4",
+      "bytes": 76604,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        2560
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-02-400.webp",
+      "sha256": "06cbcaba1b62a38c2a2e52b3609302bcd1fcf0dc31b345e29797a5c7a49c987c",
+      "bytes": 11232,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        400
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-03-1600.webp",
+      "sha256": "eb6aa181ad7f82b0ecddc4616e54a04fc0116b2b5a216cd0155ecad58ed576e6",
+      "bytes": 51612,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1600
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-03-2560.webp",
+      "sha256": "a62c425fd7750c9d8ce84eea296e8a40f9b907cb533bbfeb42b4d5a780655310",
+      "bytes": 88324,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        2560
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-03-400.webp",
+      "sha256": "6c6c02f089d9559f7eeddc30b2ad79b41609ca83550d655b8521cfd75c461648",
+      "bytes": 13166,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        400
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-12-1600.webp",
+      "sha256": "c3dc5321678ee54b2a5966c70109b9fa9b3de70d8e66bc2f3a9a51b2b966c1fc",
+      "bytes": 44418,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1600
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-12-2560.webp",
+      "sha256": "d50cb33439e0fecff6e03556e179e6ed5a1e7e75a5fdc8573e0519d3d9212e43",
+      "bytes": 73858,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        2560
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-12-400.webp",
+      "sha256": "b7f5b472d852d4bfbf674a969e3b6439c86648c0ee19d06fbd631830882708ef",
+      "bytes": 11434,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        400
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-13-1600.webp",
+      "sha256": "dda93ca63916ed46be68bda963e5f42eb41fa462e0f44bab3070de675031add1",
+      "bytes": 46708,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1600
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-13-2560.webp",
+      "sha256": "93e818ba94376f1170c29920e0c794ce2435b4eb728f965f9c15a381cab53228",
+      "bytes": 77056,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        2560
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-13-400.webp",
+      "sha256": "15076dca98c4d505c7951429793e80c9e61d886d3c960512fcab365660db2f87",
+      "bytes": 11368,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        400
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-14-1600.webp",
+      "sha256": "c3dc5321678ee54b2a5966c70109b9fa9b3de70d8e66bc2f3a9a51b2b966c1fc",
+      "bytes": 44418,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1600
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-14-2560.webp",
+      "sha256": "d50cb33439e0fecff6e03556e179e6ed5a1e7e75a5fdc8573e0519d3d9212e43",
+      "bytes": 73858,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        2560
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-14-400.webp",
+      "sha256": "b7f5b472d852d4bfbf674a969e3b6439c86648c0ee19d06fbd631830882708ef",
+      "bytes": 11434,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        400
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-15-1600.webp",
+      "sha256": "c60c3c229209ba762cffca10dae1cddb3b840b27d1b7db6f8b2c23b29f21e306",
+      "bytes": 45542,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1600
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-15-2560.webp",
+      "sha256": "e4112751cd210e28b10205a66ca418e08827882ed5430026330c9a37f6a8d6b4",
+      "bytes": 76604,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        2560
+      ]
+    },
+    {
+      "path": "public/internship-clean/demo-measure-15-400.webp",
+      "sha256": "06cbcaba1b62a38c2a2e52b3609302bcd1fcf0dc31b345e29797a5c7a49c987c",
+      "bytes": 11232,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/aft-09-1600.webp",
+      "sha256": "d43a4803467a36bdc94b39819138965082b282ca87443f054e15382f58e4fe51",
+      "bytes": 35596,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/aft-09-2560.webp",
+      "sha256": "c0fd1b5b41375bbcbffcf6041783b58fc47dfcc9c34ef42512a1dedb9e6b9bcc",
+      "bytes": 59278,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/aft-09-400.webp",
+      "sha256": "47af3008a467d1ba413ec953bc9556edc5caf24ccb174d34efcfd50315dc5cf9",
+      "bytes": 10040,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/annual-review-2025-1600.webp",
+      "sha256": "2d0ffa26966b1cb76a336a985b0d7564313236356cebc37bfc51455cdcea4343",
+      "bytes": 28238,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        876
+      ]
+    },
+    {
+      "path": "public/portfolio/annual-review-2025-2560.webp",
+      "sha256": "c0482ca83a32bc73bed0bb8131cf241ebedc1f32602de633a0fb43669f3575c3",
+      "bytes": 49320,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1402
+      ]
+    },
+    {
+      "path": "public/portfolio/annual-review-2025-400.webp",
+      "sha256": "6eadeb75b0b2f28207b68a5cccc03a2bc35b17e1ca448c115f113ef98ed4147d",
+      "bytes": 8058,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        219
+      ]
+    },
+    {
+      "path": "public/portfolio/binglang-valley-1600.webp",
+      "sha256": "020dfb1d6deb94a0b1fc4dadc132ad967f392a9699e3a40ecc3b28cdb34ee67a",
+      "bytes": 27482,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/binglang-valley-2560.webp",
+      "sha256": "0e3e97dc1e49021f1917377795a44a206f0433d3ae018b2c0058fdc2830387c9",
+      "bytes": 46332,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/binglang-valley-400.webp",
+      "sha256": "c0c7b7d4e7097cec65a195fb02a887a7635e876c9f8ba611792ffb000d2e082e",
+      "bytes": 7758,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/campus-1600.webp",
+      "sha256": "42b0bb910d112dc00e1e0683eb07da2f2eb1570622236e9e2acc2c6a93102bf6",
+      "bytes": 35324,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/campus-2560.webp",
+      "sha256": "06746257e137d5c72753918c6f972db937db8d28d2293c9df04682882b41e0fa",
+      "bytes": 56456,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/campus-400.webp",
+      "sha256": "6020695d6374a07a9809f24dea0ffb212fc9944cfb6ae2381e41637a1ea72175",
+      "bytes": 8758,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/cave-1600.webp",
+      "sha256": "4d57b6896d49b31b81d3541b4a3a18fed5306f07a621ec2d752d18fb1674e3ba",
+      "bytes": 33332,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/cave-2560.webp",
+      "sha256": "b6be09d637fb64f992d8d3dca84b28b98ecefd52ac00a68b32cbcb078d4ba207",
+      "bytes": 53438,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/cave-400.webp",
+      "sha256": "f784b20aa64b30ae6dc3bc3dd561b7f5f93c231396adaec500a6f755021452ec",
+      "bytes": 8670,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/daylight-1600.webp",
+      "sha256": "3018d53ec56bf238a02465eb66a85d9140961f6e140880cc8e9c0eb4f6a918bd",
+      "bytes": 34572,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/daylight-2560.webp",
+      "sha256": "bca10a18471a2e1919fe31acc3019647e27eb31e9944db9bbe4245ca0e040356",
+      "bytes": 54846,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/daylight-400.webp",
+      "sha256": "8eb48c0c707e2c2c353efc7e4afac5547f4eadbefaf177d2ac6d77836298a075",
+      "bytes": 9074,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-1-1600.webp",
+      "sha256": "8efc4d333ade23a917e99a22d3f596a13af6de2c7274dededb42effc6f1ccab7",
+      "bytes": 32852,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-1-2560.webp",
+      "sha256": "af18906f15c3a4947bac87f64ddd5a5dbbaf46585a3ac7e05e22a29f00a86051",
+      "bytes": 53158,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-1-400.webp",
+      "sha256": "405895b7bccd708f37ce50cd01360ecf43c85d4ad10d44e494eb9de69a5fc552",
+      "bytes": 9682,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-1600.webp",
+      "sha256": "5ab2d12dd0829d69ebdc31ae2c9f55b164ddb171bf68c411964c989f85249b4f",
+      "bytes": 39832,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-2-1600.webp",
+      "sha256": "fcdeda93be89262deae9b8a3fbf899473382a8ece9ee62d103e8bd906beb52c7",
+      "bytes": 29074,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-2-2560.webp",
+      "sha256": "7fa84844680431db944047e784135899c7b83be3c1e7fb2b49e8868d6cab9469",
+      "bytes": 46312,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-2-400.webp",
+      "sha256": "60ad9cc8e20375392aa513c72ae6da5d82425d44a821705723eec294e32907c8",
+      "bytes": 8138,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-2560.webp",
+      "sha256": "020f6b3c776969256232b6428be3de83de20b7cef92be00da5523d915ca535a8",
+      "bytes": 61180,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-4-1600.webp",
+      "sha256": "b81bc2f0e610524de5401025fb3a59ac3cf39ec13ce667a2aad7019d7cd0f69a",
+      "bytes": 34736,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-4-2560.webp",
+      "sha256": "b6d22ba5fbda7b3979bc49d6ba62c07b20fc2ebc3c28241626dc2c1b8d269f94",
+      "bytes": 55346,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-4-400.webp",
+      "sha256": "983291d1c5997c137f03d9d688ba2d15ef7b9188db9208ac6345eac38b1815af",
+      "bytes": 8764,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/ginkgo-road-400.webp",
+      "sha256": "33e8eb5c760903da83e0f169a39c0191aa4fc602588f3e3b1d3456234cafafdd",
+      "bytes": 10458,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/guyong-city-1600.webp",
+      "sha256": "761a016a5b83bc45bff1b315a0454652f53a78c74d3ab339ecc9e229e797aae9",
+      "bytes": 25986,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        781
+      ]
+    },
+    {
+      "path": "public/portfolio/guyong-city-2560.webp",
+      "sha256": "138c59affa672787e321680ee4fa159ee08f8d9847dc3fee340293ca40e00e79",
+      "bytes": 48254,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1250
+      ]
+    },
+    {
+      "path": "public/portfolio/guyong-city-400.webp",
+      "sha256": "a22cbaa037b639d64deea3477e7d17b40c7ef88f81ac5265955aee89fef6e00e",
+      "bytes": 7800,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        195
+      ]
+    },
+    {
+      "path": "public/portfolio/mazu-overlooking-sea-1600.webp",
+      "sha256": "f517c0e047d2d879f243af5385b655906b25faa725179e0edbdb00484b7fe387",
+      "bytes": 34786,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/mazu-overlooking-sea-2560.webp",
+      "sha256": "8ff172dc2177234fa8f88b3bdc7ebed56f700ad6461ec83114add01352ef209f",
+      "bytes": 53858,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/mazu-overlooking-sea-400.webp",
+      "sha256": "56f68d0dac88e5d0166114b70807ff5debaf49c5f8226d56d9ac2e8e64bb056f",
+      "bytes": 8464,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/mbt-2000-1600.webp",
+      "sha256": "5c3d5f3e04be49eee2406dab476ace3cb8369e9d42f504d534487d34b0b9b108",
+      "bytes": 30876,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/mbt-2000-2560.webp",
+      "sha256": "eedd93b16ab508f6e3bc2f1498ad87b41dc3e5510f66fb4f93c804850c946fd1",
+      "bytes": 53302,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/mbt-2000-400.webp",
+      "sha256": "e5b5f22e50b6203fb39c56af2715bb3a010fd7d42b69ad13d28af250c1477267",
+      "bytes": 8468,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/mountain-bird-1600.webp",
+      "sha256": "f517c0e047d2d879f243af5385b655906b25faa725179e0edbdb00484b7fe387",
+      "bytes": 34786,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/mountain-bird-2560.webp",
+      "sha256": "8ff172dc2177234fa8f88b3bdc7ebed56f700ad6461ec83114add01352ef209f",
+      "bytes": 53858,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/mountain-bird-400.webp",
+      "sha256": "56f68d0dac88e5d0166114b70807ff5debaf49c5f8226d56d9ac2e8e64bb056f",
+      "bytes": 8464,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/mountain-cloud-1600.webp",
+      "sha256": "4d57b6896d49b31b81d3541b4a3a18fed5306f07a621ec2d752d18fb1674e3ba",
+      "bytes": 33332,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/mountain-cloud-2560.webp",
+      "sha256": "b6be09d637fb64f992d8d3dca84b28b98ecefd52ac00a68b32cbcb078d4ba207",
+      "bytes": 53438,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/mountain-cloud-400.webp",
+      "sha256": "f784b20aa64b30ae6dc3bc3dd561b7f5f93c231396adaec500a6f755021452ec",
+      "bytes": 8670,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/old-village-walk-1600.webp",
+      "sha256": "8207c7d7d6f3ac77a0abf5fd862be8fa740bc3af6b64200817794fce18bc7901",
+      "bytes": 40450,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/old-village-walk-2560.webp",
+      "sha256": "1f3028491150bb6dce318af716f4d3bfb3620625422146050e8f99fadcc580a1",
+      "bytes": 61620,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/old-village-walk-400.webp",
+      "sha256": "593321d7c1b3a8973466af9d1e5c5e5fbe879d5223b3ba80ff3549f25eb69b5a",
+      "bytes": 10208,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-cover-1600.webp",
+      "sha256": "8efc4d333ade23a917e99a22d3f596a13af6de2c7274dededb42effc6f1ccab7",
+      "bytes": 32852,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-cover-2560.webp",
+      "sha256": "af18906f15c3a4947bac87f64ddd5a5dbbaf46585a3ac7e05e22a29f00a86051",
+      "bytes": 53158,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-cover-400.webp",
+      "sha256": "405895b7bccd708f37ce50cd01360ecf43c85d4ad10d44e494eb9de69a5fc552",
+      "bytes": 9682,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-photo-1600.webp",
+      "sha256": "fcdeda93be89262deae9b8a3fbf899473382a8ece9ee62d103e8bd906beb52c7",
+      "bytes": 29074,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-photo-2-1600.webp",
+      "sha256": "9886952ae9e86f6714edf7dc56f511dd9bcea717c1db4ec99a6a38e842b48d1f",
+      "bytes": 24266,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        763
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-photo-2-2560.webp",
+      "sha256": "9a840197f6bdcdcea4bbbbfb18981374b5aea077fb4560c3b5e08187db0ebc1a",
+      "bytes": 44518,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1221
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-photo-2-400.webp",
+      "sha256": "060b7526b4c81bcc8e37a29d3dc6851fa347836eb1027ee713b1704c711599eb",
+      "bytes": 7126,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        191
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-photo-2560.webp",
+      "sha256": "7fa84844680431db944047e784135899c7b83be3c1e7fb2b49e8868d6cab9469",
+      "bytes": 46312,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/pavilion-photo-400.webp",
+      "sha256": "60ad9cc8e20375392aa513c72ae6da5d82425d44a821705723eec294e32907c8",
+      "bytes": 8138,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/pg4-04a-1600.webp",
+      "sha256": "5c3d5f3e04be49eee2406dab476ace3cb8369e9d42f504d534487d34b0b9b108",
+      "bytes": 30876,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/pg4-04a-2560.webp",
+      "sha256": "eedd93b16ab508f6e3bc2f1498ad87b41dc3e5510f66fb4f93c804850c946fd1",
+      "bytes": 53302,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/pg4-04a-400.webp",
+      "sha256": "e5b5f22e50b6203fb39c56af2715bb3a010fd7d42b69ad13d28af250c1477267",
+      "bytes": 8468,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/pgz-09-1600.webp",
+      "sha256": "846412dc39090aad511a6993a41273e13d52b5f0694338459fc0c2acdd886577",
+      "bytes": 30474,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/pgz-09-2560.webp",
+      "sha256": "eb0d5041796100a5408831a37c9ca847e88aece414a045fe21f401bab6a72193",
+      "bytes": 51876,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/pgz-09-400.webp",
+      "sha256": "a4f595593f68eb2b1d063a7503e41eb0187dcd17fbf1d65810c548996ac726d0",
+      "bytes": 8214,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/plz-02-1600.webp",
+      "sha256": "846412dc39090aad511a6993a41273e13d52b5f0694338459fc0c2acdd886577",
+      "bytes": 30474,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/plz-02-2560.webp",
+      "sha256": "eb0d5041796100a5408831a37c9ca847e88aece414a045fe21f401bab6a72193",
+      "bytes": 51876,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/plz-02-400.webp",
+      "sha256": "a4f595593f68eb2b1d063a7503e41eb0187dcd17fbf1d65810c548996ac726d0",
+      "bytes": 8214,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/plz-05-1600.webp",
+      "sha256": "21dae45df6dba5f56f5dcc1b941a302a73ffea8c4065add4d06550b04dea26d7",
+      "bytes": 31424,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/plz-05-2560.webp",
+      "sha256": "6a642520c31659ba998b9c6ed69bc026e754375bcca85606749ea733a318074f",
+      "bytes": 54146,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/plz-05-400.webp",
+      "sha256": "56e6bca443cd912ab82c34c5f4484da531af5897e0ad3fd999069c54ab17b559",
+      "bytes": 8374,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/purple-leaf-plum-1600.webp",
+      "sha256": "f517c0e047d2d879f243af5385b655906b25faa725179e0edbdb00484b7fe387",
+      "bytes": 34786,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/purple-leaf-plum-2560.webp",
+      "sha256": "8ff172dc2177234fa8f88b3bdc7ebed56f700ad6461ec83114add01352ef209f",
+      "bytes": 53858,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/purple-leaf-plum-400.webp",
+      "sha256": "56f68d0dac88e5d0166114b70807ff5debaf49c5f8226d56d9ac2e8e64bb056f",
+      "bytes": 8464,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/qingri-molun-1600.webp",
+      "sha256": "4d57b6896d49b31b81d3541b4a3a18fed5306f07a621ec2d752d18fb1674e3ba",
+      "bytes": 33332,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/qingri-molun-2560.webp",
+      "sha256": "b6be09d637fb64f992d8d3dca84b28b98ecefd52ac00a68b32cbcb078d4ba207",
+      "bytes": 53438,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/qingri-molun-400.webp",
+      "sha256": "f784b20aa64b30ae6dc3bc3dd561b7f5f93c231396adaec500a6f755021452ec",
+      "bytes": 8670,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/road-to-city-1600.webp",
+      "sha256": "b81bc2f0e610524de5401025fb3a59ac3cf39ec13ce667a2aad7019d7cd0f69a",
+      "bytes": 34736,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/road-to-city-2560.webp",
+      "sha256": "b6d22ba5fbda7b3979bc49d6ba62c07b20fc2ebc3c28241626dc2c1b8d269f94",
+      "bytes": 55346,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/road-to-city-400.webp",
+      "sha256": "983291d1c5997c137f03d9d688ba2d15ef7b9188db9208ac6345eac38b1815af",
+      "bytes": 8764,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/seaside-sunset-1600.webp",
+      "sha256": "42b0bb910d112dc00e1e0683eb07da2f2eb1570622236e9e2acc2c6a93102bf6",
+      "bytes": 35324,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/seaside-sunset-2560.webp",
+      "sha256": "06746257e137d5c72753918c6f972db937db8d28d2293c9df04682882b41e0fa",
+      "bytes": 56456,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/seaside-sunset-400.webp",
+      "sha256": "6020695d6374a07a9809f24dea0ffb212fc9944cfb6ae2381e41637a1ea72175",
+      "bytes": 8758,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/sky-mirror-1600.webp",
+      "sha256": "f517c0e047d2d879f243af5385b655906b25faa725179e0edbdb00484b7fe387",
+      "bytes": 34786,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sky-mirror-2560.webp",
+      "sha256": "8ff172dc2177234fa8f88b3bdc7ebed56f700ad6461ec83114add01352ef209f",
+      "bytes": 53858,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/sky-mirror-400.webp",
+      "sha256": "56f68d0dac88e5d0166114b70807ff5debaf49c5f8226d56d9ac2e8e64bb056f",
+      "bytes": 8464,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/sunward-1600.webp",
+      "sha256": "42b0bb910d112dc00e1e0683eb07da2f2eb1570622236e9e2acc2c6a93102bf6",
+      "bytes": 35324,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sunward-2560.webp",
+      "sha256": "06746257e137d5c72753918c6f972db937db8d28d2293c9df04682882b41e0fa",
+      "bytes": 56456,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/sunward-400.webp",
+      "sha256": "6020695d6374a07a9809f24dea0ffb212fc9944cfb6ae2381e41637a1ea72175",
+      "bytes": 8758,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/tall-tree-1600.webp",
+      "sha256": "570029e6167f0a8a56d11c4e3cf9fcfec434f5ebb00559265f86d4f948e83a86",
+      "bytes": 36426,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/tall-tree-2560.webp",
+      "sha256": "25ac082ecfc4c452723a43ce92c757bdfce27f48938e8220bb647d5275319e20",
+      "bytes": 56364,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/tall-tree-400.webp",
+      "sha256": "7e8303cf5d833d4ba4407964fc904982483b9d33ae97765c6697903f8d71a20f",
+      "bytes": 8692,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/urban-village-1600.webp",
+      "sha256": "fcdeda93be89262deae9b8a3fbf899473382a8ece9ee62d103e8bd906beb52c7",
+      "bytes": 29074,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/urban-village-2560.webp",
+      "sha256": "7fa84844680431db944047e784135899c7b83be3c1e7fb2b49e8868d6cab9469",
+      "bytes": 46312,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/urban-village-400.webp",
+      "sha256": "60ad9cc8e20375392aa513c72ae6da5d82425d44a821705723eec294e32907c8",
+      "bytes": 8138,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/zhangjiajie-mountains-1600.webp",
+      "sha256": "020dfb1d6deb94a0b1fc4dadc132ad967f392a9699e3a40ecc3b28cdb34ee67a",
+      "bytes": 27482,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/zhangjiajie-mountains-2560.webp",
+      "sha256": "0e3e97dc1e49021f1917377795a44a206f0433d3ae018b2c0058fdc2830387c9",
+      "bytes": 46332,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/zhangjiajie-mountains-400.webp",
+      "sha256": "c0c7b7d4e7097cec65a195fb02a887a7635e876c9f8ba611792ffb000d2e082e",
+      "bytes": 7758,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/zhangyuan-panorama-1600.webp",
+      "sha256": "4d57b6896d49b31b81d3541b4a3a18fed5306f07a621ec2d752d18fb1674e3ba",
+      "bytes": 33332,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/zhangyuan-panorama-2560.webp",
+      "sha256": "b6be09d637fb64f992d8d3dca84b28b98ecefd52ac00a68b32cbcb078d4ba207",
+      "bytes": 53438,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/zhangyuan-panorama-400.webp",
+      "sha256": "f784b20aa64b30ae6dc3bc3dd561b7f5f93c231396adaec500a6f755021452ec",
+      "bytes": 8670,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-59-1600.webp",
+      "sha256": "5c3d5f3e04be49eee2406dab476ace3cb8369e9d42f504d534487d34b0b9b108",
+      "bytes": 30876,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-59-2560.webp",
+      "sha256": "eedd93b16ab508f6e3bc2f1498ad87b41dc3e5510f66fb4f93c804850c946fd1",
+      "bytes": 53302,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-59-400.webp",
+      "sha256": "e5b5f22e50b6203fb39c56af2715bb3a010fd7d42b69ad13d28af250c1477267",
+      "bytes": 8468,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-96-1600.webp",
+      "sha256": "846412dc39090aad511a6993a41273e13d52b5f0694338459fc0c2acdd886577",
+      "bytes": 30474,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-96-2560.webp",
+      "sha256": "eb0d5041796100a5408831a37c9ca847e88aece414a045fe21f401bab6a72193",
+      "bytes": 51876,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-96-400.webp",
+      "sha256": "a4f595593f68eb2b1d063a7503e41eb0187dcd17fbf1d65810c548996ac726d0",
+      "bytes": 8214,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-96a-1600.webp",
+      "sha256": "5c3d5f3e04be49eee2406dab476ace3cb8369e9d42f504d534487d34b0b9b108",
+      "bytes": 30876,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-96a-2560.webp",
+      "sha256": "eedd93b16ab508f6e3bc2f1498ad87b41dc3e5510f66fb4f93c804850c946fd1",
+      "bytes": 53302,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/ztz-96a-400.webp",
+      "sha256": "e5b5f22e50b6203fb39c56af2715bb3a010fd7d42b69ad13d28af250c1477267",
+      "bytes": 8468,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/resume.pdf",
+      "sha256": "507a2baf81ff4d41f87dd260faf414c5ccc7a4ce2407eba4581d77406f722146",
+      "bytes": 4529,
+      "kind": "fictional-blank-resume-template",
+      "pages": 2
+    },
+    {
+      "path": "src/assets/color-frames/frame-01.jpg",
+      "sha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
+      "bytes": 28192,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-02.jpg",
+      "sha256": "2345c964dd6c54b32c9bfed9b77b2431beda6f4b0531e395564b9b9301690749",
+      "bytes": 24918,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-03.jpg",
+      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
+      "bytes": 25096,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-04.jpg",
+      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
+      "bytes": 25096,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-05.jpg",
+      "sha256": "2345c964dd6c54b32c9bfed9b77b2431beda6f4b0531e395564b9b9301690749",
+      "bytes": 24918,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-06.jpg",
+      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
+      "bytes": 25096,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-07.jpg",
+      "sha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
+      "bytes": 28192,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-08.jpg",
+      "sha256": "9dc2b51106c25c3de7a684716c9f935b18914b3ba43494e49aef269f440a1350",
+      "bytes": 23775,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-09.jpg",
+      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
+      "bytes": 25096,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-10.jpg",
+      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
+      "bytes": 25096,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-11.jpg",
+      "sha256": "2345c964dd6c54b32c9bfed9b77b2431beda6f4b0531e395564b9b9301690749",
+      "bytes": 24918,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-12.jpg",
+      "sha256": "9dc2b51106c25c3de7a684716c9f935b18914b3ba43494e49aef269f440a1350",
+      "bytes": 23775,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-13.jpg",
+      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
+      "bytes": 25096,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "src/assets/color-frames/frame-14.jpg",
+      "sha256": "2345c964dd6c54b32c9bfed9b77b2431beda6f4b0531e395564b9b9301690749",
+      "bytes": 24918,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        480,
+        270
+      ]
+    }
+  ]
+}

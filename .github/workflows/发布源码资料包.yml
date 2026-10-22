@@ -1,0 +1,113 @@
+name: 发布源码资料包
+
+'on':
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/发布源码资料包.yml'
+      - '发布配置/源码资料包/**'
+      - 'scripts/打包源码资料包.mjs'
+      - 'scripts/发布源码资料包.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-motion-source-package
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'xuge1324652022-boop/job-application-template' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: 读取当前提交
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: 准备 Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: 安装生成器依赖
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: 核对中文源码与解析
+        run: npm run check:motion
+
+      - name: 拒绝私人资料与未审核素材
+        run: npm run check:privacy
+
+      - name: 准备源码资料包
+        id: source
+        shell: bash
+        run: |
+          node scripts/打包源码资料包.mjs > "$RUNNER_TEMP/motion-source-staging.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          import path from 'node:path'
+          const summary = JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP, 'motion-source-staging.json'), 'utf8'))
+          if (summary.name !== '@xuge1324652022-boop/animation-source-package' || !path.isAbsolute(summary.stagingDirectory)) throw new Error('资料包生成结果无效')
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `staging=${summary.stagingDirectory}\n`)
+          console.log(JSON.stringify({ name: summary.name, version: summary.version }))
+          NODE
+
+      - name: 打包并逐文件验证归档
+        id: archive
+        shell: bash
+        env:
+          STAGING_DIRECTORY: ${{ steps.source.outputs.staging }}
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tmp/源码资料包/tarballs"
+          (cd "$STAGING_DIRECTORY" && npm pack --json --ignore-scripts --pack-destination "$GITHUB_WORKSPACE/tmp/源码资料包/tarballs") > "$RUNNER_TEMP/motion-source-pack.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          import path from 'node:path'
+          import { execFileSync } from 'node:child_process'
+          const metadata = path.join(process.env.RUNNER_TEMP, 'motion-source-pack.json')
+          const packed = JSON.parse(fs.readFileSync(metadata, 'utf8'))
+          if (!Array.isArray(packed) || packed.length !== 1 || !/^[a-z0-9][a-z0-9.-]*\.tgz$/.test(packed[0].filename)) throw new Error('npm 归档结果无效')
+          const tarball = path.join(process.env.GITHUB_WORKSPACE, 'tmp/源码资料包/tarballs', packed[0].filename)
+          execFileSync(process.execPath, ['scripts/打包源码资料包.mjs', '--verify-tarball', tarball], { stdio: 'inherit' })
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `tarball=${tarball}\nmetadata=${metadata}\n`)
+          NODE
+
+      - name: 离线安装并验证 agent 读取入口
+        shell: bash
+        env:
+          PACKAGE_TARBALL: ${{ steps.archive.outputs.tarball }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/motion-source-consumer"
+          npm install --prefix "$RUNNER_TEMP/motion-source-consumer" "$PACKAGE_TARBALL" --offline --ignore-scripts --no-audit --no-fund --package-lock=false
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          import path from 'node:path'
+          const installed = path.join(process.env.RUNNER_TEMP, 'motion-source-consumer/node_modules/@xuge1324652022-boop/animation-source-package')
+          const manifest = JSON.parse(fs.readFileSync(path.join(installed, 'package.json'), 'utf8'))
+          if (Object.keys(manifest.dependencies ?? {}).length || Object.keys(manifest.scripts ?? {}).length) throw new Error('源码资料包不应安装运行时依赖或执行生命周期脚本')
+          const library = path.join(installed, '动效组件库')
+          const catalog = JSON.parse(fs.readFileSync(path.join(library, '组件索引.json'), 'utf8'))
+          const expected = JSON.parse(fs.readFileSync('动效组件库/组件索引.json', 'utf8'))
+          if (catalog.effectCount !== expected.effectCount || catalog.effects.length !== expected.effectCount) throw new Error('安装后的组件索引不完整')
+          for (const effect of catalog.effects) {
+            const entry = JSON.parse(fs.readFileSync(path.join(library, effect.manifest), 'utf8'))
+            const directory = path.dirname(path.join(library, effect.manifest))
+            if (!entry.bundle.entryFiles.every(file => fs.statSync(path.join(directory, file)).isFile())) throw new Error(`效果入口缺失：${effect.id}`)
+          }
+          console.log(`PASS：离线安装后可读取 ${catalog.effectCount} 个中文效果及源码入口`)
+          NODE
+
+      - name: 发布已验证的源码资料包
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_TARBALL: ${{ steps.archive.outputs.tarball }}
+          PACKAGE_METADATA: ${{ steps.archive.outputs.metadata }}
+        run: npm run publish:motion-source -- --tarball "$PACKAGE_TARBALL" --metadata "$PACKAGE_METADATA"

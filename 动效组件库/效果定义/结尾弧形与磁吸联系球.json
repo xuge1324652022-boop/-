@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "contact-orb",
+  "title": { "zh": "结尾弧形衔接与磁吸联系球", "en": "Footer curve and magnetic contact orb" },
+  "category": "pointer",
+  "status": "active",
+  "summary": "关于页页脚把滚动驱动的弧形收束、内容/箭头/联系位置位移，与精细鼠标驱动的磁吸球和文字分层组合。ScrollTrigger scrub 负责进入页脚的连续衔接，quickTo 负责局部磁吸，离开后弹性归位；邮件、简历和作品导航仍是原生入口。",
+  "entryFiles": ["src/components/about/ContactEnd.vue"],
+  "integrationFiles": ["src/views/AboutView.vue", "src/data/aboutProfile.ts", "src/utils/motionLayout.ts"],
+  "sourceSections": [
+    { "file": "src/components/about/ContactEnd.vue", "symbols": ["initializeContact", "contactTravel", "prepareContact"], "purpose": "延迟建立 ScrollTrigger 时间轴，计算不超出横向轨道的联系球滚动行程。" },
+    { "file": "src/components/about/ContactEnd.vue", "symbols": ["measureMagnet", "moveMagnet", "resetMagnet", "updateMagnet", "releaseMagnet"], "purpose": "以未位移命中外壳为基准采样，分别磁吸球体与文字并弹回。" },
+    { "file": "src/components/about/ContactEnd.vue", "symbols": ["selectWorkDestination", "toTop", "workTo", "nextTo"], "purpose": "组件完整集成上下文：原生联系与下载、会话轮换作品入口和尊重运动偏好的回顶。" }
+  ],
+  "mechanism": {
+    "trigger": "页脚进入视口前 500px 时通过布局队列准备动画；滚动由 footer top 到 viewport bottom 开始，footer bottom 到 viewport bottom 结束。磁吸仅 hover/fine 且允许动态。",
+    "stages": [
+      { "name": "滚动衔接", "description": "同一 ScrollTrigger scrub 时间轴同时把 curve.scaleY 从1变0、content.y 从-100变0、标题箭头 rotation 从15变0；contactPosition.x 从正向安全行程移到反向安全行程。", "properties": ["curve.scaleY", "content.y", "headingArrow.rotation", "contactPosition.x"], "timing": "start='top bottom'，end='bottom bottom'，scrub:true，ease:none；与滚动比例绑定，无固定秒数播放。" },
+      { "name": "磁吸", "description": "mouse 且无按键时按未位移外壳缓存边界取 -1..1 的偏转；球体最多偏转30px，内部文字12px。scroll/blur 清空边界并归位。", "properties": ["orb.x", "orb.y", "orbText.x", "orbText.y"], "timing": "quickTo 0.6s、power4.out。" },
+      { "name": "弹性返回与填色", "description": "leave 或 blur 暂停跟随 quickTo，从当前位置 invalidate/restart 两条返回 tween；hover/focus-visible 时另由 CSS 将球内填色从下方推入。", "properties": ["orb.x", "orb.y", "orbText.x", "orbText.y", "orb-fill.transform"], "timing": "返回 1.5s、elastic.out(1,.4)；填色 CSS transition 0.6s cubic-bezier(.65,0,.35,1)。" }
+    ],
+    "state": ["media MatchMedia / preparationObserver / cancelPreparation / dead", "pointerBounds", "updateMagnet / releaseMagnet / moved", "workPath 与会话轮换索引"],
+    "propertyOwnership": ["滚动只写 contactPosition.x，磁吸只写其内部 orb.x/y 和 orbText.x/y，不能合并为同一 transform 目标。", "命中 shell 的 transform:translateY(-50%) 属于 CSS；缓存 shell 边界，不能读已被磁吸移动的 orb 再算中心。", "CSS 填色是独立 orb-fill，GSAP 不写该层 transform。"],
+    "interruption": ["进入磁吸时暂停弹性返回，释放时暂停四个 quickTo tween 再从当前位置返回，避免两个写入者并发。", "运动与指针媒体查询变化由 matchMedia 自动 revert 对应动画；释放回调清空为 no-op。", "卸载前设置 dead，取消未执行准备，防止远处页脚初始化晚于组件销毁。"]
+  },
+  "integration": {
+    "steps": ["在关于页结尾传 lang 挂载 ContactEnd，提供页面主题 --ab-bg。", "复用 CONTACT 与 FACTS 数据，替换求职者邮箱、简历、角色和可用状态。", "保留 curve/content/contactPosition/magnet/orb/orbText 的层级，分别承接滚动、命中和磁吸。", "保留 prepareMotionLayout 与临近视口 observer，避免远端页脚挤占首屏动画准备。"],
+    "inputs": ["lang: zh | en", "route.query.from，保留 cards/gallery 来源", "CONTACT.email/gmail/resume 与 FACTS", "CSS --ab-bg 与 --stable-viewport-height（如宿主提供）"],
+    "outputs": ["原生 mailto、简历 download、RouterLink 作品入口、回到顶部行为；无组件 emits。"],
+    "dependencies": ["vue", "vue-router", "gsap", "gsap/ScrollTrigger", "motionLayout.prepareMotionLayout", "IntersectionObserver", "matchMedia", "sessionStorage（可失败回退）"],
+    "assets": ["/about/portrait.webp，装饰头像。", "CONTACT.resume 指向的简历 PDF；个人联系信息在 src/data/aboutProfile.ts。"]
+  },
+  "accessibility": { "reducedMotion": "不建立滚动与磁吸动画，CSS 将弧形停在 scaleY(.4)，填色和箭头过渡停用；回顶用 auto。", "touch": "磁吸只接受 mouse 且 hover/fine；触屏原生点击 mailto、导航和简历入口。", "keyboard": "联系球为原生链接且 focus-visible 可触发填色，blur 释放磁吸；导航、下载与回顶有可见焦点，装饰弧形/箭头 aria-hidden。" },
+  "lifecycle": {
+    "setup": ["挂载确定本次浏览的作品目标，IntersectionObserver(rootMargin=500px) 首次接近后排准备。", "初始化建立 matchMedia 的滚动/精细指针分支，注册 scroll/blur 重置磁吸。"],
+    "cleanup": ["卸载取消观察器和待准备任务、移除 scroll/blur、media.revert 撤销时间轴/ScrollTrigger/quickTo 与回弹动画。"],
+    "knownLimitations": ["组件包含求职者联系内容和站内路由，并非只含视觉球体的独立包；通用化需要抽出数据与导航策略。", "contactTravel 把单侧移动限制在70px及真实余量之内，修改定位/尺寸后仍需检查窄屏边界。", "准备前的远端页脚不持有动画，依赖 IntersectionObserver 与浏览器环境；当前不面向 SSR 直接执行。"]
+  },
+  "agentNotes": ["将滚动轨道与指针磁吸分层是防止 transform 冲突的核心，重构时不要合并。", "stage 的 ScrollTrigger 使用 invalidateOnRefresh，让安全行程函数在布局刷新后重算。", "作品入口按 sessionStorage 轮换 /poster、/photo、/color、/news；这属于业务内容而非磁吸特性。"],
+  "relatedEffects": ["action-cursor", "route-curtain"],
+  "verification": { "commands": ["npm run typecheck", "node scripts/verify-about-mobile-runtime.mjs"], "manualChecks": ["从页脚上方慢滚并倒滚，检查弧形、内容、箭头与球体位置连续。", "鼠标快速进出联系球、拖拽按住、滚动和失焦后检查不跳中心且能回弹。", "320px、短横屏、触屏、Tab 焦点与减少动态下确认邮件/简历/作品入口可用且球体不裁切。"] },
+  "tags": ["vue", "gsap", "scrolltrigger", "magnetic", "quickTo", "footer", "contact"]
+}

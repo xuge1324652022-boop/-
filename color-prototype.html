@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>COLOR — Interactive Study (Prototype)</title>
+<!-- 和主应用一致地声明图标；否则浏览器会去试探 /favicon.ico 并刷一条 404 -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<!--
+  历史独立原型：以下说明只描述此文件，不代表当前 /color（15段素材）的实现。
+  COLOR / 调色 —— 鼠标交互素材展开原型（第二版：接入真实视频）
+
+  范围说明（严格遵守）：
+    · 独立原型页，不进 Router、不做 Fullscreen、不做 Chapter、不做点击/详情页
+    · 素材是 14 个真实调色成片，作为静态资源放在 media/color/ 下
+    · 首批只让 01–06 参与交互；07–14 虽已就位但不创建元素、不发请求（后续资源）
+    · 不改动 Gallery / 六张卡 / 其他五张卡 / 入场动画 / Fullscreen Transition
+
+  为什么仍然用 DOM <video> 而不是 Three.js VideoTexture：
+    现有原型本来就是纯 DOM + 单条 rAF 的架构，按规格「沿用当前架构，
+    不为接视频而重构」。video 标签加 muted + loop + playsinline 即可自动播放。
+
+  动画机制（无新增依赖，仍是第一版那一条 rAF）：
+    Mouse → Distance → Target → Damping，模型完全没变：
+      mouse  ──► 归一化 nx, ny ∈ [-1, 1]
+              ──► target = 基准位置 + (nx * ampX, ny * ampY) + 极轻微速度增量
+              ──► current += (target - current) * (1 - e^(-dt / TAU))     ← 指数阻尼
+    素材始终围绕自己的 base position 偏移，不是「鼠标在哪视频就跑到哪」；
+    鼠标停下后 current 继续追 target，自然产生惯性。
+
+  播放策略：进入可见状态才 play()，完全退出才 pause()；
+           自动播放被策略拒绝时静默 catch，不在控制台刷红。
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #ffffff;              /* 纯白底，不用任何渐变 */
+    color: #111111;
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage { position: fixed; inset: 0; }
+
+  /* ---- 主文字：视觉主体，压在所有素材之上 ---- */
+  .color-word {
+    position: absolute;
+    left: -3vw;                       /* 「C」略被左边界裁掉，营造溢出感 */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: clamp(84px, 13vw, 200px);
+    font-weight: 700;
+    line-height: 0.82;
+    letter-spacing: -0.05em;
+    color: #111111;
+    user-select: none;
+    white-space: nowrap;
+    z-index: 100;                     /* 高于全部素材：COLOR 永远是第一层 */
+  }
+
+  /* 极少量辅助信息：小、灰、克制 */
+  .meta {
+    position: absolute;
+    left: 2.2vw;
+    top: 4.2vh;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #b4b4b4;
+    user-select: none;
+  }
+  .meta--hint {
+    top: auto;
+    bottom: 4.2vh;
+    letter-spacing: 0.14em;
+    text-transform: none;
+    color: #c8c8c8;
+  }
+
+  /* ---- 素材：真实视频 ---- */
+  .media {
+    position: absolute;
+    /* left / top 由 JS 按视口比例写入；这里的 transform 由 rAF 每帧整体覆盖 */
+    transform: translate(-50%, -50%);
+    opacity: 0;                       /* 初始隐藏，由 rAF 推到 1 */
+    overflow: hidden;                 /* object-fit: cover 的裁切边界 */
+    will-change: transform, opacity;
+    pointer-events: none;             /* 判定靠距离而不是 hover，所以不吃鼠标事件 */
+    background: #f4f4f4;              /* 元数据还没到时的极浅底，避免闪出黑块 */
+  }
+  .media > video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* 保持原始比例。绝不能用 fill —— 那会把画面拉伸变形。
+       容器统一 16:9，成片也是 16:9，所以 cover 实际不产生裁切。 */
+    object-fit: cover;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="meta">Color Study</div>
+  <h1 class="color-word" id="colorWord">COLOR</h1>
+  <div class="meta meta--hint">移动鼠标靠近 COLOR —— 调色素材依次展开</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var stage = document.getElementById('stage');
+  var colorWord = document.getElementById('colorWord');
+
+  // ------------------------------------------------------------------
+  // 真实素材：media/color/ 下共 14 个成片。
+  // ⚠️ 文件名保持原始样貌 —— "color grade-N.mp4"，中间是空格不是连字符。
+  //    一个字都不要改，改了就是 404；需要转义的地方统一交给 encodeURIComponent。
+  // ------------------------------------------------------------------
+  var FILES = [
+    'color grade-1.mp4',  'color grade-2.mp4',  'color grade-3.mp4',
+    'color grade-4.mp4',  'color grade-5.mp4',  'color grade-6.mp4',
+    'color grade-7.mp4',  'color grade-8.mp4',  'color grade-9.mp4',
+    'color grade-10.mp4', 'color grade-11.mp4', 'color grade-12.mp4',
+    'color grade-13.mp4', 'color grade-14.mp4'
+  ];
+
+  /*
+   * 首批只让 6 个视频参与交互。
+   * 07–14 已经在 media/color/ 就位，但这一版不为它们创建 video 元素、
+   * 也不发任何请求 —— 总共 217MB，不能让 14 个一起进首屏。
+   * 把它们接进来的方式：把 FIRST_BATCH 调大，并在下面 MEDIA 里补上对应参数。
+   */
+  var FIRST_BATCH = 6;
+
+  // ------------------------------------------------------------------
+  // 首批 6 个素材的空间构图参数
+  //   i      : 对应 FILES 的第几个（1 起）
+  //   bx/by  : 基准位置（视口比例）—— 素材围绕它偏移，而不是跟着鼠标跑
+  //   w      : 宽度（px，随视口缩放），高按 16:9 推出；刻意大小不一形成层次
+  //   hidden : 隐藏起始位置相对基准的偏移（px）—— 各自从不同方向进场
+  //   amp    : 鼠标跟随幅度 [maxX, maxY]（px）—— 每个都不同，形成多层视差
+  //   depth  : 空间层级 0（远）→ 5（近），影响 z-index 与轻微缩放差
+  //   delay  : stagger（s）
+  // ------------------------------------------------------------------
+  var MEDIA = [
+    { i: 1, bx: 0.50, by: 0.26, w: 320, hidden: [-130,  95], amp: [35, 22], depth: 2, delay: 0.00 },
+    { i: 2, bx: 0.70, by: 0.34, w: 420, hidden: [ 165,  25], amp: [55, 32], depth: 5, delay: 0.06 },
+    { i: 3, bx: 0.58, by: 0.50, w: 280, hidden: [  45,-135], amp: [25, 18], depth: 1, delay: 0.12 },
+    { i: 4, bx: 0.82, by: 0.62, w: 360, hidden: [ 140, 115], amp: [45, 28], depth: 4, delay: 0.18 },
+    { i: 5, bx: 0.36, by: 0.74, w: 300, hidden: [-115, -95], amp: [18, 12], depth: 0, delay: 0.24 },
+    { i: 6, bx: 0.64, by: 0.80, w: 390, hidden: [-150,  60], amp: [38, 25], depth: 3, delay: 0.30 }
+  ];
+
+  var REVEAL_MS = 780;   // 出现 0.78s（规格 0.6~0.9）
+  var HIDE_MS   = 680;   // 收回 0.68s（规格 0.5~0.8）
+  var TAU       = 0.14;  // 阻尼时间常数（s）—— 越大越慢、惯性越明显
+  var VEL_GAIN  = 0.12;  // 鼠标速度带来的额外幅度，最多 +12%（极轻微，纯辅助）
+
+  // power2.out（GSAP power2 = Cubic）→ easeOutCubic
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+  // ------------------------------------------------------------------
+  // 建 DOM：<div class="media"><video …></video></div>
+  // ------------------------------------------------------------------
+  var nodes = MEDIA.slice(0, FIRST_BATCH).map(function (m) {
+    var el = document.createElement('div');
+    el.className = 'media';
+    el.dataset.video = String(m.i).padStart(2, '0');
+    // 空间层级：都低于 .color-word 的 100，所以 COLOR 永远压在素材之上
+    el.style.zIndex = String(10 + m.depth * 10);
+
+    var v = document.createElement('video');
+    // 属性 + 属性都设：Safari 对自动播放的判定更严格，只设 property 不够稳
+    v.setAttribute('muted', '');
+    v.setAttribute('loop', '');
+    v.setAttribute('playsinline', '');
+    v.muted = true;
+    v.loop = true;
+    v.playsInline = true;
+    v.preload = 'metadata';   // 只取元数据，不预先缓冲整片
+    // 文件名含空格 → 必须编码，否则请求会被空格截断
+    v.src = '/color/' + encodeURIComponent(FILES[m.i - 1]);
+
+    // 加载失败：不做任何兜底（不改名、不换源），只把信息暴露给校验脚本报告
+    v.addEventListener('error', function () {
+      var err = v.error;
+      window.__colorVideoErrors = window.__colorVideoErrors || [];
+      window.__colorVideoErrors.push({
+        index: m.i,
+        src: v.src,
+        code: err ? err.code : null,
+        message: err ? err.message : 'unknown'
+      });
+    });
+
+    el.appendChild(v);
+    stage.appendChild(el);
+
+    return {
+      cfg: m,
+      el: el,
+      video: v,
+      // 出现进度 0（隐藏）→ 1（完全展开）
+      reveal: 0,
+      from: 0, to: 0,
+      tweenStart: 0, tweenDur: REVEAL_MS,
+      // 鼠标跟随的当前/目标偏移（阻尼后的实际值）
+      ox: 0, oy: 0, tx: 0, ty: 0,
+      // 播放状态：只在跨越阈值时才调 play/pause，避免每帧重复调用
+      playing: false
+    };
+  });
+
+  // ------------------------------------------------------------------
+  // 尺寸与基准位置
+  // ------------------------------------------------------------------
+  var W = 0, H = 0, scaleRef = 1;
+
+  function measure() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    // 小屏整体缩一点，保证素材都能落进视口；并设下限避免手机端缩成指甲盖
+    scaleRef = Math.max(0.6, Math.min(1, W / 1280));
+    nodes.forEach(function (n) {
+      var m = n.cfg;
+      var w = m.w * scaleRef;
+      n.el.style.width = w + 'px';
+      n.el.style.height = (w * 9 / 16) + 'px';   // 统一 16:9 容器
+      n.el.style.left = (m.bx * 100) + '%';
+      n.el.style.top = (m.by * 100) + '%';
+    });
+  }
+  measure();
+  window.addEventListener('resize', measure);
+
+  // ------------------------------------------------------------------
+  // 交互区域：以 COLOR 主文字为中心的一个半径，而不是 :hover
+  // ------------------------------------------------------------------
+  var areaX = 0, areaY = 0, areaR = 420;
+
+  function measureArea() {
+    var r = colorWord.getBoundingClientRect();
+    areaX = r.left + r.width / 2;
+    areaY = r.top + r.height / 2;
+    // 半径取得比文字本身大，让「靠近」而不是「压上去」就能触发
+    areaR = Math.max(r.width * 0.85, Math.min(W * 0.62, 560));
+  }
+  measureArea();
+  window.addEventListener('resize', measureArea);
+
+  // ------------------------------------------------------------------
+  // 指针
+  // ------------------------------------------------------------------
+  var px = -9999, py = -9999;      // 指针位置
+  var ppx = px, ppy = py;          // 上一帧位置（算速度）
+  var hasPointer = false;
+  var active = false;              // 是否处在交互区域内
+  var velocity = 0;                // 平滑后的鼠标速度（0~1）
+
+  window.addEventListener('pointermove', function (e) {
+    px = e.clientX; py = e.clientY;
+    hasPointer = true;
+  }, { passive: true });
+
+  window.addEventListener('pointerleave', function () {
+    hasPointer = false;
+  });
+
+  function setActive(next) {
+    if (next === active) return;
+    active = next;
+    var now = performance.now();
+    var dur = next ? REVEAL_MS : HIDE_MS;
+    nodes.forEach(function (n) {
+      n.from = n.reveal;
+      n.to = next ? 1 : 0;
+      n.tweenStart = now + n.cfg.delay * 1000 * (next ? 1 : 0.5); // 收回时 stagger 减半，像整个空间一起安静下来
+      n.tweenDur = dur;
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // 主循环：一个 rAF 同时求值「出现进度」「阻尼跟随」和「播放状态」
+  // ------------------------------------------------------------------
+  var last = performance.now();
+
+  function frame(now) {
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    // 1) 指针 → 是否激活（距离判定，不是 :hover）
+    if (hasPointer) {
+      var d = Math.hypot(px - areaX, py - areaY);
+      setActive(d < areaR);
+    } else {
+      setActive(false);
+    }
+
+    // 2) 归一化鼠标位置 -1 → 1
+    var nx = 0, ny = 0;
+    if (W > 0 && H > 0) {
+      nx = (px / W) * 2 - 1;
+      ny = (py / H) * 2 - 1;
+    }
+
+    // 3) 鼠标速度：非常轻微，只是让快速划过时幅度略增
+    var moved = Math.hypot(px - ppx, py - ppy);
+    ppx = px; ppy = py;
+    var vTarget = Math.min(1, moved / 45);
+    velocity += (vTarget - velocity) * 0.18;
+    var velBoost = 1 + velocity * VEL_GAIN;
+
+    // 4) 指数阻尼系数（与帧率无关）
+    var k = 1 - Math.exp(-dt / TAU);
+
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i], m = n.cfg;
+
+      // --- 出现 / 收回进度 ---
+      var el = now - n.tweenStart;
+      if (el >= 0) {
+        var t = n.tweenDur > 0 ? Math.min(1, el / n.tweenDur) : 1;
+        n.reveal = n.from + (n.to - n.from) * easeOutCubic(t);
+      }
+
+      // --- 鼠标跟随目标：基准 + 鼠标偏移（不是直接等于鼠标位置）---
+      var ampX = m.amp[0] * scaleRef * velBoost;
+      var ampY = m.amp[1] * scaleRef * velBoost;
+      n.tx = nx * ampX;
+      n.ty = ny * ampY;
+
+      // --- 阻尼：鼠标停下后仍然继续追 target，这就是惯性 ---
+      n.ox += (n.tx - n.ox) * k;
+      n.oy += (n.ty - n.oy) * k;
+
+      // --- 合成：隐藏位移 + 跟随位移 + 缩放 ---
+      var r = n.reveal;
+      var hx = m.hidden[0] * scaleRef * (1 - r);
+      var hy = m.hidden[1] * scaleRef * (1 - r);
+      var s = 0.95 + 0.05 * r;                       // 0.95 → 1.00
+      var depthScale = 0.94 + (m.depth / 5) * 0.06;  // 层次：越靠前略大
+
+      n.el.style.opacity = String(r);
+      n.el.style.transform =
+        'translate(-50%, -50%) translate(' +
+        (hx + n.ox * r).toFixed(2) + 'px, ' +
+        (hy + n.oy * r).toFixed(2) + 'px) scale(' +
+        (s * depthScale).toFixed(4) + ')';
+
+      // --- 播放策略：进入可见才解码，完全退出就停 ---
+      var wantPlay = r > 0.02;
+      if (wantPlay !== n.playing) {
+        n.playing = wantPlay;
+        if (wantPlay) {
+          var p = n.video.play();
+          // 自动播放被策略拦下时静默吞掉，不让控制台刷一片红
+          if (p && typeof p.catch === 'function') p.catch(function () {});
+        } else {
+          n.video.pause();
+        }
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  requestAnimationFrame(frame);
+
+  // 给校验脚本用的快照：逐个素材报告加载状态、原始分辨率、是否在播
+  window.__colorSnapshot = function () {
+    return nodes.map(function (n) {
+      return {
+        index: n.cfg.i,
+        src: n.video.src,
+        reveal: +n.reveal.toFixed(3),
+        readyState: n.video.readyState,
+        networkState: n.video.networkState,
+        w: n.video.videoWidth,
+        h: n.video.videoHeight,
+        paused: n.video.paused,
+        playing: n.playing
+      };
+    });
+  };
+})();
+</script>
+</body>
+</html>

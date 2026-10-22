@@ -1,0 +1,196 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "visual-viewer-overlay",
+  "title": {
+    "zh": "完整作品查看器遮罩",
+    "en": "Visual artwork viewer overlay"
+  },
+  "category": "overlay",
+  "status": "active",
+  "summary": "摄影与海报共用的大图弹层，通过 Teleport 脱离页面裁切，以 CSS opacity 入场、contain 保持原构图。模块级 composable 持有唯一作品序列和索引，组件处理焦点圈定、锁滚与输入；关闭后可取消地恢复原位置和触发焦点。该效果未使用 GSAP。",
+  "entryFiles": [
+    "src/components/about/VisualViewer.vue",
+    "src/composables/useVisualViewer.ts"
+  ],
+  "integrationFiles": [
+    "src/views/AboutView.vue",
+    "src/views/PhotoView.vue",
+    "src/views/PosterView.vue",
+    "src/utils/overlayTouchGuard.ts",
+    "src/data/visualPortfolio.ts",
+    "src/data/aboutProfile.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/VisualViewer.vue",
+      "symbols": [
+        "onKey",
+        "onWheel",
+        "focusables",
+        "revealCurrentThumbnail",
+        "shown"
+      ],
+      "purpose": "弹层 DOM、CSS 入场、键盘/滚轮导航、缩略图局部滚动与锁滚生命周期。"
+    },
+    {
+      "file": "src/composables/useVisualViewer.ts",
+      "symbols": [
+        "useVisualViewer",
+        "open",
+        "openAt",
+        "step",
+        "goTo",
+        "close",
+        "reset",
+        "cancelRestore"
+      ],
+      "purpose": "模块级单例状态、组内循环索引及版本化的关闭位置恢复。"
+    },
+    {
+      "file": "src/utils/overlayTouchGuard.ts",
+      "symbols": [
+        "guardOverlayTouchScroll"
+      ],
+      "purpose": "仅拦截弹层内部不能消费的单指滚动链，保留内部滚动与多指缩放。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "页面调用 open(item, trigger) 或 openAt(items, index, trigger)，并以 active 的 v-if 挂载查看器。",
+    "stages": [
+      {
+        "name": "打开",
+        "description": "先记录 scrollY 与触发元素；组件保存既有 no-scroll 状态并上锁、安装输入监听，将焦点移到关闭按钮。nextTick 后下一帧设置 shown。",
+        "properties": [
+          "active",
+          "list",
+          "index",
+          "html.no-scroll",
+          "shown",
+          "opacity"
+        ],
+        "timing": "CSS 入场 opacity 0.3s ease；组件层不含 GSAP 时间轴。"
+      },
+      {
+        "name": "浏览",
+        "description": "组件只发 step/goTo，composable 独占索引；多张支持箭头、缩略图、左右键和舞台纵向滚轮。主图读取 large，缩略图读取 thumb。",
+        "properties": [
+          "index",
+          "active",
+          "aria-current",
+          "thumbs.scrollLeft"
+        ],
+        "timing": "滚轮阈值 32px、180ms 空闲或反向重置、切换后锁定 360ms；主图直接换 src，无溶解补间。"
+      },
+      {
+        "name": "关闭",
+        "description": "active 置空使组件卸载并还原锁状态，再在 nextTick 加一帧后恢复 scrollY 和 trigger.focus({preventScroll:true})。",
+        "properties": [
+          "active",
+          "list",
+          "index",
+          "html.no-scroll",
+          "window.scrollY",
+          "focus"
+        ],
+        "timing": "无离场淡出：v-if 直接卸载；恢复任务在下一帧执行并受版本号保护。"
+      }
+    ],
+    "state": [
+      "模块级 active / list / index / total / trigger",
+      "savedScrollY / restoreRaf / restoreVersion",
+      "组件 shown / hadNoScroll / disposed",
+      "wheelLock / wheelLastAt / wheelSum"
+    ],
+    "propertyOwnership": [
+      "当前作品和索引只归 useVisualViewer；VisualViewer 不复制索引，仅发事件。",
+      "no-scroll 的添加/原状恢复归组件，scrollY 和焦点恢复归 composable，顺序由 nextTick 保证。",
+      "大图保持 max-width/max-height 与 object-fit:contain；不要把主图改成统一裁切比例。"
+    ],
+    "interruption": [
+      "重新打开或 reset 会 cancelRestore 并增加版本号，旧的关闭恢复不能滚动新页面。",
+      "路由离开必须 reset，而非会恢复旧页面坐标的 close。",
+      "单张不接管左右键和滚轮；Ctrl/Meta+wheel、横向滚动及缩略图区域放行。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "页面取得 useVisualViewer 单例，以 active 条件渲染一份 VisualViewer。",
+      "绑定 item、items=list、index、lang，并把 close/step/goTo 事件连接到同一 composable 的方法。",
+      "作品按钮将 currentTarget 作为 trigger 传入 open/openAt。",
+      "每个使用页面 onBeforeUnmount 调用 reset，避免单例状态残留；保留全站 html.no-scroll 样式。"
+    ],
+    "inputs": [
+      "组件 props：item: VisualAsset、lang、items?、index?",
+      "VisualAsset：id、title/alt 双语、width/height、src/large/thumb、note?",
+      "composable openAt(items,index,trigger?) 与 open(item,trigger?)"
+    ],
+    "outputs": [
+      "组件 emits close、step(-1|1)、goTo(index)",
+      "共享 active/list/index/total/trigger 及 open/openAt/step/goTo/close/reset"
+    ],
+    "dependencies": [
+      "vue",
+      "aboutProfile.pick",
+      "VisualAsset 类型",
+      "guardOverlayTouchScroll",
+      "Teleport",
+      "requestAnimationFrame"
+    ],
+    "assets": [
+      "调用方VisualAsset的thumb/src/large；响应式候选按真实宽度和舞台宽高选择，手机不再固定下载2560档，缩略导航仍用400档。",
+      "基础图由 scripts/build-portfolio-images.py 等素材流程生成，快照不自动附带作品图。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "组件 CSS 在减少动态时停用 transition；仍保留完整大图和所有控件。",
+    "touch": "点击箭头/缩略图切图，横向缩略图条可滚动；触摸守卫阻止背景滚动链且保留多指缩放。未实现 swipe 切图。",
+    "keyboard": "role=dialog、aria-modal、双语按钮标签；Esc 关闭、多张左右键循环；Tab/Shift+Tab 动态圈定弹层内焦点，关闭还原触发按钮。"
+  },
+  "lifecycle": {
+    "setup": [
+      "挂载保存锁状态，安装 keydown/wheel 与触摸守卫，下一帧入场并聚焦关闭按钮。",
+      "index watcher 只滚动缩略图条自身，避免 scrollIntoView 误动正文。"
+    ],
+    "cleanup": [
+      "卸载取消入场 RAF，移除 keydown/wheel、释放触摸守卫，仅在原本未锁时移除 no-scroll。",
+      "宿主 reset 清除共享序列、触发元素、已保存位置并取消待执行恢复。"
+    ],
+    "knownLimitations": [
+      "共享状态保证打开接口一次只接受一组，但宿主仍需确保同页只渲染一个 Viewer；这不是多弹层锁计数器。",
+      "当前没有关闭淡出或图片切换过渡，不能把 0.3s 入场描述为完整双向转场。",
+      "顶层浏览器 API 与模块级状态需要移植时考虑 SSR 和页面实例隔离。"
+    ]
+  },
+  "agentNotes": [
+    "此效果是 CSS 与原生事件实现，归档于转场相关组件，不应添加虚构 GSAP 依赖。",
+    "大图 grid 两层均需 minmax(0,1fr) 与 min-height:0，避免竖图把图注推离视口。",
+    "关闭恢复的版本号是快速关闭再导航的正确性约束，不是可删除的冗余代码。"
+  ],
+  "relatedEffects": [
+    "poster-palette",
+    "poster-color-chapters",
+    "action-cursor",
+    "route-curtain"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-mobile-overlays.mjs",
+      "node scripts/verify-mobile-artwork.mjs"
+    ],
+    "manualChecks": [
+      "打开横图/竖图、单张/多张，在 320px 与桌面确认完整图、图注和缩略图都在可见区域。",
+      "Tab/Shift+Tab、Esc、左右键及滚轮轻滑一次只切一张；缩略图横滚与 Ctrl/Meta 缩放可用。",
+      "关闭后立刻切路由或重开，确认旧恢复任务不会抢新页面的焦点与位置；已有 no-scroll 锁保持。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "teleport",
+    "overlay",
+    "css-transition",
+    "focus-trap",
+    "gallery",
+    "non-gsap"
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "video-loop-fade",
+  "title": {
+    "zh": "循环视频接缝淡化",
+    "en": "Video loop seam fade"
+  },
+  "category": "media",
+  "status": "active",
+  "summary": "监听 HTMLVideoElement 的播放时间，在接近片尾时将 video 自身淡至透明，浏览器 loop 回绕后再淡回；暂停立即恢复不透明，避免遮挡或离屏中断留下半透明画面。调用方负责静音、循环、可见性与减少动态策略。",
+  "entryFiles": [
+    "src/composables/useLoopFade.ts"
+  ],
+  "integrationFiles": [
+    "src/views/ColorView.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/composables/useLoopFade.ts",
+      "symbols": [
+        "attachLoopFade",
+        "onTime",
+        "onPause",
+        "onVisibility"
+      ],
+      "purpose": "循环边界检测、GSAP opacity 补间、暂停复位与清理。"
+    },
+    {
+      "file": "src/views/ColorView.vue",
+      "symbols": [
+        "syncBodyMedia",
+        "releaseVideo",
+        "onMediaMotionChange",
+        "loopFadeOffs"
+      ],
+      "purpose": "仅为允许播放的正文 video 挂载效果，离开预热区或减少动态时释放。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "已静音且 loop 的 video 派发 timeupdate。",
+    "stages": [
+      {
+        "name": "片尾淡出",
+        "description": "duration 有效、未暂停、未 busy 且剩余时间小于 fadeSeconds 时开始淡出。",
+        "properties": [
+          "video.opacity",
+          "busy",
+          "last"
+        ],
+        "timing": "默认窗口 0.4s；实际淡出时长 max(duration-currentTime,0.06)，power2.inOut。"
+      },
+      {
+        "name": "回绕淡入",
+        "description": "currentTime 比上次读数少 0.5s 以上判为回绕，取消旧补间，从 opacity 0 到 1。",
+        "properties": [
+          "video.opacity",
+          "busy"
+        ],
+        "timing": "fadeSeconds，默认 0.4s，power2.inOut。"
+      },
+      {
+        "name": "暂停与恢复",
+        "description": "pause 取消 tween 并强制 opacity=1；回前台时若仍播放且 opacity<0.99 则补回不透明。",
+        "properties": [
+          "video.opacity",
+          "busy"
+        ],
+        "timing": "暂停立即复位；可见性恢复兜底 0.3s。"
+      }
+    ],
+    "state": [
+      "last 上次时间读数",
+      "busy 防止同一片尾反复起补间"
+    ],
+    "propertyOwnership": [
+      "此模块只拥有 video 元素 opacity；滚动入场 opacity 必须放在父容器，避免两个控制器互抢。",
+      "调用方负责 src、play、pause 与 currentTime；该模块不启动播放器，也不修改循环策略。"
+    ],
+    "interruption": [
+      "paused 的 timeupdate 只更新 last，不会把离屏主动归零错认成回绕。",
+      "pause 保证完全不透明，无须调用方 seek 才能复原。",
+      "每次检测回绕与暂停时 killTweensOf(video)，因此该元素上不应挂其他 GSAP 动画。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "确认目标 video 已设置 muted、loop，并由外层生命周期决定播放权限。",
+      "调用 attachLoopFade(video, fadeSeconds?)，保存返回的 cleanup。",
+      "减少动态时不要挂载此效果；释放 video src、卸载或停用功能时执行 cleanup。",
+      "为 video 留独占 opacity，把滚动淡入和播放器显示放到外层容器。"
+    ],
+    "inputs": [
+      "video: HTMLVideoElement",
+      "fadeSeconds?: number，默认 0.4"
+    ],
+    "outputs": [
+      "() => void 清理函数"
+    ],
+    "dependencies": [
+      "gsap",
+      "HTMLMediaElement timeupdate/pause",
+      "document.visibilitychange"
+    ],
+    "assets": [
+      "由调用方提供的循环视频；本模块没有固定素材路径。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "模块没有内部偏好分支；调用方必须在 reduce 时不挂载且停止自动播放。",
+    "touch": "无指针或手势监听，播放权限由宿主处理。",
+    "keyboard": "无自建控件，需由宿主提供播放与替代内容。"
+  },
+  "lifecycle": {
+    "setup": [
+      "调用时安装 video 的 timeupdate/pause 和 document.visibilitychange。"
+    ],
+    "cleanup": [
+      "返回函数移除三个监听并 kill video 的 tween。"
+    ],
+    "knownLimitations": [
+      "依据稀疏 timeupdate 和 0.5s 回退判据近似识别回绕；很短的循环或主动 seek 可能不符合该假设。",
+      "淡化只隐藏硬切，不能完成两路画面的真正交叉溶解。",
+      "cleanup 只取消补间，不自行设置 opacity；当前页面在 reduce 切换时另显式写 opacity=1。"
+    ]
+  },
+  "agentNotes": [
+    "这是可单独复用的函数，仍依赖浏览器 DOM 与 GSAP，不是独立 npm 包。",
+    "默认时长以 LOOP_FADE_S=0.4 为准；不保证 timeupdate 固定频率。",
+    "不要把外层 is-playing 的 opacity 合并到 video。"
+  ],
+  "relatedEffects": [
+    "color-scroll-gate",
+    "color-preview-trail"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-wechat-color-media.mjs"
+    ],
+    "manualChecks": [
+      "播放至少两个循环，检查片尾隐藏与片头淡入。",
+      "在片尾淡出中途 pause 且不 seek，再 resume，确认立即不透明。",
+      "切后台/前台、滚出预热区、打开幕布与切换减少动态后检查无透明残留。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "video",
+    "opacity",
+    "loop",
+    "cleanup"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组合函数/视频接缝淡化.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/composables/useLoopFade.ts",
+      "path": "源码/项目源码/组合函数/视频接缝淡化.ts",
+      "role": "entry",
+      "originalSha256": "3a47dd107b858ee26b58e4550a10bb80621cd3205c6aca47303663a9876547d1",
+      "originalBytes": 5144,
+      "sha256": "3a47dd107b858ee26b58e4550a10bb80621cd3205c6aca47303663a9876547d1",
+      "bytes": 5144
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/views/ColorView.vue",
+      "path": "集成示例/项目源码/页面/调色作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "f2585b1b01ee0ca57f1fea6cb40e38d3167adb81f41b92e660a56c9e5a34a266",
+      "originalBytes": 43088,
+      "sha256": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+      "bytes": 43103
+    }
+  ]
+}

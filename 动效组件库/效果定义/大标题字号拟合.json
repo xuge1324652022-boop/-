@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "fit-text",
+  "title": {
+    "zh": "大标题字号拟合",
+    "en": "Single-line title fitting"
+  },
+  "category": "layout",
+  "status": "active",
+  "summary": "按容器真实宽度和当前字体度量拟合单行大标题，避免遮罩与视口裁切隐藏末尾字母；使用原生Range和观察器，不由GSAP驱动。",
+  "entryFiles": [
+    "src/composables/useFitText.ts"
+  ],
+  "integrationFiles": [
+    "src/views/PhotoView.vue",
+    "src/views/PosterView.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/composables/useFitText.ts",
+      "symbols": [
+        "useFitText",
+        "fit",
+        "cacheKey",
+        "lines"
+      ],
+      "purpose": "参考字号测量、计算拟合、单行复核与缓存失效。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "onMounted首轮同步fit；容器宽度、文本、窗口与字体变化合并到RAF。",
+    "stages": [
+      {
+        "name": "缓存判断",
+        "description": "比较真实宽度、文本、字体参数与revision，未变不测量。",
+        "properties": [
+          "computed style"
+        ],
+        "timing": "重复输入立即返回"
+      },
+      {
+        "name": "测量与反算",
+        "description": "临时100px和nowrap，用Range测自然宽度，乘0.995安全余量后夹在min/max。",
+        "properties": [
+          "fontSize",
+          "whiteSpace"
+        ],
+        "timing": "首轮挂载同步；后续合并到一次RAF"
+      },
+      {
+        "name": "单行复核",
+        "description": "Range行盒数大于1时再乘0.98，最多3次。",
+        "properties": [
+          "fontSize"
+        ],
+        "timing": "最多3次收缩"
+      }
+    ],
+    "state": [
+      "lastElement/lastKey缓存",
+      "fontsPending/fontRevision",
+      "disposed/frame"
+    ],
+    "propertyOwnership": [
+      "只拥有目标元素内联fontSize；whiteSpace测完恢复",
+      "y/opacity由标题入场的另一个效果持有"
+    ],
+    "interruption": [
+      "卸载disposed使迟到的字体Promise失效",
+      "相同输入不会因父元素高度通知重复拟合"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "为标题创建HTMLElement ref，在setup调用useFitText(ref,{min,max})。",
+      "确保clientWidth代表文字可用宽度，左右留白放在父容器。",
+      "需要时调用返回fit；保留CSS字号作为脚本初始化前基线。"
+    ],
+    "inputs": [
+      "Ref<HTMLElement|null>",
+      "{min:number,max:number}像素边界"
+    ],
+    "outputs": [
+      "{fit():void}"
+    ],
+    "dependencies": [
+      "vue",
+      "document.fonts",
+      "Range",
+      "ResizeObserver",
+      "MutationObserver"
+    ],
+    "assets": [
+      "当前字体栈或调用方字体资源"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "无动态位移；偏好变化不影响静态标题可读。",
+    "touch": "横竖屏与窗口resize会重算。",
+    "keyboard": "不改变焦点或文本语义。"
+  },
+  "lifecycle": {
+    "setup": [
+      "挂载时注册字体事件、父容器RO、文本MO与窗口resize"
+    ],
+    "cleanup": [
+      "取消RAF并断开RO/MO",
+      "移除resize和三个字体事件监听"
+    ],
+    "knownLimitations": [
+      "min字号仍可能阻止特别长的文字继续缩小；调用方需选择可读下限和断行策略。",
+      "适用于单行标题，不应直接用于长段落或竖排文字。"
+    ]
+  },
+  "agentNotes": [
+    "这是布局辅助，不要宣传为GSAP插件。",
+    "只测scrollWidth无法区分已经换成两行的情况，保留Range复核。"
+  ],
+  "relatedEffects": [
+    "subpage-heading-reveal",
+    "text-line-reveal"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "320px、1280px和1920px宽度下标题末字完整。",
+      "替换长标题、字体加载与语言切换后复核一行及无裁切。"
+    ]
+  },
+  "tags": [
+    "native-dom",
+    "typography",
+    "range",
+    "responsive"
+  ]
+}

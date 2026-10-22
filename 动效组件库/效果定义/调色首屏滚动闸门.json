@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "color-scroll-gate",
+  "title": { "zh": "调色首屏滚动闸门与进度阻尼", "en": "Colour intro scroll gate" },
+  "category": "scroll",
+  "status": "active",
+  "summary": "调色页首屏先把滚轮或触屏纵向位移喂给底部白条，累计一趟首屏高度后一次性放行正文滚动；显示值由原生 RAF 指数收敛。本效果没有独立组件或独立 GSAP 时间轴，而是 ColorView 页面内逻辑，并与现有 useSmoothScroll 配合。该文件还含文字和正文媒体生命周期，文档明确保留这些集成边界。",
+  "entryFiles": ["src/views/ColorView.vue"],
+  "integrationFiles": ["src/composables/useSmoothScroll.ts", "src/composables/usePageCurtain.ts", "src/composables/useTransition.ts", "src/composables/useLoopFade.ts", "src/components/color/ColorWave.vue"],
+  "sourceSections": [
+    { "file": "src/views/ColorView.vue", "symbols": ["progressP", "barFrame", "syncBar", "feedGate", "updateProgress", "onTouchStart", "onTouchMove"], "purpose": "本效果核心：输入累计、一次放行、进度显示和触摸消费。" },
+    { "file": "src/composables/useSmoothScroll.ts", "symbols": ["useSmoothScroll"], "purpose": "唯一的 wheel 控制器把归一化位移传给 gate；放行后继续原有滚轮阻尼。" },
+    { "file": "src/views/ColorView.vue", "symbols": ["covered", "startObservers", "syncBodyMedia", "warmVideo", "releaseVideo", "playVideo", "onMediaMotionChange"], "purpose": "同文件的集成上下文：等待揭幕后触发文字 CSS 遮罩，管理正文播放器可见性；这些不属于 feedGate 算法。" }
+  ],
+  "mechanism": {
+    "trigger": "滚轮经 useSmoothScroll(feedGate) 输入，或首屏非控件上的单指纵向 touchmove；运动偏好、覆盖层与锁屏状态会限制接管。",
+    "stages": [
+      { "name": "累计", "description": "gateFed 在 0 至 intro.offsetHeight 内累计；progressP 取累计比例与实际 scrollY/首屏高的最大值并钳到 0..1。", "properties": ["gateFed", "gateTravel", "scrollP", "progressP"], "timing": "逐次输入计算，无固定入场时长。" },
+      { "name": "白条追赶", "description": "progressShown 用 1-exp(-dt/0.16) 追目标，写 --p 与 aria-valuenow；进度差小于 0.0015 即吸附并停止 RAF。", "properties": ["progressShown", "--p", "aria-valuenow", "progressIndex"], "timing": "时间常数 0.16s；单帧 dt 最多 0.1s。" },
+      { "name": "一次放行", "description": "累计到 travel-0.5 即 gateOpen；推满的这次输入仍消费，下一次才滚正文。实际 scrollY>1 也开闩，支持键盘、锚点与历史恢复。", "properties": ["gateOpen"], "timing": "本次页面实例内一次性开闩，返回首屏不重新锁住。" }
+    ],
+    "state": ["gateFed / gateOpen / scrollP / gateTravel", "progressShown / barRaf / barLast", "touchId / touchX / touchY", "reduceMotion / covered"],
+    "propertyOwnership": ["wheel 只有 useSmoothScroll 一个监听所有者，ColorView 只提供 gate 回调。", "白条显示只读 progressShown，不直接写 progressP；其 RAF 与页面滚轮阻尼是独立读数层。", "正文容器 .cview__media 的 CSS opacity 与 attachLoopFade 写 video.opacity 分层。"],
+    "interruption": ["触摸多指、横向主导、控件或 data-native-scroll 区域、不可取消事件以及覆盖/滚动锁不被闸门消费。", "reduce 模式停止白条 RAF 并直接对齐显示，不安装触摸闸门；useSmoothScroll 同样不接管滚轮。", "原生键盘、滚动条、锚点与程序化滚动直接放行；开闩不会随回顶重新关闭。"]
+  },
+  "integration": {
+    "steps": ["复用 ColorView 内 introRef、进度 ref/computed、feedGate、barFrame 与触摸监听，保留进度条模板的 --p 和 ARIA。", "传 feedGate 给现有 useSmoothScroll；不要再注册另一个 wheel 消费器。", "移植 gate 时单独识别同文件的媒体逻辑：300px 预热、25% 可见播放、幕布/索引暂停、离开预热释放 src，以及视频循环淡化均是正文媒体能力。", "保留 covered 与 routeCurtainActive 门禁；初始文字观察器需等待幕布不再覆盖再建立。"],
+    "inputs": ["首屏 offsetHeight", "归一化 wheel pixels", "单指 touch 的相邻纵向位移", "window.scrollY 与全局覆盖状态"],
+    "outputs": ["feedGate 返回 boolean：true 表示该次位移已消费。", "progressShown、progressIndex 与 gateOpen 供页面模板显示。"],
+    "dependencies": ["vue", "useSmoothScroll（内部使用 gsap/ScrollTrigger.update）", "requestAnimationFrame", "matchMedia", "页面全局幕布及过渡状态"],
+    "assets": ["闸门本身不需要媒体资源。", "同文件正文媒体来自 /color/color%20grade-N.mp4，poster 与首屏预览来自 /color-previews/；不应误当作闸门必需资产。"]
+  },
+  "accessibility": { "reducedMotion": "直接更新进度显示，停用平滑滚轮与触摸闸门；正文视频仅显示 poster，不自动播放。", "touch": "只消费首屏非控件的单指纵向手势；达到门限后还原原生惯性，不接管双指缩放。", "keyboard": "不拦键盘、锚点及滚动条，实际移动后直接开闩；进度条用 aria-valuenow 报告百分比。" },
+  "lifecycle": {
+    "setup": ["Vue watch(progressP) 驱动显示更新，挂载测量首屏并安装 scroll/resize 与按偏好启用的 touch 监听。", "同文件另行 watch covered 与 routeCurtainActive，建立文字/媒体观察器并同步播放器。"],
+    "cleanup": ["卸载取消白条 RAF、移除 scroll/resize/touch/matchMedia 监听；useSmoothScroll 自行卸载其控制器。", "页面同时释放覆盖 watch、文字和媒体观察器、循环淡化、视频地址及播放请求状态。"],
+    "knownLimitations": ["effect 核心仍嵌在完整 ColorView，直接复制该文件会同时带入正文、媒体和导航内容。", "只管理当前挂载实例的一次放行，重建页面会重新累计。", "无真实滚动时进度条推满仍需下一次手势才能离开首屏，这是当前消费契约。"]
+  },
+  "agentNotes": ["不要把同文件所有动效称为 GSAP：进度白条是 RAF，文字揭示是 CSS，循环淡化才直接使用 GSAP。", "正文媒体在被临时遮挡时仅暂停，真实离屏才 rewind；异步 play 使用 Symbol 防止过期回调错误更新拒播状态。", "现有 verify-wechat-color-media 主要检查媒体与触摸边界；白条手感仍需浏览器手动确认。"],
+  "relatedEffects": ["color-preview-trail", "video-loop-fade", "route-curtain", "text-line-reveal"],
+  "verification": { "commands": ["npm run typecheck", "node scripts/verify-wechat-color-media.mjs"], "manualChecks": ["从顶部分格滚动并触屏上滑，白条推满前正文不动，推满之后一次放行。", "使用 PageDown、锚点、拖滚动条再触摸，确认不会在正文重新被锁。", "开索引、切换页面及系统运动偏好后确认没有输入误消费，白条静止后 RAF 停止。"] },
+  "tags": ["vue", "scroll-gate", "raf", "progress", "touch", "media-lifecycle", "non-gsap-core"]
+}

@@ -1,0 +1,191 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "pointer-svg-trail",
+  "title": {
+    "zh": "历史指针 SVG 绘线",
+    "en": "Legacy pointer SVG trail"
+  },
+  "category": "pointer",
+  "status": "legacy",
+  "summary": "按真实指针历史采样生成多笔 SVG 二次贝塞尔路径，以时间淘汰旧点，尾部随轨迹老化自然消退。源码保留 createPointerTrail 工厂，但当前 src 中没有调用者，因此属于可供参考的历史实现，不代表网站正在运行的效果。未使用 GSAP。",
+  "entryFiles": [
+    "src/composables/usePointerTrail.ts"
+  ],
+  "integrationFiles": [],
+  "sourceSections": [
+    {
+      "file": "src/composables/usePointerTrail.ts",
+      "symbols": [
+        "pointsToPath",
+        "createPointerTrail",
+        "frame",
+        "onPointerMove",
+        "reset"
+      ],
+      "purpose": "采样、分笔、曲线路径生成、寿命与全局事件生命周期。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "调用工厂并 enable(true) 后，window 的非 touch pointermove；每个合并样本都需落在 host 的视口边界内。",
+    "stages": [
+      {
+        "name": "采样与分笔",
+        "description": "优先 getCoalescedEvents；每约 3px 存一个点，最新 head 独立记录。离开区域或首笔设置 move，使路径以新的 M 开始。视口点按 host 的布局尺寸和变换后 rect 比例转换。",
+        "properties": [
+          "points",
+          "head",
+          "breakNext",
+          "drawing"
+        ],
+        "timing": "事件驱动，最多 360 个存储点。"
+      },
+      {
+        "name": "曲线绘制",
+        "description": "按笔分组，使用当前点作 Q 控制点、相邻点中点作锚点，末段 L 连到最新 head，保证笔尖跟随最新坐标。",
+        "properties": [
+          "path.d"
+        ],
+        "timing": "有轨迹时每 RAF 重算；不依赖 GSAP。"
+      },
+      {
+        "name": "消退与静止",
+        "description": "保留最近 1400ms 的点，整条路径 opacity 由最新点剩余寿命决定，最后 250ms 淡出；无点时清空 d、调用 onRest 并停止循环。",
+        "properties": [
+          "path.d",
+          "path.opacity",
+          "drawing"
+        ],
+        "timing": "LIFE=1400ms、FADE=250ms；并非停止后等待 250ms 即开始淡出。"
+      }
+    ],
+    "state": [
+      "enabled 默认 false",
+      "drawing / breakNext",
+      "points / head / raf",
+      "AbortController / ResizeObserver"
+    ],
+    "propertyOwnership": [
+      "frame 独占活动绘制期 path.d 和 path.opacity；reset 负责清空与复原。",
+      "宿主负责 SVG 描边、定位及开场曲线；onDraw/onRest 只提供状态回调，不内建另一条曲线动画。"
+    ],
+    "interruption": [
+      "enable(false)、尺寸变化、捕获阶段 scroll 和 window blur 都 reset，避免旧局部坐标轨迹漂移。",
+      "host pointerleave 与样本越界双重断笔，再进入不会跨画面连直线。",
+      "destroy 中止所有 signal 监听、断开尺寸观察、取消 RAF 并清空 d。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "当前没有运行中的宿主；如需重新启用，创建具有明确坐标尺寸的 host 与覆盖 SVG/path。",
+      "调用 createPointerTrail(host,svg,path,onDraw,onRest)，由宿主在入场结束且允许动态时 enable(true)。",
+      "宿主负责 reduced-motion、页面可见性和 viewport/覆盖层门禁；停用时 enable(false)，卸载时 destroy。",
+      "保留 host 覆盖层的 pointer-events 策略与完整 CSS 描边；不要将历史固定开场曲线误当本算法输出。"
+    ],
+    "inputs": [
+      "host: HTMLElement",
+      "svg: SVGSVGElement",
+      "path: SVGPathElement",
+      "onDraw: () => void",
+      "onRest: () => void"
+    ],
+    "outputs": [
+      "{ enable(value:boolean), destroy() }",
+      "一笔首次开始时 onDraw，轨迹完全静止或 reset 时 onRest。"
+    ],
+    "dependencies": [
+      "Pointer Events 与可选 getCoalescedEvents",
+      "SVG",
+      "requestAnimationFrame",
+      "ResizeObserver",
+      "AbortController"
+    ],
+    "assets": [
+      "无固定资产；需要调用方提供 host/SVG/path 与 stroke 样式。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "本函数没有内部 matchMedia；宿主必须自行禁用，当前无宿主负责此策略。",
+    "touch": "明确跳过 pointerType=touch；pen 未排除。",
+    "keyboard": "纯装饰绘线，无键盘输入能力；宿主应将 SVG 标注 aria-hidden，不能以其承载必要信息。"
+  },
+  "lifecycle": {
+    "setup": [
+      "调用即创建 ResizeObserver，监听 pointermove、host pointerleave、blur 与 capture scroll；初始不采样。",
+      "尺寸观察更新 SVG viewBox 到 host.clientWidth/clientHeight 并清空旧轨迹。"
+    ],
+    "cleanup": [
+      "enable(false) reset；最终 destroy 释放事件、尺寸观察与 RAF，清空路径。"
+    ],
+    "knownLimitations": [
+      "当前全 src 仅有定义无引用，不应标注 active 或声称已有集成测试验证运行效果。",
+      "缺少内部减少动态、标签页可见性和覆盖状态策略，重新接入前由宿主补齐。",
+      "destroy 清空 d，但不调用 onRest 或复位 opacity；宿主不能依赖 destroy 触发视觉恢复。"
+    ]
+  },
+  "agentNotes": [
+    "legacy 表示当前未接入，不表示可以不读源码即删除。",
+    "不要替换为整条固定曲线 translate；此效果的形状来自真实历史点。",
+    "注释中可能提到已移除的旧验证段，当前仓库没有对应专门回归脚本。"
+  ],
+  "relatedEffects": [
+    "action-cursor",
+    "color-preview-trail"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "rg -n createPointerTrail src"
+    ],
+    "manualChecks": [
+      "重新接入宿主后快速画 S 与圆，检查合并样本与笔尖位置。",
+      "移出再进入应另起一笔；滚动、缩放 host、blur 与禁用应清空轨迹。",
+      "停止绘制等待 1.4s，检查轨迹淡出、onRest 仅调用一次及 RAF 停止。"
+    ]
+  },
+  "tags": [
+    "legacy",
+    "svg",
+    "pointer",
+    "raf",
+    "bezier",
+    "non-gsap",
+    "unreferenced"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组合函数/指针矢量轨迹.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [],
+  "sources": [
+    {
+      "original": "src/composables/usePointerTrail.ts",
+      "path": "源码/项目源码/组合函数/指针矢量轨迹.ts",
+      "role": "entry",
+      "originalSha256": "be4167ca0742b676074c25db7b305afdb24898bf361c0a92da82bc51198b93ce",
+      "originalBytes": 9769,
+      "sha256": "be4167ca0742b676074c25db7b305afdb24898bf361c0a92da82bc51198b93ce",
+      "bytes": 9769
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    }
+  ]
+}

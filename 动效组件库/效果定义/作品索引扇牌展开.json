@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "card-list-expand",
+  "title": {
+    "zh": "作品索引扇牌展开",
+    "en": "Work-index fanned card expansion"
+  },
+  "category": "card",
+  "status": "active",
+  "summary": "/cards 的六张扇形牌堆使用每卡独立 CSS 变量配置缩放、旋转、缓动与原点。点击或键盘激活先展开当前卡，再导航至对应子页并交由全局路由幕布覆盖；该展开本身没有 GSAP。",
+  "entryFiles": [
+    "src/views/CardListView.vue"
+  ],
+  "integrationFiles": [
+    "src/composables/useTransition.ts",
+    "src/composables/usePageCurtain.ts",
+    "src/App.vue",
+    "src/router/index.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/views/CardListView.vue",
+      "symbols": [
+        "cardAnimations",
+        "onCardClick",
+        "expandingId",
+        "expansionTimer"
+      ],
+      "purpose": "每卡配置、CSS 变量注入、延迟导航及卸载计时器清理。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "对带 role=button 的卡片 click、Enter 或 Space；isTransitioning 或 routeCurtainActive 为 true 时忽略。",
+    "stages": [
+      {
+        "name": "fan",
+        "description": "桌面卡以 i*fan-x、i*fan-y 扇开，rotateX=6deg，z=0；层级 10-i 保证看到哪张点哪张。",
+        "properties": [
+          "--i",
+          "transform",
+          "z-index"
+        ],
+        "timing": "静态构图；常态 hover 阴影/边框 .3s。"
+      },
+      {
+        "name": "expand",
+        "description": "读取当前卡配置为 CSS 自定义属性，加 card--expanding，将卡移至 (0,0,60px) 并旋转缩放。",
+        "properties": [
+          "--card-scale",
+          "--card-rotate",
+          "--card-duration",
+          "--card-easing",
+          "--card-origin",
+          "transform"
+        ],
+        "timing": "01:1.4/-8deg/.5s；02:1.2/6deg/.6s；03:1.6/-12deg/.45s；04:1.35/10deg/.55s；05:1.5/-5deg/.5s；06:1.25/14deg/.65s。"
+      },
+      {
+        "name": "handoff",
+        "description": "按当前卡秒数设定 setTimeout；结束走 jumpPathFor 并携带 query.from=cards；PageCurtain 的守卫负责真正换页。",
+        "properties": [
+          "isTransitioning",
+          "expandingId",
+          "html.no-scroll"
+        ],
+        "timing": "duration*1000 毫秒；减少动态模式等待 0ms。"
+      }
+    ],
+    "state": [
+      "expandingId: string|null",
+      "isTransitioning 共享点击锁",
+      "expansionTimer 存当前延迟导航"
+    ],
+    "propertyOwnership": [
+      "本页只写每张 .card 的 CSS 变量和 expanding 类。",
+      "路由幕布及导航失败恢复由 App 持有。"
+    ],
+    "interruption": [
+      "卸载清 expansionTimer，历史导航打断后旧页不再发起 push。",
+      "计时器回调若发现 routeCurtainActive 已开启就放弃旧导航。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "保留配置数组作为独立动效参数的唯一来源。",
+      "使用 event.currentTarget 定位目标卡，不依赖 v-for ref 数组顺序。",
+      "接入统一 jumpPathFor 映射与 App/PageCurtain；不要拼旧 /card/NN。",
+      "保留 query.from=cards，让子页返回入口指向作品索引。"
+    ],
+    "inputs": [
+      "CardAnimation 配置：id/title/label/scale/rotate/duration/easing/origin",
+      "click/keydown Event"
+    ],
+    "outputs": [
+      "router.push({path:jumpPathFor(id),query:{from:'cards'}})",
+      "no-scroll 与 isTransitioning 交接"
+    ],
+    "dependencies": [
+      "vue",
+      "vue-router",
+      "useTransition",
+      "usePageCurtain"
+    ],
+    "assets": [
+      "无需外部图像；扇牌由 CSS 渐变、文字和边框组成。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "CSS 禁用 transition 和展开 transform，JS 导航等待降为 0。",
+    "touch": "<=760px 宽或 <=550px 高改两列文档流，避免末张卡被舞台裁掉；返回链接触控高度>=44px。",
+    "keyboard": "每卡 tabindex=0、role=button、aria-label，Enter/Space 与点击共用入口。"
+  },
+  "lifecycle": {
+    "setup": [
+      "组件实例创建 router、expandingId 与 timer；交互时注入变量并设置 no-scroll。"
+    ],
+    "cleanup": [
+      "onBeforeUnmount clearTimeout；滚动锁与共享状态交给 App 导航恢复流程。"
+    ],
+    "knownLimitations": [
+      "不是可单独消费的 GSAP class；整页同时包含标题、扇牌布局与导航。",
+      "独立使用时需要宿主负责撤销 no-scroll 和 isTransitioning，否则失败导航可能保留锁。",
+      "手机布局保留每卡不同缩放与旋转，但没有桌面的 translateZ=60px 构图。"
+    ]
+  },
+  "agentNotes": [
+    "scale/rotate/duration 的顺序在 timing 中固定为比例/角度/秒。",
+    "本效果只负责导航前的局部 CSS 展开；route-curtain 定义跨页面的视觉遮罩。"
+  ],
+  "relatedEffects": [
+    "route-curtain",
+    "gallery-focus"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-runtime-navigation.mjs"
+    ],
+    "manualChecks": [
+      "在 /cards 逐卡激活，核对六个不同展开轨迹与落点。",
+      "展开未结束时后退，确认没有迟到 push。",
+      "窄屏/短屏检查六张入口全部可见且键盘可达。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "css-transition",
+    "card",
+    "fan",
+    "navigation",
+    "no-gsap"
+  ]
+}

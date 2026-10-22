@@ -1,0 +1,306 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "about-scroll-reveal",
+  "title": {
+    "zh": "数据标记滚动揭示控制器",
+    "en": "Data attribute scroll reveal controller"
+  },
+  "category": "scroll",
+  "status": "active",
+  "summary": "以 data 属性集中创建单元素、分组错峰、章节线条和成果数字入场，并保留聊天气泡的双轴展开分支。通用揭示和聊天使用两个 GSAP context，编辑对照另有独立 matchMedia 句柄；当前直接集成在海报页与摄影页。",
+  "entryFiles": [
+    "src/composables/useAboutReveal.ts"
+  ],
+  "integrationFiles": [
+    "src/views/PosterView.vue",
+    "src/views/PhotoView.vue",
+    "src/components/about/AboutSection.vue",
+    "src/composables/setupEditorialScroll.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/composables/useAboutReveal.ts",
+      "symbols": [
+        "MOTIONS",
+        "motionOf",
+        "setupAboutReveal",
+        "buildReveal",
+        "revealTween",
+        "bucket"
+      ],
+      "purpose": "最近的 data-motion 决定机制，分组元素按机制分桶，同一组允许多个揭示样式。"
+    },
+    {
+      "file": "src/composables/useAboutReveal.ts",
+      "symbols": [
+        "buildChat",
+        "tlItem",
+        "tlBubble",
+        "syncItem",
+        "bubbleClosed"
+      ],
+      "purpose": "聊天条目透明度与气泡裁切分轴，收完气泡后才允许条目反向退出。"
+    },
+    {
+      "file": "src/composables/useAboutReveal.ts",
+      "symbols": [
+        "ctxReveal",
+        "ctxChat",
+        "countEls",
+        "rebuildChat",
+        "dispose"
+      ],
+      "purpose": "语言变化只重建聊天，卸载时恢复手写数字文本，并按 pin→chat→reveal 顺序清理。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "单元素 top 88%、分组 top 84%、线条 top 94%、成果数字所在 .work 或自身 top 84%；通用元素和线条 once，数字只正向播放。finishAt 可改用 createViewportEntrance。",
+    "stages": [
+      {
+        "name": "reveal",
+        "description": "rise 上移26px；slide 从左46px；wipe 从右裁100%展开；scale 从0.94落位；fade 只淡入。",
+        "properties": [
+          "opacity",
+          "x",
+          "y",
+          "scale",
+          "clipPath"
+        ],
+        "timing": "通用补间 1秒、power3.out；组内错峰0.08秒。可选页面标题为 y:80→0/opacity:0→1，1.5秒。"
+      },
+      {
+        "name": "rule-and-count",
+        "description": "章节线左锚点横向展开；数字使用0→1对象代理，每帧重新解析当前语言的 data-count-value。",
+        "properties": [
+          "rule.scaleX:0→1",
+          "proxy.v:0→1",
+          "element.textContent"
+        ],
+        "timing": "线条0.9秒 power3.out；数字1.15秒 power2.out。"
+      },
+      {
+        "name": "chat-item",
+        "description": "top86%先显示条目；打字点只在输入阶段运动。",
+        "properties": [
+          "item.opacity:0→1",
+          "typing-dot.y:0↔-6"
+        ],
+        "timing": "条目0.4秒 power2.out；打字点0.3秒、0.15秒错峰、无限yoyo，但由气泡状态控制暂停。"
+      },
+      {
+        "name": "chat-bubble",
+        "description": "top76%启动：打字点让位，气泡由四边38%的小块先横向、再纵向展开，最后整句出现。",
+        "properties": [
+          "typing.opacity",
+          "bubble.clipPath",
+          "text.opacity"
+        ],
+        "timing": "打字层于0.02秒开始淡出0.18秒；横展0.02–0.42秒；纵展0.42–0.88秒；整句0.56–0.90秒。两段clipPath不重叠。"
+      }
+    ],
+    "state": [
+      "ctxReveal",
+      "ctxChat",
+      "countEls",
+      "bubbleClosed",
+      "itemTrigger",
+      "dots",
+      "cancelRefresh"
+    ],
+    "propertyOwnership": [
+      "通用揭示只写明确标记 data-reveal 的节点；wipe 不对可拖动照片槽位使用，避免裁掉溢出。",
+      "数字 textContent 由代理 onUpdate 写入，data-count-value 由 Vue 保存当前语言原文。",
+      "morph 图版没有 data-reveal；clipPath 归 setupEditorialScroll，不在此处重复写。",
+      "聊天气泡的两段 clipPath 使用完整一致的 inset 参数，第二段 immediateRender:false。"
+    ],
+    "interruption": [
+      "聊天反向时先收气泡，onReverseComplete 读取 itemTrigger 当前 scroll/start 判断条目是否退出，避免历史布尔请求在快速折返时误退。",
+      "切语言调用 rebuildChat，仅 revert 聊天分支；通用揭示和数字不重建。",
+      "减少动态由调用者在初始化时以 reduceMotion 选项传入；editorial 的偏好变化由其独立 matchMedia 处理。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "页面加载幕撤掉并解除滚动锁后，用真实页面根调用 setupAboutReveal。",
+      "元素添加 data-reveal；组容器添加 data-reveal-stagger；在近祖先 data-motion 指定 rise/slide/wipe/scale/fade。",
+      "成果数字同时绑定 data-count 与当前语言原文 data-count-value；换语言若存在聊天分支，在 DOM 更新后调用 rebuildChat。",
+      "页面卸载调用返回句柄 dispose；editorial 已由句柄统一管理，不要再对同一 root 重复 setupEditorialScroll。"
+    ],
+    "inputs": [
+      "root: HTMLElement",
+      "opts.reduceMotion?:boolean",
+      "opts.title?:HTMLElement|null",
+      "opts.finishAt?:number",
+      "data-reveal/data-reveal-stagger/data-motion/data-count/data-count-value DOM约定",
+      "可选 .chat-item/.bubble/.typing/.bubble__tx DOM结构"
+    ],
+    "outputs": [
+      "AboutRevealHandle.rebuildChat()",
+      "AboutRevealHandle.dispose()",
+      "元素内联样式及数字 textContent"
+    ],
+    "dependencies": [
+      "gsap",
+      "gsap/ScrollTrigger",
+      "src/composables/setupEditorialScroll.ts",
+      "src/utils/motionLayout.ts",
+      "src/utils/viewportEntrance.ts"
+    ],
+    "assets": [
+      "控制器无图片资源；依赖页面提供符合选择器的内容 DOM。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "reduceMotion=true 不建通用/数字/聊天补间；CSS须保留内容终态。该布尔值是初始化快照，后续变更需由页面管理。",
+    "touch": "不接管滚轮与触摸；wipe 会裁切盒外内容，因此可拖动照片应使用 scale 等不裁切机制。",
+    "keyboard": "无自定义键盘逻辑；不能在 wipe 节点中放置需要溢出显示的焦点环或固定/粘性后代。"
+  },
+  "lifecycle": {
+    "setup": [
+      "setupAboutReveal 创建 scoped ctxReveal 和 ctxChat，随后登记独立 setupEditorialScroll；布局刷新请求统一合并。"
+    ],
+    "cleanup": [
+      "dispose 取消待刷新任务，先 editorial.dispose 撤 pin，再 ctxChat.revert 和 ctxReveal.revert。",
+      "GSAP revert 后重新以 data-count-value 写回数字原文，防止对象代理归零造成0值残留。"
+    ],
+    "knownLimitations": [
+      "聊天是保留的选择器分支；没有相应 DOM 时不会产生聊天效果，不能假设当前每个页面都呈现该结构。",
+      "wipe 为 clip-path，会改变包含块和裁切命中区域；源码明确不适用于含 sticky/fixed 后代或需要拖出边界的节点。",
+      "ReferenceIntroduction、人物照片和空间海报由各自组件管理，不应再全部加 data-reveal。"
+    ]
+  },
+  "agentNotes": [
+    "函数名包含 About，但当前 AboutView 已采用组件各自管理动效；当前直接调用者以 integrationFiles 为准。",
+    "数字数据不可改成反向播放；换语言不可对 ctxReveal 执行 revert 后只重建聊天。"
+  ],
+  "relatedEffects": [
+    "text-line-reveal",
+    "editorial-wipe",
+    "photo-chapter-wipe"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "npm run build"
+    ],
+    "manualChecks": [
+      "混用多个 data-motion 的错峰组按各自机制出现。",
+      "数字演完后回顶部换语言，再回数字区仍为正确语言和完整终值。",
+      "如使用聊天DOM，快速上下折返验证气泡先收完、条目再退出。",
+      "离开页面后无 pin-spacer 或文字归零残留。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "ScrollTrigger",
+    "data-attributes",
+    "stagger",
+    "counter",
+    "chat",
+    "clip-path"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组合函数/数据标记揭示控制.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/composables/setupEditorialScroll.ts",
+      "path": "源码/项目源码/组合函数/编辑版面滚动控制.ts",
+      "role": "dependency",
+      "originalSha256": "ec3f1016c9c7ca41a43cf01d6b9678a57edc3478b1e00cb7a15eebb32e069d1b",
+      "originalBytes": 9515,
+      "sha256": "8d958dda15929f170c5675db9863b59a01dd965efc90971dea5ae593648517a1",
+      "bytes": 9522
+    },
+    {
+      "original": "src/composables/useAboutReveal.ts",
+      "path": "源码/项目源码/组合函数/数据标记揭示控制.ts",
+      "role": "entry",
+      "originalSha256": "d92ec43cadd7fb8e9942dbcc132f94538f2f48386f89bb450875e7ff74eaa3e9",
+      "originalBytes": 27185,
+      "sha256": "1d761144ace56445d1a5d893053c493f809c3c71c4f5e70060fc2b32d5b166f8",
+      "bytes": 27199
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/motionLayout.ts",
+      "path": "源码/项目源码/工具/动效布局调度.ts",
+      "role": "dependency",
+      "originalSha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "originalBytes": 3222,
+      "sha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "bytes": 3222
+    },
+    {
+      "original": "src/utils/viewportEntrance.ts",
+      "path": "源码/项目源码/工具/视口入场控制.ts",
+      "role": "dependency",
+      "originalSha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "originalBytes": 1233,
+      "sha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "bytes": 1233
+    },
+    {
+      "original": "src/views/PosterView.vue",
+      "path": "集成示例/项目源码/页面/海报作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "61cb26ac58819bcc1deb631a6ac6d60765e63670f712ff28f426ab19517137fd",
+      "originalBytes": 12143,
+      "sha256": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+      "bytes": 12234
+    },
+    {
+      "original": "src/views/PhotoView.vue",
+      "path": "集成示例/项目源码/页面/摄影作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "1def0b25e43fde58989fd906e1e38e7d8c5f5591e265ca9195ec9800cd1535a3",
+      "originalBytes": 18541,
+      "sha256": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+      "bytes": 18629
+    },
+    {
+      "original": "src/components/about/AboutSection.vue",
+      "path": "集成示例/项目源码/组件/人物与作品/作品章节容器.vue",
+      "role": "integration-context",
+      "originalSha256": "b414b574bb9540982df1aaee84f56178619c33450e1d036ea63e2f8185480ac2",
+      "originalBytes": 3270,
+      "sha256": "e45810410e6d0c9f6fc8f36f37a307a1145f4c812329ed7d46d7459be26c7db4",
+      "bytes": 3269
+    }
+  ]
+}

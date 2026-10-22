@@ -1,0 +1,17 @@
+{
+  "siteName": { "zh": "示例求职者的求职作品集", "en": "Example Candidate · Portfolio" },
+  "image": "/color-previews/clip-1.jpg",
+  "imageAlt": { "zh": "求职作品集中的影像调色作品画面", "en": "A colour grading still from the portfolio" },
+  "routes": [
+    { "path": "/", "title": { "zh": "示例求职者的求职作品集｜影像、设计与创意", "en": "Example Candidate · Film, Design & Creative Work" }, "description": { "zh": "示例求职者的求职作品集：了解个人经历，浏览视频剪辑、影像调色、新闻影像、海报设计与摄影作品。", "en": "Explore Example Candidate's experience and selected film editing, colour grading, news, poster design and photography work." } },
+    { "path": "/cards", "title": { "zh": "作品目录｜示例求职者的求职作品集", "en": "Work Index · Example Candidate" }, "description": { "zh": "从六个作品章节进入示例求职者的个人介绍、视频剪辑、影像调色、新闻影像、海报与摄影作品。", "en": "Browse six portfolio chapters: about, film editing, colour grading, news, posters and photography." } },
+    { "path": "/about", "title": { "zh": "关于我与求职简历｜示例求职者", "en": "About & Résumé · Example Candidate" }, "description": { "zh": "了解示例求职者的学习与实习经历、创作技能、AI 辅助工作流、求职简历和公开联系方式。", "en": "Read Example Candidate's education, internship experience, creative skills, AI-assisted workflow, résumé and contact details." } },
+    { "path": "/edit", "title": { "zh": "视频剪辑作品｜示例求职者", "en": "Film Editing · Example Candidate" }, "description": { "zh": "示例求职者的视频剪辑作品章节，从素材选择、节奏组织与声音设计认识影像叙事方法。", "en": "Explore film editing through shot selection, pacing, sound design and visual storytelling." } },
+    { "path": "/color", "title": { "zh": "影像调色作品｜示例求职者", "en": "Colour Grading · Example Candidate" }, "description": { "zh": "浏览示例求职者的影像调色成片与轻量预览，了解色彩、对比度与影调如何服务画面情绪。", "en": "View colour grading films and previews, exploring how colour, contrast and tone shape a scene's mood." } },
+    { "path": "/news", "title": { "zh": "新闻影像作品｜示例求职者", "en": "News & Stories · Example Candidate" }, "description": { "zh": "示例求职者的新闻影像作品章节，关注现场记录、信息组织与真实故事的影像表达。", "en": "Explore news and documentary storytelling through field recording, information structure and visual expression." } },
+    { "path": "/poster", "title": { "zh": "海报与版面设计｜示例求职者", "en": "Posters & Design · Example Candidate" }, "description": { "zh": "浏览示例求职者的实习海报、个人版面与设计练习，了解图像、文字和空间的编排。", "en": "Browse internship posters, personal layouts and design studies in image, typography and composition." } },
+    { "path": "/photo", "title": { "zh": "摄影作品｜示例求职者", "en": "Photography · Example Candidate" }, "description": { "zh": "示例求职者的摄影作品与精选图集，以色彩、光线和日常观察串联不同影像章节。", "en": "Explore selected photography and collections connected by colour, light and everyday observation." } }
+  ],
+  "legacyPaths": { "/card/01": "/about", "/card/02": "/edit", "/card/03": "/color", "/card/04": "/news", "/card/05": "/poster", "/card/06": "/photo" },
+  "notFound": { "title": { "zh": "页面未找到｜示例求职者的求职作品集", "en": "Page Not Found · Example Candidate" }, "description": { "zh": "这个页面不存在，可能是链接有误或页面已被移除。你可以返回作品集首页或浏览作品目录。", "en": "This page could not be found. Return to the portfolio home or browse the work index." } }
+}

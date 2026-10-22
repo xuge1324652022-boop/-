@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "color-preview-trail",
+  "title": { "zh": "指针轨迹视频遮罩预览", "en": "Pointer video preview trail" },
+  "category": "mask",
+  "status": "active",
+  "summary": "调色页首屏沿主指针轨迹弹出轻量视频：固定位置外框、polygon 揭示层和缩放内容层分工，最多保留五个预览；离场或被遮挡时依次缩回并释放播放器。标题另用 quickTo 轻微跟随。这是 Vue 页面中的组合效果，尚未封装为独立包。",
+  "entryFiles": ["src/components/color/ColorWave.vue"],
+  "integrationFiles": ["src/views/ColorView.vue"],
+  "sourceSections": [
+    { "file": "src/components/color/ColorWave.vue", "symbols": ["spawn", "retire", "retireAll"], "purpose": "三层 DOM 的定位、揭示、FIFO 退休与媒体源管理。" },
+    { "file": "src/components/color/ColorWave.vue", "symbols": ["onMove", "onPointerDown", "onPointerEnd", "syncLive", "setupField"], "purpose": "距离及频率门限、主触点边界、标题跟随和可见性门禁。" },
+    { "file": "src/views/ColorView.vue", "symbols": ["PREVIEWS", "covered"], "purpose": "提供轻量预览素材、标题插槽和全局幕布状态。" }
+  ],
+  "mechanism": {
+    "trigger": "active prop 为真、首屏交叉比例至少 0.4、页面可见、无索引覆盖且未要求减少动态时，采集舞台内 pointermove。",
+    "stages": [
+      { "name": "采样", "description": "鼠标累计移动 80px、触屏 56px 后弹下一项，每次事件最多一项，至少间隔 90ms；累计余量最多存一格。", "properties": ["acc", "lastSpawnAt", "spawnSeq"], "timing": "事件驱动；无常驻 ticker。" },
+      { "name": "揭示", "description": "视口坐标换算为 root 局部坐标并按素材大小留 20px 边距钳位。外层一次定位，中层从中心竖线展开至全幅，内容 scale 0.7071 到 1。", "properties": ["item.x", "item.y", "item.opacity", "mask.clipPath", "content.scale"], "timing": "clipPath 与 scale 同时 0.5s，power4.out；标题 quickTo 为 0.8s、power3.out。" },
+      { "name": "保留与退休", "description": "最多五个活跃项，新增时最旧项退休；离场从旧到新错开收回。退休开始即暂停保留末帧，clipPath 收回中心、scale 缩到 0，尾段才淡透明，结束移除 src 并 load。", "properties": ["mask.clipPath", "content.scale", "item.opacity", "video.src"], "timing": "退休 0.5s、power2.in；淡出在退休进度 55% 后开始；整体退休错峰 0.07s。" }
+    ],
+    "state": ["active / inViewport / mounted", "spawnSeq 与 alive FIFO", "acc / hasLast / touchPointerId", "setters / io / classObserver"],
+    "propertyOwnership": ["外框负责固定落点和退休 opacity；mask 独占 clipPath；content 独占 scale。", "标题插槽的文字揭示归 ColorView 的 CSS，整层 x/y 跟随归 ColorWave 的 quickTo。", "spawn 和 retire 切换前 kill 同一层旧 tween，不把 clipPath 与 scale 合并到同一 DOM。"],
+    "interruption": ["active=false、离开首屏、隐藏标签页或索引覆盖调用 stopLive，停止采样并整体退休。", "指针离开舞台或文档会断开轨迹并归零标题。触屏抬手只断开本笔采样，已弹出的预览仍按正常规则保留。", "复用同一素材前取消旧 tween；切换 reduced-motion 后同步停用，并将退休时间归零。"]
+  },
+  "integration": {
+    "steps": ["在具有明确宽高和裁切边界的首屏容器内挂载 ColorWave。", "传 clips；通过默认 slot 提供标题，页面负责标题字号与逐行遮罩。", "把幕布、索引等覆盖状态合并到 active；不要只依赖 IntersectionObserver 判断可用性。"],
+    "inputs": ["clips: readonly { src, previewSrc?, poster? }[]", "active?: boolean，默认 true", "默认 slot：标题 DOM"],
+    "outputs": ["无 emits；只在本组件 DOM 内显示预览并管理对应视频资源。"],
+    "dependencies": ["vue", "gsap", "Pointer Events", "IntersectionObserver", "MutationObserver", "matchMedia"],
+    "assets": ["调用方传入的轻量 video 与 poster；当前 /color-previews/clip-N.mp4 和 /color-previews/clip-N.jpg。", "预览构建入口 scripts/build-color-previews.py；媒体不由此效果代码自动生成。"]
+  },
+  "accessibility": { "reducedMotion": "初始 reduce 时只监听偏好变化，不注册指针与几何观察器；所有预览保持隐藏，保留静态标题。", "touch": "只采集舞台内非控件上的主触点；第二指、抬手和 pointercancel 断笔；不 preventDefault，原生滚动由页面决定。", "keyboard": "预览是非交互装饰，不代替作品入口；键盘访问正文作品与导航。" },
+  "lifecycle": {
+    "setup": ["onMounted 根据运动偏好建立字段，收集 item，创建标题 quickTo，监听指针、可见性及 html class。", "IntersectionObserver 阈值 [0,0.4,0.6,1] 与 active prop 共同控制采集。"],
+    "cleanup": ["卸载断开两种观察器、移除所有事件与运动偏好监听。", "kill 标题及各层 tween，暂停所有视频，移除 src 并 load，清空 alive。"],
+    "knownLimitations": ["依赖 window/document，当前并非 SSR 安全的通用 composable。", "池数量由 clips 决定；少于五条时轮转更快，复用同一项会取消它旧的退休过程。", "窄舞台小于素材加边距时钳位仍可能由父级 overflow 裁切；移植需重新核对尺寸。"]
+  },
+  "agentNotes": ["源码中参考站与历史实现的长注释仅作背景，以当前常量和执行分支为准。", "不要加入随机落点或按距离淘汰；当前行为是固定坐标、五项 FIFO。", "本效果的预览视频与正文 /color/ 成片是两条资源生命周期。"],
+  "relatedEffects": ["color-scroll-gate", "video-loop-fade", "action-cursor", "route-curtain"],
+  "verification": { "commands": ["npm run typecheck", "node scripts/verify-wechat-color-media.mjs"], "manualChecks": ["在 /color 首屏快速画线，确认五项上限、旧项完整缩回及新项顶层显示。", "滚出再返回、切换标签页、打开索引、触屏双指和运动偏好切换后检查无隐藏视频继续播放。", "页面部分滚动后再滑动，确认预览坐标仍落在首屏局部位置。"] },
+  "tags": ["vue", "gsap", "clip-path", "video", "pointer", "fifo", "lazy-media"]
+}

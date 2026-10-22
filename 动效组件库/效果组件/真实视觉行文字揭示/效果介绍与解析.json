@@ -1,0 +1,359 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "text-line-reveal",
+  "title": {
+    "zh": "真实视觉行文字揭示",
+    "en": "Visual line text reveal"
+  },
+  "category": "text",
+  "status": "active",
+  "summary": "共享双语介绍组件，按最终排版的真实行切分。标题从行遮罩底部上移，正文用段落与行的独立淡入位移。页面门禁、视口预热与播放触发相互分离；字体、语言和排版变化后延续已播放进度，避免重读内容再次隐藏。",
+  "entryFiles": [
+    "src/components/ReferenceIntroduction.vue",
+    "src/components/ReferenceIntroduction.ts"
+  ],
+  "integrationFiles": [
+    "src/views/AboutView.vue",
+    "src/views/PosterView.vue",
+    "src/views/PhotoView.vue",
+    "src/views/ColorView.vue",
+    "src/views/FoundationView.vue",
+    "src/components/about/AboutSection.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/ReferenceIntroduction.vue",
+      "symbols": [
+        "setup",
+        "arm",
+        "play",
+        "playParagraph",
+        "completeParagraph"
+      ],
+      "purpose": "建立 SplitText 行与暂停时间线，根据整块、逐段或父级 reveal 信号触发一次。"
+    },
+    {
+      "file": "src/components/ReferenceIntroduction.vue",
+      "symbols": [
+        "queuePreparation",
+        "rememberProgress",
+        "rebuild",
+        "clear",
+        "onResize"
+      ],
+      "purpose": "按近屏距离排队测量；排版改变时保存 totalTime，撤销旧分行并重建。"
+    },
+    {
+      "file": "src/components/ReferenceIntroduction.ts",
+      "symbols": [
+        "referenceIntroductionGate",
+        "referenceIntroductionFinishAt",
+        "referenceIntroductionPace"
+      ],
+      "purpose": "通过 Vue InjectionKey 提供页面可播门禁、可选收尾线与节奏倍率。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "IntersectionObserver 使用 500px 预热边距；默认 ScrollTrigger 在 top 80% 触发一次。reveal 为明确布尔值时由父级判断位置；finishAt 启用 createViewportEntrance 的入场与收尾守卫。active 和注入 gate 必须同时放行。",
+    "stages": [
+      {
+        "name": "prepare",
+        "description": "prepareMotionLayout 调度 SplitText.create，type 为 lines、autoSplit 为 true；中文使用零可见空格的断词正则，aria 为 auto。",
+        "properties": [
+          "SplitText lines",
+          "prepared"
+        ],
+        "timing": "近屏预热或 reveal=true 主动请求；每帧由共享队列准备一个组件。"
+      },
+      {
+        "name": "title",
+        "description": "treatment=title 才创建 mask:lines，真实行由下方移至原位。",
+        "properties": [
+          "line.yPercent:100→0"
+        ],
+        "timing": "每行 0.8×pace 秒，错峰 0.08×pace 秒，power3.out；整块模式跨段累计前面的行数。"
+      },
+      {
+        "name": "paragraph",
+        "description": "正文保持段落排版，同时推进段落和内部视觉行。unit 在宽度大于 900px 时为视口宽/144，否则为 10px。",
+        "properties": [
+          "paragraph.opacity:0→1",
+          "paragraph.y:5×unit→0",
+          "line.opacity:0→1",
+          "line.y:6×unit→0"
+        ],
+        "timing": "段落 pace 秒，内部行 0.8×pace 秒、错峰 0.08×pace 秒；revealBy=paragraph 时各段独立触发、不累计前段延迟。"
+      },
+      {
+        "name": "preserve",
+        "description": "重排记录各动画 totalTime，已完成的段直接保持可读终态。",
+        "properties": [
+          "animations.totalTime",
+          "finished",
+          "paragraphStarted",
+          "hasPlayed"
+        ],
+        "timing": "语言/处理方式/逐段模式更新前清理，nextTick 后重建；字体相关 CSS 值改变时重建。"
+      }
+    ],
+    "state": [
+      "prepared",
+      "hasPlayed",
+      "paragraphStarted",
+      "finished",
+      "resumeTimes",
+      "nearViewport",
+      "rebuildVersion",
+      "dead"
+    ],
+    "propertyOwnership": [
+      "此组件拥有 .reference-introduction__copy 及 SplitText 行的 opacity/y/yPercent。",
+      "标题遮罩由 SplitText 创建；调用页面负责外部容器布局与 gate，避免再对同一行节点加揭示控制器。"
+    ],
+    "interruption": [
+      "未播放时 gate 关闭会 disarm，避免一次性触发器在加载幕下被消耗。",
+      "重排保存已走过的秒数；hasPlayed 只阻止再次触发，不会强制尚未完成的内容跳到结尾。",
+      "异步重建使用 rebuildVersion 与 dead 排除旧任务；finishAt 允许快滚后直接落到终态。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在 Vue 页面导入 ReferenceIntroduction.vue，传入 string 或 {zh,en} 文本。",
+      "页面使用 provide(referenceIntroductionGate, readonlyRef) 关联加载幕和路由状态；不提供时默认放行。",
+      "短标题选择 treatment=title；常规介绍保留 paragraph。逐段阅读可选择 revealBy=paragraph。",
+      "父空间场景可显式传 reveal；常规文档流保留未定义以使用滚动触发。复制时同时保留 motionLayout 和 viewportEntrance 依赖。"
+    ],
+    "inputs": [
+      "text: Bi|string",
+      "label?: Bi|string",
+      "active=true",
+      "reveal?: boolean",
+      "start='top 80%'",
+      "finishAt?: number|false",
+      "revealBy='block'|'paragraph'",
+      "variant='hero'|'section'",
+      "treatment='paragraph'|'title'",
+      "注入 pace，默认 1"
+    ],
+    "outputs": [
+      "分行后的可读介绍 DOM；无组件事件输出。"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "gsap/ScrollTrigger",
+      "gsap/SplitText",
+      "src/data/aboutProfile.ts:withoutFinalStop/Bi",
+      "src/utils/motionLayout.ts",
+      "src/utils/viewportEntrance.ts",
+      "IntersectionObserver",
+      "requestAnimationFrame",
+      "window.matchMedia"
+    ],
+    "assets": [
+      "无图片素材；文字来自传入 text/label，字体由站点样式提供。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "减少动态时跳过 SplitText 和补间，段落立即保持完整可读；监听偏好变化并重建。",
+    "touch": "只观察视口和滚动，不拦截触摸；760px 以下将标签放到段落上方，取消首行缩进。",
+    "keyboard": "无键盘交互；SplitText aria:auto 处理分行后的文本可访问性，中英文段落保留 lang。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted 登记预热观察器、motion change 和被动 resize 监听；在共享布局队列内创建 scoped gsap.context。",
+      "watch 在 Vue 更新文本之前先撤销 SplitText 包装，防止 revert 写回旧语言。"
+    ],
+    "cleanup": [
+      "onBeforeUnmount 标记 dead 并增加 rebuildVersion，断开预热观察器，取消准备/刷新任务与 resize rAF，移除媒体查询和 resize 监听。",
+      "clear→disarm 杀死块/段触发器、context.revert，并对每个 SplitText 调 kill 与 revert，恢复 Vue 原始文本。"
+    ],
+    "knownLimitations": [
+      "组件直接使用 window.matchMedia，是当前客户端 Vue 应用组件；复用到 SSR 需将浏览器访问移入客户端生命周期。",
+      "测行依赖最终字体与真实布局，不能把源文件片段当作脱离 CSS/共享布局队列的独立文本插件。"
+    ]
+  },
+  "agentNotes": [
+    "只有 title 使用行遮罩；正文不能统一描述为遮罩上移。",
+    "finishAt=false 会关闭页面注入的收尾线，适合揭幕后再播放的首屏介绍。",
+    "sourceSections 仅定位实际实现；原始文件及其依赖快照需配套读取。"
+  ],
+  "relatedEffects": [
+    "about-scroll-reveal",
+    "poster-artwork-reveal",
+    "profile-scroll-scene"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "npm run build"
+    ],
+    "manualChecks": [
+      "加载幕未放行时文字不抢播；放行后按块或段播放一次。",
+      "在中文和英文、宽窄屏之间切换，已读段落保持可见，进行中的段落延续进度。",
+      "切换减少动态偏好后没有残留分行包装或隐藏文字。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "gsap",
+    "SplitText",
+    "ScrollTrigger",
+    "line-mask",
+    "bilingual",
+    "one-shot"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/引导文字揭示.vue",
+      "源码/项目源码/组件/引导文字状态.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/SplitText",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/ReferenceIntroduction.ts",
+      "path": "源码/项目源码/组件/引导文字状态.ts",
+      "role": "entry",
+      "originalSha256": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+      "originalBytes": 678,
+      "sha256": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+      "bytes": 678
+    },
+    {
+      "original": "src/components/ReferenceIntroduction.vue",
+      "path": "源码/项目源码/组件/引导文字揭示.vue",
+      "role": "entry",
+      "originalSha256": "96d05f989179d82ecb2a7d18bef925d254c2e7cf680e3cb95fcf2d122560cf74",
+      "originalBytes": 17515,
+      "sha256": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+      "bytes": 17524
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/motionLayout.ts",
+      "path": "源码/项目源码/工具/动效布局调度.ts",
+      "role": "dependency",
+      "originalSha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "originalBytes": 3222,
+      "sha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "bytes": 3222
+    },
+    {
+      "original": "src/utils/viewportEntrance.ts",
+      "path": "源码/项目源码/工具/视口入场控制.ts",
+      "role": "dependency",
+      "originalSha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "originalBytes": 1233,
+      "sha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "bytes": 1233
+    },
+    {
+      "original": "src/views/AboutView.vue",
+      "path": "集成示例/项目源码/页面/人物介绍页.vue",
+      "role": "integration-context",
+      "originalSha256": "c1e07514949a15015f63c108c9dbd002f008ae927fbc586f7914a21618949acd",
+      "originalBytes": 4389,
+      "sha256": "85bbda99d9f976be7a97dd313b5a5393c2fdc32c14089a8b28f8996762752326",
+      "bytes": 4483
+    },
+    {
+      "original": "src/views/PosterView.vue",
+      "path": "集成示例/项目源码/页面/海报作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "61cb26ac58819bcc1deb631a6ac6d60765e63670f712ff28f426ab19517137fd",
+      "originalBytes": 12143,
+      "sha256": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+      "bytes": 12234
+    },
+    {
+      "original": "src/views/PhotoView.vue",
+      "path": "集成示例/项目源码/页面/摄影作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "1def0b25e43fde58989fd906e1e38e7d8c5f5591e265ca9195ec9800cd1535a3",
+      "originalBytes": 18541,
+      "sha256": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+      "bytes": 18629
+    },
+    {
+      "original": "src/views/ColorView.vue",
+      "path": "集成示例/项目源码/页面/调色作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "f2585b1b01ee0ca57f1fea6cb40e38d3167adb81f41b92e660a56c9e5a34a266",
+      "originalBytes": 43088,
+      "sha256": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+      "bytes": 43103
+    },
+    {
+      "original": "src/views/FoundationView.vue",
+      "path": "集成示例/项目源码/页面/基础作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "b790bce24b3a394712bb0e0e7d401e54816b8de8fef3e853e1cf3646edc9f675",
+      "originalBytes": 19360,
+      "sha256": "1d7a34970e009656251e655e6a2e8ce5882713bb79bfa7ff4d7e91e6014da695",
+      "bytes": 19379
+    },
+    {
+      "original": "src/components/about/AboutSection.vue",
+      "path": "集成示例/项目源码/组件/人物与作品/作品章节容器.vue",
+      "role": "integration-context",
+      "originalSha256": "b414b574bb9540982df1aaee84f56178619c33450e1d036ea63e2f8185480ac2",
+      "originalBytes": 3270,
+      "sha256": "e45810410e6d0c9f6fc8f36f37a307a1145f4c812329ed7d46d7459be26c7db4",
+      "bytes": 3269
+    }
+  ]
+}

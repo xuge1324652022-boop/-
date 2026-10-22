@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "photo-chapter-wipe",
+  "title": {
+    "zh": "摄影双列章节与纵向遮罩接力",
+    "en": "Photo chapter and dual lane wipe"
+  },
+  "category": "mask",
+  "status": "active",
+  "summary": "摄影页按色彩分章，每章将横图与竖图分为两个等高窗口，滚动时同一位置推进两列照片。横列从底向上揭开、竖列从顶向下揭开；一章末张完成并停留后，下一章整屏从下方揭入。该效果使用scrollY、requestAnimationFrame和纯数学日程，不由GSAP时间线驱动。",
+  "entryFiles": [
+    "src/components/about/PhotoSets.vue",
+    "src/utils/photoStory.ts"
+  ],
+  "integrationFiles": [
+    "src/views/PhotoView.vue",
+    "src/data/photoPage.ts",
+    "src/composables/usePhotoDrag.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/PhotoSets.vue",
+      "symbols": [
+        "lanes",
+        "steps",
+        "laneRatios",
+        "laneSums",
+        "measure"
+      ],
+      "purpose": "按真实宽高分列、选取每章最长列步数，并测量共享舞台与滚动起点。"
+    },
+    {
+      "file": "src/components/about/PhotoSets.vue",
+      "symbols": [
+        "render",
+        "scroll",
+        "move",
+        "configure",
+        "lastCurtain",
+        "lastPosition",
+        "lastVisible"
+      ],
+      "purpose": "由单一文档位置计算章/槽遮罩，跳过未变化样式；按钮仅改变文档滚动位置。"
+    },
+    {
+      "file": "src/utils/photoStory.ts",
+      "symbols": [
+        "chapterSchedule",
+        "unit"
+      ],
+      "purpose": "纯函数排出进入、首张停留、照片行程、末张停留与下一章擦入时间，并统一钳制进度。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "CSS sticky舞台配合window.scrollY；rAF合并scroll事件。measure将舞台高度H换算为stride=max(260px,0.48H)，根高度为H+最后章节finish。所有阶段单位为滚动像素，不是秒。",
+    "stages": [
+      {
+        "name": "chapter-enter",
+        "description": "第一章直接可见；后续章的clip-path上边从100%降至0%，覆盖前章。",
+        "properties": [
+          "chapter.clipPath",
+          "chapter.visibility",
+          "active"
+        ],
+        "timing": "chapterSchedule传入0.65H，内部wipe为其0.8倍，即0.52H；进度达到0.5后更新active。"
+      },
+      {
+        "name": "first-read",
+        "description": "整章完整揭开后先保留首图阅读距离，再推进列内切图。",
+        "properties": [
+          "chapterSchedule.start"
+        ],
+        "timing": "hold为传入0.65H的0.3倍，即0.195H；第一章没有wipe，但同样保留hold。"
+      },
+      {
+        "name": "lane-wipes",
+        "description": "左右列共用position；新槽覆盖旧槽、不移动整条轨道；较短列停在末张。",
+        "properties": [
+          "wide-slot.clipPath:inset(hidden% 0 0)",
+          "tall-slot.clipPath:inset(0 0 hidden%)",
+          "slot.visibility",
+          "progress.scaleX",
+          "photoIndices"
+        ],
+        "timing": "每步stride像素，照片行程为(max(两列长度)-1)×stride；图片标题取round(position)。"
+      },
+      {
+        "name": "last-read-and-handoff",
+        "description": "每章最后照片完整显示并停留后，下一章才开始进入；被完全覆盖的旧章及其槽隐藏。",
+        "properties": [
+          "chapterSchedule.end",
+          "chapterSchedule.finish",
+          "visibility"
+        ],
+        "timing": "末张停留0.195H；下一章enter严格等于上一章finish。"
+      }
+    ],
+    "state": [
+      "active",
+      "photoIndices",
+      "staticMode",
+      "schedule",
+      "origin",
+      "stride",
+      "lastCurtain",
+      "lastPosition",
+      "lastVisible",
+      "dirty"
+    ],
+    "propertyOwnership": [
+      "PhotoSets只写章与槽的clipPath/visibility、进度条transform及根高度。",
+      "usePhotoDrag只写.ps__card的transform；槽的裁切与卡片的拖动分层，不能合并。",
+      "图片名称放在裁切窗口外，footer以active管理inert/aria-hidden，图片按钮以tabindex管理当前键盘入口。"
+    ],
+    "interruption": [
+      "反向滚动重新计算同一纯函数状态，无待完成的补间或额外追赶阻尼。",
+      "切换减少动态时detach拖动、取消rAF并清除章/槽的clip-path、transform和visibility，改为所有原图自然流。",
+      "语言变化nextTick后重新measure，重置样式读数缓存，避免首帧被跳过。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "从PhotoView模式页面传非空PhotoSet[]，每章保留palette与VisualAsset数组；源项目先通过assertPhotoSets检查数据。",
+      "保留sticky舞台、章、双列lane、slot和card的DOM层次；横图窗口3:2、竖图窗口2:3。",
+      "监听open(item,trigger)接入页面查看器；需要查看完整原构图时使用该事件，展示窗内横图通常以cover填满。",
+      "同步复制photoStory、usePhotoDrag及数据类型；该组件没有外部GSAP初始化句柄。"
+    ],
+    "inputs": [
+      "sets:readonly PhotoSet[]",
+      "lang:Lang",
+      "PhotoSet.palette.background/foreground/accent",
+      "VisualAsset.width/height/src/thumb/large/title/alt"
+    ],
+    "outputs": [
+      "open(item:VisualAsset,trigger:HTMLElement)",
+      "dirty/reset拖动恢复状态仅在组件内部使用"
+    ],
+    "dependencies": [
+      "vue",
+      "src/utils/photoStory.ts",
+      "src/composables/usePhotoDrag.ts",
+      "src/data/aboutProfile.ts",
+      "src/data/photoPage.ts",
+      "src/data/visualPortfolio.ts",
+      "ResizeObserver",
+      "requestAnimationFrame",
+      "document.fonts.ready",
+      "window.matchMedia"
+    ],
+    "assets": [
+      "sets[].items[]中的thumb/src/large摄影资源；不在组件内嵌入图片。",
+      "主题CSS变量--stable-viewport-height来自站点视口体系。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "减少动态使用完整普通照片流，显示所有图注并移除章节进度和上下切换控制；仍可点开完整作品。",
+    "touch": "照片拖动依赖usePhotoDrag，仅接管鼠标；触摸保留pan-y/pinch-zoom与点击查看。760px以下两列上下排，短横屏恢复并排。",
+    "keyboard": "动态模式仅active章和当前索引照片按钮可Tab进入；非当前章footer设inert/aria-hidden，上一张和下一张为原生按钮。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted配置媒体偏好与拖动，ResizeObserver监视stage，字体ready/窗口resize/语言更新后measure。",
+      "scroll监听只登记一帧render，不自行启动永动循环。"
+    ],
+    "cleanup": [
+      "卸载标记dead，断开ResizeObserver，取消rAF，detach拖动，移除scroll/resize/matchMedia change监听。",
+      "usePhotoDrag自身也在卸载detach，负责拖动中window监听回收。"
+    ],
+    "knownLimitations": [
+      "动态展示横图常以固定3:2窗口cover裁切；完整原图由查看器或静态流呈现。",
+      "章与素材数量按初始数据建立；当前组件监视lang和布局，不提供实时替换sets的完整重建协议。"
+    ]
+  },
+  "agentNotes": [
+    "本效果的运动主体不是GSAP；不要为了统一目录把scrollY渲染器误写为ScrollTrigger scrub。",
+    "chapterSchedule参数名height并非直接的舞台高：组件传入0.65H，因此实际hold/wipe需再乘该比例。",
+    "drag transform必须继续保留在card层，不能在render中清除。",
+    "图片宽度描述符已统一使用responsiveImage.ts与imageVariants.json，竖图按实际像素宽度声明，修改资源后需重新生成尺寸清单。"
+  ],
+  "relatedEffects": [
+    "photo-runway",
+    "poster-stack",
+    "about-scroll-reveal"
+  ],
+  "verification": {
+    "commands": [
+      "node scripts/verify-photo-story.mjs",
+      "npm run typecheck",
+      "npm run build"
+    ],
+    "manualChecks": [
+      "每章末图完整停留后下一章才开始覆盖；快速倒滚按原路恢复。",
+      "左右列长度不等时较短列保持末张，进度条与当前名称一致。",
+      "拖动某卡片后遮罩仍在槽内正确推进，恢复排布只清卡片位移。",
+      "检查竖图srcset真实像素宽度与显示清晰度，已知错配不得被目录说明掩盖。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "clip-path",
+    "sticky",
+    "requestAnimationFrame",
+    "scrollY",
+    "photo",
+    "dual-lane",
+    "non-gsap"
+  ]
+}

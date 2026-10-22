@@ -1,0 +1,351 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "route-curtain",
+  "title": {
+    "zh": "全站弧形路由幕布",
+    "en": "Global curved route curtain"
+  },
+  "category": "mask",
+  "status": "active",
+  "summary": "用上下椭圆帽和整屏位移实现跨路由覆盖、停留与揭幕。PageCurtain只承担视觉动作；useRouteCurtainNavigation显式接收router与幕布引用，等待路由和首轮布局、控制门禁及处理异常。App保留渲染，首访子页从已覆盖状态起步。",
+  "entryFiles": [
+    "src/components/PageCurtain.vue",
+    "src/composables/usePageCurtain.ts"
+  ],
+  "integrationFiles": [
+    "src/App.vue",
+    "src/composables/useTransition.ts",
+    "src/router/index.ts",
+    "src/main.ts",
+    "src/style.css",
+    "src/composables/useRouteCurtainNavigation.ts",
+    "src/utils/navigationOwnership.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/PageCurtain.vue",
+      "symbols": [
+        "cover",
+        "reveal",
+        "reset",
+        "stopCurrent",
+        "onMotionChange"
+      ],
+      "purpose": "暴露可等待的覆盖/揭幕/复位动作；维护 GSAP、原生文字动画和中断代次。"
+    },
+    {
+      "file": "src/composables/usePageCurtain.ts",
+      "symbols": [
+        "needsInitialCurtain",
+        "routeCurtainActive",
+        "routeCurtainBlocked",
+        "curtainTitleFor"
+      ],
+      "purpose": "全局响应式门禁和双语章节名；兼容 /card/01 至 /card/06。"
+    },
+    {
+      "file": "src/composables/useRouteCurtainNavigation.ts",
+      "symbols": [
+        "coverRoute",
+        "revealRoute",
+        "cancelCurtain",
+        "removeBeforeNavigation",
+        "removeAfterNavigation"
+      ],
+      "purpose": "导航所有权、等待时间、滚动与输入锁、失败恢复。"
+    },
+    {
+      "file": "src/router/index.ts",
+      "symbols": [
+        "router",
+        "preparedScrollTarget"
+      ],
+      "purpose": "全遮挡跨页导航在 beforeResolve 归零；scrollBehavior 处理历史位置与章节锚点。"
+    },
+    {
+      "file": "src/utils/navigationOwnership.ts",
+      "symbols": [
+        "createNavigationOwnership",
+        "beginNavigation",
+        "invalidateNavigation",
+        "focusedNavigationOutcome",
+        "isModuleNavigationError"
+      ],
+      "purpose": "用纯决策区分完整目标与代次、隔离迟到回调，并决定模块失败是否允许自动重试。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "跨 path 的应用内导航由 useRouteCurtainNavigation 的 beforeEach 发起；初访 /about、/edit、/news、/color、/poster、/photo、/cards 或 /card/* 走 cover(true)。同 path 的 query/hash 变化不重新播幕布。",
+    "stages": [
+      {
+        "name": "cover",
+        "description": "screen 从 yPercent=100 到 0，上帽 scaleY=0 到 -1；0.5 秒时已经完全遮挡并兑现 Promise，章节文字可以继续进入。",
+        "properties": [
+          "screen.yPercent",
+          "topCap.scaleY",
+          "topCap.yPercent"
+        ],
+        "timing": "0.5s power4.in；上帽 0.4s，均从 0s 开始。"
+      },
+      {
+        "name": "chapter-label",
+        "description": "文字由透明变可见并向上移动 50px；优先用采样 power4.out 的 Web Animations 帧，旧 WebView 回退 GSAP。",
+        "properties": [
+          "words.opacity",
+          "words.transform"
+        ],
+        "timing": "原生动画 delay 550ms、duration 800ms；GSAP 回退位置 .55s、时长 .8s。"
+      },
+      {
+        "name": "hold",
+        "description": "导航协调器等待导航及 nextTick、两帧 requestAnimationFrame；自完全遮挡时点起保证最低停留时间。",
+        "properties": [
+          "routeCurtainActive",
+          "routeCurtainBlocked"
+        ],
+        "timing": "普通导航最低 650ms；初访最低 500ms；减少动态模式为 0ms。"
+      },
+      {
+        "name": "reveal",
+        "description": "screen 向上退出，文字淡出，底部椭圆帽逐渐压平；正文入场在揭幕开始放行，用户输入在整个揭幕结束才解锁。",
+        "properties": [
+          "screen.yPercent",
+          "words.opacity",
+          "bottomCap.scaleY",
+          "bottomCap.yPercent"
+        ],
+        "timing": "screen .8s power3.inOut；文字 .6s；底帽从 .2s 开始 .85s，总 1.05s。"
+      }
+    ],
+    "state": [
+      "组件 phase: idle / covering / covered / revealing",
+      "generation 拦截迟到 nextTick 与 Promise",
+      "useRouteCurtainNavigation.navigationVersion 和 transitionTarget 决定导航所有权",
+      "routeCurtainActive 覆盖全程；routeCurtainBlocked 在揭幕开始变 false"
+    ],
+    "propertyOwnership": [
+      "PageCurtain 独占 screen、caps、words 的 transform/opacity；App 不直接改这些视觉节点。",
+      "App 持有 page-turn-lock、is-jumping、no-scroll 的交接和 route-stage.inert。"
+    ],
+    "interruption": [
+      "stopCurrent 递增 generation、kill 两条 GSAP 时间线、提交并取消原生文字动画、结算旧等待者。",
+      "reset 使用 context.revert；新导航按 navigationVersion 校验旧异步工作。",
+      "切换到减少动态效果时将当前阶段落到覆盖或隐藏终态。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在应用顶层常驻一个 PageCurtain，用 active/title props 连接全局状态。",
+      "复用 useRouteCurtainNavigation({router, curtain}) 的 coverRoute/revealRoute 的守卫顺序；不要把 App/router 当独立视觉组件的递归入口。",
+      "保留 routeCurtainBlocked 对子组件入场的门禁，routeCurtainActive 对输入、媒体和索引的门禁。",
+      "保证全局 viewport CSS 变量与 overlayTouchGuard 可用；迁移时按宿主应用重接异常恢复。"
+    ],
+    "inputs": [
+      "active: boolean",
+      "title: { zh: string; en: string }",
+      "cover(entry?: boolean)",
+      "reveal()",
+      "reset()"
+    ],
+    "outputs": [
+      "cover/reveal 返回 Promise<void>；cover 在完全遮挡时完成",
+      "routeCurtainActive / routeCurtainBlocked 响应式状态"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "src/utils/overlayTouchGuard.ts",
+      "Vue Router 的宿主集成"
+    ],
+    "assets": [
+      "无需外部图片；背景与椭圆均为 CSS。",
+      "依赖 --stable-viewport-height 全局 CSS 变量。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "cover/reveal 改成 .12s 透明度切换，帽子压平、文字位移为 0；媒体查询 change 可中途终止大幅运动。",
+    "touch": "guardOverlayTouchScroll 按 active 状态防止幕布下的滚动链；CSS active 时可接收指针。",
+    "keyboard": "根节点 role=status、aria-live=polite、双语 lang；App 给 route-stage 设置 inert。幕布本身无可聚焦按钮。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted 绑定触摸守卫和减少动态媒体查询。",
+      "按 root 创建 GSAP context，所有视觉动作登记其中。"
+    ],
+    "cleanup": [
+      "onBeforeUnmount 标记 dead，移除触摸守卫和媒体查询监听，再 reset。",
+      "导航协调器卸载应同时注销路由守卫并取消自己的等待/错误恢复状态。"
+    ],
+    "knownLimitations": [
+      "视觉组件不是独立路由管理器；导航协调器中的错误恢复与 App 的错误提示、自动恢复和锁交接必须随宿主重接。",
+      "原生 words.animate 和 GSAP 的交接依赖 commitStyles，失败时捕获后继续。",
+      "usePageCurtain 在模块顶层读取 window.location，不直接适用于 SSR。"
+    ]
+  },
+  "agentNotes": [
+    "此包的 entryFiles 只指向视觉组件与状态；App/router 是 integrationFiles，避免将全应用当组件依赖复制。",
+    "useTransition 中 OVERLAY_COVER_MS=300、OVERLAY_REVEAL_MS=400 属旧兼容导出，不是现行幕布时长。",
+    "verification.commands 是建议运行的现有仓库命令，不表示本 JSON 编写时已经执行。"
+  ],
+  "relatedEffects": [
+    "gallery-focus",
+    "card-list-expand",
+    "home-preloader",
+    "index-overlay"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-runtime-navigation.mjs",
+      "node scripts/verify-mobile-overlays.mjs",
+      "node scripts/verify-navigation-state.mjs"
+    ],
+    "manualChecks": [
+      "从首页与 /cards 分别进入六个子页，检查盖满后换页、无露底。",
+      "直达 /photo 与 /card/06，检查章节名及初访揭幕。",
+      "覆盖、等待、揭幕期间快速后退/前进以及同页锚点导航，检查旧 Promise 不复写新幕。",
+      "开启动效减少，检查短淡入淡出及交互解锁。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "vue",
+    "route",
+    "curtain",
+    "mask",
+    "web-animations",
+    "navigation"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/页面幕布.vue",
+      "源码/项目源码/组合函数/页面幕布控制.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/PageCurtain.vue",
+      "path": "源码/项目源码/组件/页面幕布.vue",
+      "role": "entry",
+      "originalSha256": "abe6b56d9dc602244f07f34447fe02a421678e80cf7b87d6b04bc1ed4c33eec3",
+      "originalBytes": 10339,
+      "sha256": "d52238259d25ec4a1284616cc81fd4e28830952a63a8584dbf914376d6fc5fcb",
+      "bytes": 10344
+    },
+    {
+      "original": "src/composables/usePageCurtain.ts",
+      "path": "源码/项目源码/组合函数/页面幕布控制.ts",
+      "role": "entry",
+      "originalSha256": "c3a4e2b07723684ac7d06ecb2fea597ab245f6cc23ceb7c42c530099e4111355",
+      "originalBytes": 1568,
+      "sha256": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+      "bytes": 1570
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/overlayTouchGuard.ts",
+      "path": "源码/项目源码/工具/覆盖层触摸保护.ts",
+      "role": "dependency",
+      "originalSha256": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+      "originalBytes": 2717,
+      "sha256": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+      "bytes": 2717
+    },
+    {
+      "original": "src/App.vue",
+      "path": "集成示例/项目源码/应用根组件.vue",
+      "role": "integration-context",
+      "originalSha256": "d3616de42ebe50434066d43ea8b45870be8584edcb944185e804d47f73c009af",
+      "originalBytes": 4374,
+      "sha256": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+      "bytes": 4375
+    },
+    {
+      "original": "src/composables/useTransition.ts",
+      "path": "集成示例/项目源码/组合函数/应用转场状态.ts",
+      "role": "integration-context",
+      "originalSha256": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+      "originalBytes": 8511,
+      "sha256": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+      "bytes": 8511
+    },
+    {
+      "original": "src/router/index.ts",
+      "path": "集成示例/项目源码/路由/应用路由.ts",
+      "role": "integration-context",
+      "originalSha256": "2c515120588b3a08d1e5c080b677429242d2a238219e16e78b1685b12e0358d4",
+      "originalBytes": 5700,
+      "sha256": "7f598f3f4808f044baa622f90274f0d7e145db5bcc3ec39fa4a63c1c6c60f05e",
+      "bytes": 5767
+    },
+    {
+      "original": "src/main.ts",
+      "path": "集成示例/项目源码/应用入口.ts",
+      "role": "integration-context",
+      "originalSha256": "59422eb2699e1b071a57e9c19436378349ea53380a0c3c8ef4ef53dd5ed89465",
+      "originalBytes": 2923,
+      "sha256": "f711f248a132dd3b55f76a2ae43f906c4b345dae76520da2e1790633e8e6e484",
+      "bytes": 2971
+    },
+    {
+      "original": "src/composables/useRouteCurtainNavigation.ts",
+      "path": "集成示例/项目源码/组合函数/路由幕布导航.ts",
+      "role": "integration-context",
+      "originalSha256": "ad8c63f73f83152dbc09424c0f2f23af79cff6fe54849c887b34c59fadce522a",
+      "originalBytes": 16966,
+      "sha256": "27d1fefba57d0a2d212cfb04510e0bca01529765b982ce5bdbbf7b3620165d96",
+      "bytes": 16972
+    },
+    {
+      "original": "src/utils/navigationOwnership.ts",
+      "path": "集成示例/项目源码/工具/导航所有权.ts",
+      "role": "integration-context",
+      "originalSha256": "40a0e4e7406967c1bf2acfdc44408b477c3e60e11dfaa20d0aa11d040adfb63f",
+      "originalBytes": 1940,
+      "sha256": "40a0e4e7406967c1bf2acfdc44408b477c3e60e11dfaa20d0aa11d040adfb63f",
+      "bytes": 1940
+    }
+  ]
+}

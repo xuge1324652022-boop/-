@@ -1,0 +1,220 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "smooth-scroll",
+  "title": {
+    "zh": "共享滚轮平滑控制器",
+    "en": "Shared smooth wheel controller"
+  },
+  "category": "scroll",
+  "status": "active",
+  "summary": "精确指针设备使用原生RAF与指数曲线推进window.scrollTo，并同步ScrollTrigger.update；尊重原生内部滚动、路由锁与调色页闸门。",
+  "entryFiles": [
+    "src/composables/useSmoothScroll.ts",
+    "src/utils/wheel.ts"
+  ],
+  "integrationFiles": [
+    "src/App.vue",
+    "src/views/ColorView.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/composables/useSmoothScroll.ts",
+      "symbols": [
+        "useSmoothScroll",
+        "onWheel",
+        "frame",
+        "insideNativeScroller"
+      ],
+      "purpose": "滚轮输入消费、目标插值和外部滚动中断。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "可取消的无修饰键纵向wheel；enabled且精确指针、非reduce、非全局锁。",
+    "stages": [
+      {
+        "name": "输入归一",
+        "description": "识别像素/行/页deltaMode，放行横向及原生内部滚动。",
+        "properties": [
+          "target scrollY"
+        ],
+        "timing": "每次wheel事件"
+      },
+      {
+        "name": "目标插值",
+        "description": "从当前scrollY向累加目标插值，曲线min(1,1.001-2^(-10p))。",
+        "properties": [
+          "window.scrollY"
+        ],
+        "timing": "DURATION=1.2s；误差小于0.5px或进度1终止"
+      },
+      {
+        "name": "滚动动画同步",
+        "description": "写入scrollTo后调用ScrollTrigger.update。",
+        "properties": [
+          "ScrollTrigger.update"
+        ],
+        "timing": "仅动画活动时逐帧"
+      }
+    ],
+    "state": [
+      "target/applied/from",
+      "startedAt/raf",
+      "pointer/motion查询"
+    ],
+    "propertyOwnership": [
+      "拥有全页面滚轮目标；不直接动画作品transform",
+      "ColorView通过gate回调先消费首屏进度"
+    ],
+    "interruption": [
+      "键盘、pointerdown、touchstart停止旧目标",
+      "外部滚动差超过2px、偏好变化与全局锁停止",
+      "gate返回true时本轮不推进页面"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "每个页面只保留一个滚轮控制器。",
+      "普通子页由App挂载；调色页关闭App控制器并由ColorView传入gate。",
+      "为内部滚动区域保留overflow:auto或data-native-scroll，保留所有全局锁类。"
+    ],
+    "inputs": [
+      "gate?:(pixels:number)=>boolean",
+      "enabled?:()=>boolean"
+    ],
+    "outputs": [
+      "无返回值；自动登记卸载清理"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap/ScrollTrigger",
+      "normalizeWheelDelta"
+    ],
+    "assets": []
+  },
+  "accessibility": {
+    "reducedMotion": "reduce立即停止并放行原生滚动。",
+    "touch": "非精确指针不接管；触摸开始会停止桌面遗留RAF。",
+    "keyboard": "页面方向键/翻页键/Home/End/空格停止插值，交浏览器处理。"
+  },
+  "lifecycle": {
+    "setup": [
+      "登记wheel/scroll/keydown/pointerdown/touchstart与查询change"
+    ],
+    "cleanup": [
+      "onUnmounted停止RAF并成对移除全部事件"
+    ],
+    "knownLimitations": [
+      "依赖window/document，不能直接在SSR求值。",
+      "它不是Lenis；与其他全页滚动控制器并用会争夺scrollY。"
+    ]
+  },
+  "agentNotes": [
+    "GSAP仅用于ScrollTrigger同步；插值主循环为原生RAF。",
+    "保留ctrl/meta与不可取消事件的放行逻辑。"
+  ],
+  "relatedEffects": [
+    "color-scroll-gate",
+    "route-curtain",
+    "motion-layout-scheduler"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run test:deployment"
+    ],
+    "manualChecks": [
+      "桌面滚轮平滑，菜单和幕布出现时立即停止。",
+      "内部列表、触摸、键盘与浏览器缩放继续按原生方式操作。"
+    ]
+  },
+  "tags": [
+    "raf",
+    "wheel",
+    "scrolltrigger",
+    "input-gate"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组合函数/平滑滚动控制.ts",
+      "源码/项目源码/工具/滚轮事件工具.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/composables/useSmoothScroll.ts",
+      "path": "源码/项目源码/组合函数/平滑滚动控制.ts",
+      "role": "entry",
+      "originalSha256": "87e885b95054644460c2b57d782145ed904a8ea29073fac3089ece48714f9fae",
+      "originalBytes": 4384,
+      "sha256": "1243deebb1c283cc722dd90c8c3ecaaf1b66d921833c354e34e33be868a6e6c3",
+      "bytes": 4398
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/wheel.ts",
+      "path": "源码/项目源码/工具/滚轮事件工具.ts",
+      "role": "entry",
+      "originalSha256": "264a6775b28195d15fb913b677010a432de3c7a1a795e22cdd7805dc67212a3a",
+      "originalBytes": 1630,
+      "sha256": "264a6775b28195d15fb913b677010a432de3c7a1a795e22cdd7805dc67212a3a",
+      "bytes": 1630
+    },
+    {
+      "original": "src/App.vue",
+      "path": "集成示例/项目源码/应用根组件.vue",
+      "role": "integration-context",
+      "originalSha256": "d3616de42ebe50434066d43ea8b45870be8584edcb944185e804d47f73c009af",
+      "originalBytes": 4374,
+      "sha256": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+      "bytes": 4375
+    },
+    {
+      "original": "src/views/ColorView.vue",
+      "path": "集成示例/项目源码/页面/调色作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "f2585b1b01ee0ca57f1fea6cb40e38d3167adb81f41b92e660a56c9e5a34a266",
+      "originalBytes": 43088,
+      "sha256": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+      "bytes": 43103
+    }
+  ]
+}

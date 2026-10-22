@@ -1,0 +1,16 @@
+# Normalise line endings. Without this, every commit on Windows prints a wall of
+# "warning: LF will be replaced by CRLF" for every text file.
+* text=auto
+
+# Binaries must never be converted.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary

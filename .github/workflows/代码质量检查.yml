@@ -1,0 +1,65 @@
+name: 代码质量检查
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: quality (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22.16.0', '24']
+    steps:
+      - name: 读取当前提交
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: 准备 Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+
+      - name: 安装锁定依赖
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: 检查源码与维护脚本
+        run: npm run lint
+
+      - name: 检查个人信息与公开素材
+        run: npm run check:privacy
+
+      - name: 检查 TypeScript 与 Vue 模板类型
+        run: npm run typecheck
+
+      - name: 执行纯逻辑单元测试
+        run: npm run test:unit
+
+      - name: 执行本地 mock 验收
+        run: npm run test:deployment
+
+      - name: 核对中文动效源码与解析
+        run: npm run check:motion
+
+      - name: 核对响应式图片真实尺寸清单
+        run: npm run check:images
+
+      - name: 构建网站
+        run: npm run build
+
+      - name: 验证已构建路由页和 404 交付
+        run: node scripts/verify-route-head.mjs --dist

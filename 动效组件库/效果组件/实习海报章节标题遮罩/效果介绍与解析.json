@@ -1,0 +1,366 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "poster-gallery-reveal",
+  "title": {
+    "zh": "实习海报章节标题遮罩",
+    "en": "Internship gallery heading masks"
+  },
+  "category": "mask",
+  "status": "active",
+  "summary": "海报编排层将章节标题的内层文字从行遮罩下方揭示一次；作品碎片、CSS演示和空间叠层由下层效果分别负责。",
+  "entryFiles": [
+    "src/components/about/InternshipPosterGallery.vue"
+  ],
+  "integrationFiles": [
+    "src/views/PosterView.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/InternshipPosterGallery.vue",
+      "symbols": [
+        "revealed",
+        "armHeadings",
+        "disarmHeadings"
+      ],
+      "purpose": "独立记录已读标题，并在页面门闩开放时登记视口触发器。"
+    },
+    {
+      "file": "src/utils/viewportEntrance.ts",
+      "symbols": [
+        "createViewportEntrance"
+      ],
+      "purpose": "快滚与锚点进入后直接补齐终态。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "matchMedia(no-preference)创建paused tween，pageGate开放时调用armHeadings。",
+    "stages": [
+      {
+        "name": "建立行遮罩",
+        "description": ".ipg__title-line裁切，内层span从行下方进入。",
+        "properties": [
+          "yPercent"
+        ],
+        "timing": "100→0，0.95s，stagger 0.09s，power2.out"
+      },
+      {
+        "name": "视口触发与终态补齐",
+        "description": "createViewportEntrance默认top 95%开始，bottom top结束；已越过则完成。",
+        "properties": [
+          "timeline progress"
+        ],
+        "timing": "一次性自然播放；快滚直接补终态"
+      }
+    ],
+    "state": [
+      "revealed:WeakSet<Element>",
+      "pending标题列表",
+      "triggers:Map",
+      "pageGate"
+    ],
+    "propertyOwnership": [
+      "编排层只动画标题span的yPercent",
+      "单张作品和空间构图保持各自节点及时间线所有权"
+    ],
+    "interruption": [
+      "关闭门闩杀触发器，恢复后仅为未读标题重建",
+      "媒体条件退出时revert并清理函数；revealed跨媒体实例保留"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "传入groups和lang，按当前产品组数据建立章节结构。",
+      "父页面provide(referenceIntroductionGate)控制何时可触发。",
+      "保持标题外层裁切、内层位移结构；监听open事件交给页面查看器。"
+    ],
+    "inputs": [
+      "groups:readonly InternshipPosterGroup[]",
+      "lang:zh|en",
+      "referenceIntroductionGate"
+    ],
+    "outputs": [
+      "open(item,trigger)转发"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "ScrollTrigger",
+      "createViewportEntrance",
+      "requestMotionLayoutRefresh"
+    ],
+    "assets": [
+      "groups中的public/internship-clean图像由页面提供"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "无动画媒体分支不创建标题tween，原始文字静态可读。",
+    "touch": "章节导航使用原生锚点；单张点击由下层按钮实现。",
+    "keyboard": "原生章节链接、作品按钮可聚焦。"
+  },
+  "lifecycle": {
+    "setup": [
+      "nextTick后创建matchMedia",
+      "监听pageGate、lang和字体就绪刷新"
+    ],
+    "cleanup": [
+      "dead标记阻止迟到刷新",
+      "取消刷新请求并media.revert()",
+      "分支cleanup杀所有标题trigger"
+    ],
+    "knownLimitations": [
+      "语言变更只刷新布局；组键须匹配INTERNSHIP_MOTION_THEMES。",
+      "宿主包含完整编排和子效果，不能把其所有动画都算作标题效果。"
+    ]
+  },
+  "agentNotes": [
+    "标题已读标记与媒体查询实例分离。",
+    "V10L12–15从普通页序排除，交poster-depth展示。"
+  ],
+  "relatedEffects": [
+    "text-line-reveal",
+    "poster-artwork-reveal",
+    "poster-depth",
+    "poster-motion-tile"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "打开海报页，滚入章节标题后回滚不重播。",
+      "快滚到深处、锚点跳转及切换减少动态后标题仍可读。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "scrolltrigger",
+    "line-mask",
+    "poster",
+    "once"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/人物与作品/实习海报画廊.vue"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/SplitText",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/ReferenceIntroduction.ts",
+      "path": "源码/项目源码/组件/引导文字状态.ts",
+      "role": "dependency",
+      "originalSha256": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+      "originalBytes": 678,
+      "sha256": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+      "bytes": 678
+    },
+    {
+      "original": "src/components/ReferenceIntroduction.vue",
+      "path": "源码/项目源码/组件/引导文字揭示.vue",
+      "role": "dependency",
+      "originalSha256": "96d05f989179d82ecb2a7d18bef925d254c2e7cf680e3cb95fcf2d122560cf74",
+      "originalBytes": 17515,
+      "sha256": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+      "bytes": 17524
+    },
+    {
+      "original": "src/components/about/InternshipAnimatedArtwork.vue",
+      "path": "源码/项目源码/组件/人物与作品/实习海报碎片动效.vue",
+      "role": "dependency",
+      "originalSha256": "6aaaddf5cf18e1489febfe8944fa581f810b24656eea9363b466fb45b9afde1b",
+      "originalBytes": 5891,
+      "sha256": "344e2873c874e6beb0d5933d5f12dfa6b965776618b5428236f0840ea40990c4",
+      "bytes": 5904
+    },
+    {
+      "original": "src/components/about/InternshipDepthComposition.vue",
+      "path": "源码/项目源码/组件/人物与作品/实习海报空间构图.vue",
+      "role": "dependency",
+      "originalSha256": "8c27cefacf9597b0536b4c12315ad11ef1ba8d024f303a22e7fff22a7df02bbb",
+      "originalBytes": 30298,
+      "sha256": "1ad6559e8fe11557079da3fa94bcc275dfe8b1f6b3f1affa88d93ad76accf2a5",
+      "bytes": 30306
+    },
+    {
+      "original": "src/components/about/InternshipMotionCard.vue",
+      "path": "源码/项目源码/组件/人物与作品/实习海报动效卡.vue",
+      "role": "dependency",
+      "originalSha256": "c2086a5c79e8009407bf2868120fa2590e7ef066675a31e737f5991fc8d3102b",
+      "originalBytes": 9671,
+      "sha256": "c1575dc237ce1b824a29dbe8f83cc8afe7d8b61dd191bc14170ecce70b239bf5",
+      "bytes": 9684
+    },
+    {
+      "original": "src/components/about/InternshipMotionTile.vue",
+      "path": "源码/项目源码/组件/人物与作品/实习海报交互单元.vue",
+      "role": "dependency",
+      "originalSha256": "1789cdbda60f5fd1baa922d6fdc72188402f8fbdffa21ec8102249508336faa8",
+      "originalBytes": 10636,
+      "sha256": "2f3c181c23c6e7beb21332b9ffcbfbc87b7cbaeca8222753db0e6f67200f8544",
+      "bytes": 10639
+    },
+    {
+      "original": "src/components/about/InternshipPosterGallery.vue",
+      "path": "源码/项目源码/组件/人物与作品/实习海报画廊.vue",
+      "role": "entry",
+      "originalSha256": "4e080a008b1fb3b5be3daa5589858b62b43d56ab56c04f1a08490f99543501b7",
+      "originalBytes": 10805,
+      "sha256": "50380d9d28f073a99422b86ae643059ab759185cad7524553eee4f1d2938e247",
+      "bytes": 10826
+    },
+    {
+      "original": "src/components/about/internshipArtworkMotion.ts",
+      "path": "源码/项目源码/组件/人物与作品/实习海报碎片控制.ts",
+      "role": "dependency",
+      "originalSha256": "9f13cee9b4b8757f67ff1f91a6d9c4ade1356fbd5b6915b64e01cdde0d98a6b2",
+      "originalBytes": 1021,
+      "sha256": "9f13cee9b4b8757f67ff1f91a6d9c4ade1356fbd5b6915b64e01cdde0d98a6b2",
+      "bytes": 1021
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/imageVariants.json",
+      "path": "源码/项目源码/数据/图片实际尺寸.json",
+      "role": "dependency",
+      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "originalBytes": 12182,
+      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "bytes": 12182
+    },
+    {
+      "original": "src/data/internship-poster-assets.json",
+      "path": "源码/项目源码/数据/实习海报素材.json",
+      "role": "dependency",
+      "originalSha256": "ed33e6ca71df39aac6af96685253dee8825fbad05f16679da20536a894f8c032",
+      "originalBytes": 3426,
+      "sha256": "ed33e6ca71df39aac6af96685253dee8825fbad05f16679da20536a894f8c032",
+      "bytes": 3426
+    },
+    {
+      "original": "src/data/internship-poster-plan.json",
+      "path": "源码/项目源码/数据/实习海报动效计划.json",
+      "role": "dependency",
+      "originalSha256": "dbe3166a8fe3740d78c1000597695a13cf4ca772de05a00481cba48516846a23",
+      "originalBytes": 3902,
+      "sha256": "dbe3166a8fe3740d78c1000597695a13cf4ca772de05a00481cba48516846a23",
+      "bytes": 3902
+    },
+    {
+      "original": "src/data/internshipPosterMotion.ts",
+      "path": "源码/项目源码/数据/实习海报动效数据.ts",
+      "role": "dependency",
+      "originalSha256": "1d93a8cf7792abd7f18a52bffc94ea5e9d64f50d69b6ecf53d0b88013f9a0eaa",
+      "originalBytes": 4015,
+      "sha256": "37eaf14fb8fc4d2175c78567bf823b773dd85f3221313eab5589273e0f70b204",
+      "bytes": 4018
+    },
+    {
+      "original": "src/data/internshipPosters.ts",
+      "path": "源码/项目源码/数据/实习海报资料.ts",
+      "role": "dependency",
+      "originalSha256": "d5f66c6803a0079bca81f4fb780cb16df06d5385ffefb32a3d1e34ff9ef6b6ac",
+      "originalBytes": 3447,
+      "sha256": "d19b676e88bb14eb8bc47ddb71c631aa341c0305a176e1e56835676b774ba9ca",
+      "bytes": 3446
+    },
+    {
+      "original": "src/data/visualPortfolio.ts",
+      "path": "源码/项目源码/数据/视觉作品资料.ts",
+      "role": "dependency",
+      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
+      "originalBytes": 22342,
+      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+      "bytes": 22342
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/motionLayout.ts",
+      "path": "源码/项目源码/工具/动效布局调度.ts",
+      "role": "dependency",
+      "originalSha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "originalBytes": 3222,
+      "sha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "bytes": 3222
+    },
+    {
+      "original": "src/utils/responsiveImage.ts",
+      "path": "源码/项目源码/工具/响应式图片.ts",
+      "role": "dependency",
+      "originalSha256": "3f4f4a263ee92ff55c4048446ad55eaaf37a31d6c83f1905c3027f85f02b0714",
+      "originalBytes": 1118,
+      "sha256": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+      "bytes": 1125
+    },
+    {
+      "original": "src/utils/viewportEntrance.ts",
+      "path": "源码/项目源码/工具/视口入场控制.ts",
+      "role": "dependency",
+      "originalSha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "originalBytes": 1233,
+      "sha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "bytes": 1233
+    },
+    {
+      "original": "src/views/PosterView.vue",
+      "path": "集成示例/项目源码/页面/海报作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "61cb26ac58819bcc1deb631a6ac6d60765e63670f712ff28f426ab19517137fd",
+      "originalBytes": 12143,
+      "sha256": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+      "bytes": 12234
+    }
+  ]
+}

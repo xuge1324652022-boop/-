@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "action-cursor",
+  "title": { "zh": "局部动作文字光标", "en": "Contextual action cursor" },
+  "category": "pointer",
+  "status": "active",
+  "summary": "在声明了真实动作的作品区域显示实心点与双语动词，原生 RAF 对位置做指数追随，Vue Transition 与 CSS 接力替换文字。页面滚动或动画时短时重新命中，静止后停止采样。配套 useCursor 仅提供画廊共享锁状态；本实现不使用 GSAP。",
+  "entryFiles": ["src/components/CustomCursor.vue", "src/composables/useCursor.ts"],
+  "integrationFiles": ["src/App.vue", "src/components/ThreeHome.vue", "src/composables/useSubpageLanguage.ts", "src/composables/usePageCurtain.ts", "src/composables/useVisualViewer.ts"],
+  "sourceSections": [
+    { "file": "src/components/CustomCursor.vue", "symbols": ["paint", "updateZone", "updateLabel", "positionLabel"], "purpose": "局部动作区域选择、平滑位置、标签防抖及靠右边界换侧。" },
+    { "file": "src/components/CustomCursor.vue", "symbols": ["recheck", "checkHit", "onSceneMotion", "hide", "stopSampling"], "purpose": "滚动、DOM 及动画变化时按最近指针坐标重新命中，并在空闲停止 RAF。" },
+    { "file": "src/composables/useCursor.ts", "symbols": ["cursorLockState"], "purpose": "跨组件共享 drag/locked/null；画廊写入，动作光标读取。" }
+  ],
+  "mechanism": {
+    "trigger": "鼠标 pointermove 或 pointerover 命中 [data-cursor]、[data-cursor-label] 或 .pg__btn，且精细指针、允许动态、无拖拽/幕布/查看器。",
+    "stages": [
+      { "name": "命中与显示", "description": "筛除原生输入、controls video、禁用/隐藏/inert 等目标，按当前语言读取动作标签；只对生效区域设置 data-cursor-active 以隐藏系统光标。", "properties": ["zone", "shown", "data-cursor-active", "cursorColor", "normalBlend"], "timing": "首次进入立即显示文字；CSS opacity 与 color 为 0.3s。" },
+      { "name": "位置与文字", "description": "位置用 1-exp(-26*dt) 追随目标，误差和小于 0.02px 后停 RAF。跨动作标签先防抖再由 Vue Transition 向上接力；靠近视口右侧时标签移至左侧。", "properties": ["transform", "label", "flipLabel"], "timing": "标签防抖 50ms；文字 transform 0.45s、opacity 0.35s。" },
+      { "name": "场景重采样", "description": "滚动、窗口变化、DOM 结构、场景 CSS transition/animation 或锁状态改变后用 elementFromPoint 复查；非动作区域、按下、失焦与遮罩立即隐藏。", "properties": ["hitUntil", "hitFrame", "shown"], "timing": "滚动重采样 180ms，场景动画开始后最多 500ms；结束/cancel 再检查一次。" }
+    ],
+    "state": ["shown / label / flipLabel / normalBlend / cursorColor", "zone / hasPosition / pressed", "x/y 与 targetX/targetY", "frame / hitFrame / hitUntil / labelTimer", "cursorLockState: drag | locked | null"],
+    "propertyOwnership": ["paint 独占光标根 transform；CSS 负责内层居中与标签入退场。", "全局共享锁由画廊交互写入，CustomCursor 不改写锁值，仅切换 body.is-cursor-dragging。", "difference 为默认混合；显式 normal 可用 data-cursor-color 或命中区的 computed color。"],
+    "interruption": ["pointerdown、离开窗口、blur、隐藏标签页、锁定、幕布或大图查看器会停采样并隐藏。", "偏好不再满足 hover/fine 或变为 reduce 后恢复系统指针，CSS 与 JS 双重保护。", "命中 DOM 被移除时 paint 检查 isConnected，取消旧区域状态；语言变化后重新命中。"]
+  },
+  "integration": {
+    "steps": ["在应用根只挂载一份 CustomCursor，Teleport 会把视觉层放入 body。", "在真实按钮/链接声明 data-cursor 或 data-cursor-label，可提供 data-cursor-zh/en。", "原生控件区域声明 data-cursor=\"native\"；纯色舞台按需提供 data-cursor-blend=\"normal\" 与有效 CSS 颜色。", "拖拽流程通过 cursorLockState 写 drag，聚焦/返回锁定写 locked，交互结束置 null；保留全局样式的区域限定。"],
+    "inputs": ["DOM data-cursor、data-cursor-label、data-cursor-zh/en、data-cursor-blend、data-cursor-color", "cursorLockState、subpageLanguage、routeCurtainActive、viewerActive"],
+    "outputs": ["局部 data-cursor-active 标记、body.is-cursor-dragging 与 Teleport 视觉层；无 emits。"],
+    "dependencies": ["vue", "useCursor", "useSubpageLanguage", "usePageCurtain", "useVisualViewer", "MutationObserver", "ResizeObserver", "requestAnimationFrame", "elementFromPoint"],
+    "assets": ["无外部图片或字体要求；圆点和标签均由 DOM/CSS 绘制。"]
+  },
+  "accessibility": { "reducedMotion": "完全隐藏自定义光标，保留系统光标；文字和显示 CSS transition 同时停用。", "touch": "hover:none 或 pointer:coarse 不显示，非鼠标事件隐藏；不影响原生触屏动作。", "keyboard": "视觉层 aria-hidden 且 pointer-events:none，不进入焦点序列；动作必须来自原本可访问的按钮/链接及其标签。" },
+  "lifecycle": {
+    "setup": ["挂载建立锁状态和语言 watcher，安装指针、scroll、resize、CSS 动画、可见性和媒体查询监听。", "MutationObserver 只看结构与相关属性，不观察每帧 style；ResizeObserver 缓存整体宽度供标签换侧。"],
+    "cleanup": ["卸载标记 dead，取消追随及命中两个 RAF、标签 timer，清掉动作区标记。", "停止 watcher、断开两个 observer、移除所有事件及偏好监听，移除 body 的光标相关 class。"],
+    "knownLimitations": ["强依赖应用的共享状态模块与全局 CSS，抽出复用时需显式提供替代状态。", "以 elementFromPoint 判命中，视觉动画的持续时间若超过 500ms 且指针不动，后续位置变化未必持续采样。", "label 文本不能替代宿主按钮的 aria-label；这是装饰提示，不是交互控件。"]
+  },
+  "agentNotes": ["不要将其描述为 GSAP quickTo 光标；真实位置算法是原生 RAF。", "不要全站强制 cursor:none，只有当前有效动作区域在满足媒体查询时才隐藏原生光标。", "不要在 pointermove 中读取图片 canvas 估色；当前 difference 交给浏览器混合。"],
+  "relatedEffects": ["visual-viewer-overlay", "color-preview-trail", "pointer-svg-trail", "route-curtain"],
+  "verification": { "commands": ["npm run typecheck"], "manualChecks": ["在作品、普通文字、输入框和禁用元素之间移动，只有真实动作区显示提示且退出恢复系统光标。", "指针靠右、切换语言、页面滚动但不移动鼠标时检查标签换侧与命中更新。", "拖拽、幕布和大图查看器、触屏与减少动态模式检查隐藏；静止时确认 RAF 不持续运行。"] },
+  "tags": ["vue", "pointer", "raf", "css-transition", "bilingual", "non-gsap"]
+}

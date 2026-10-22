@@ -1,0 +1,207 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "motion-layout-scheduler",
+  "title": {
+    "zh": "动效布局预热与刷新调度",
+    "en": "Motion layout preparation scheduler"
+  },
+  "category": "layout",
+  "status": "active",
+  "summary": "共享可取消队列按元素与视口的距离排序，每帧准备一个组件，并在批次结束后合并ScrollTrigger刷新；它是效果基础设施，不直接绘制动画。",
+  "entryFiles": [
+    "src/utils/motionLayout.ts",
+    "src/utils/viewportEntrance.ts"
+  ],
+  "integrationFiles": [
+    "src/components/ReferenceIntroduction.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/utils/motionLayout.ts",
+      "symbols": [
+        "prepareMotionLayout",
+        "flushPreparation",
+        "requestMotionLayoutRefresh"
+      ],
+      "purpose": "读取候选位置、分帧执行准备与合并刷新。"
+    },
+    {
+      "file": "src/utils/viewportEntrance.ts",
+      "symbols": [
+        "createViewportEntrance"
+      ],
+      "purpose": "一次性视口入场与越界完成兜底。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "调用prepareMotionLayout或requestMotionLayoutRefresh。",
+    "stages": [
+      {
+        "name": "让出首轮布局",
+        "description": "warmFrame后排入prepareFrame，避免挂载同一任务内反复强制布局。",
+        "properties": [
+          "RAF scheduling"
+        ],
+        "timing": "两个requestAnimationFrame阶段，不承诺固定毫秒数"
+      },
+      {
+        "name": "按距离准备",
+        "description": "批量读候选rect，仅执行最近的一个run，再处理下一帧。",
+        "properties": [
+          "layout reads"
+        ],
+        "timing": "每帧最多一个组件"
+      },
+      {
+        "name": "批次刷新",
+        "description": "preparations为空且存在refreshRequests才调用全局刷新。",
+        "properties": [
+          "ScrollTrigger.refresh"
+        ],
+        "timing": "合并到独立RAF"
+      }
+    ],
+    "state": [
+      "preparations:Map<symbol,Preparation>",
+      "refreshRequests:Set<symbol>",
+      "warmFrame/prepareFrame/refreshFrame",
+      "preparing"
+    ],
+    "propertyOwnership": [
+      "队列不写元素transform，具体run回调由调用方持有",
+      "viewportEntrance只调用play/complete并返回trigger"
+    ],
+    "interruption": [
+      "返回取消函数只撤销本调用方任务",
+      "断开的元素被丢弃；空队列停止RAF"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在DOM挂载后prepareMotionLayout(element,run)。",
+      "把返回取消函数保存到组件卸载清理。",
+      "布局变化时请求requestMotionLayoutRefresh并保存其取消函数；实际动画保持组件上下文。"
+    ],
+    "inputs": [
+      "HTMLElement",
+      "run():void",
+      "createViewportEntrance的trigger/play/complete/start/finishAt"
+    ],
+    "outputs": [
+      "取消函数",
+      "ScrollTrigger实例"
+    ],
+    "dependencies": [
+      "gsap/ScrollTrigger",
+      "浏览器RAF与DOM"
+    ],
+    "assets": []
+  },
+  "accessibility": {
+    "reducedMotion": "工具无偏好判断，调用方需按reduce选择静态分支。",
+    "touch": "工具不接管输入。",
+    "keyboard": "工具不接管焦点；锚点越界通过complete补齐。"
+  },
+  "lifecycle": {
+    "setup": [
+      "按需求登记Symbol任务；使用者负责注册ScrollTrigger插件"
+    ],
+    "cleanup": [
+      "调用返回取消函数；viewportEntrance实例由宿主kill或context.revert"
+    ],
+    "knownLimitations": [
+      "队列为模块单例；不要在同一页面复制多个模块实例造成多次全局刷新。",
+      "分帧准备减少重复工作，不保证任意设备固定帧率。"
+    ]
+  },
+  "agentNotes": [
+    "延迟准备和允许播放是两种门闩，不能混用。",
+    "createViewportEntrance默认start top95%、end bottom top，不是scrub动画。"
+  ],
+  "relatedEffects": [
+    "text-line-reveal",
+    "about-scroll-reveal",
+    "poster-gallery-reveal",
+    "about-hero"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "快速换页后没有对已卸载DOM的分行/刷新。",
+      "快滚和锚点直达时已越过文字保持终态。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "scrolltrigger",
+    "raf",
+    "scheduler",
+    "performance"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/工具/动效布局调度.ts",
+      "源码/项目源码/工具/视口入场控制.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/motionLayout.ts",
+      "path": "源码/项目源码/工具/动效布局调度.ts",
+      "role": "entry",
+      "originalSha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "originalBytes": 3222,
+      "sha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "bytes": 3222
+    },
+    {
+      "original": "src/utils/viewportEntrance.ts",
+      "path": "源码/项目源码/工具/视口入场控制.ts",
+      "role": "entry",
+      "originalSha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "originalBytes": 1233,
+      "sha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "bytes": 1233
+    },
+    {
+      "original": "src/components/ReferenceIntroduction.vue",
+      "path": "集成示例/项目源码/组件/引导文字揭示.vue",
+      "role": "integration-context",
+      "originalSha256": "96d05f989179d82ecb2a7d18bef925d254c2e7cf680e3cb95fcf2d122560cf74",
+      "originalBytes": 17515,
+      "sha256": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+      "bytes": 17524
+    }
+  ]
+}

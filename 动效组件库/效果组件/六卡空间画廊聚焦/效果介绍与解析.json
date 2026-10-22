@@ -1,0 +1,566 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "gallery-focus",
+  "title": {
+    "zh": "六卡空间画廊与全屏聚焦",
+    "en": "Six-card gallery and fullscreen focus"
+  },
+  "category": "transition",
+  "status": "active",
+  "summary": "以 CSS 3D 正交环承载六个求职作品方向。几何由纯函数计算，宿主统一渲染，GSAP 只插值 entrance、orbit 与 focus；章节转场单独只推进 focus，让选中卡铺满视口、其余卡原地淡出。",
+  "entryFiles": [
+    "src/components/ThreeHome.vue",
+    "src/experience/transitions/index.ts",
+    "src/experience/state.ts",
+    "src/utils/galleryMotion.ts"
+  ],
+  "integrationFiles": [
+    "src/views/GalleryView.vue",
+    "src/components/CardVisual.vue",
+    "src/composables/useTransition.ts",
+    "src/App.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/utils/galleryMotion.ts",
+      "symbols": [
+        "layoutGallery",
+        "projectCardCorners",
+        "entranceEase",
+        "focusEase",
+        "INTRO_DURATION",
+        "FOCUS_DURATION"
+      ],
+      "purpose": "六卡位姿、裁切、明暗与投影的唯一数学来源。"
+    },
+    {
+      "file": "src/experience/transitions/index.ts",
+      "symbols": [
+        "createChapterTransition",
+        "TransitionHost"
+      ],
+      "purpose": "单时间线 focus 进入/返回及状态机交接。"
+    },
+    {
+      "file": "src/experience/state.ts",
+      "symbols": [
+        "createChapterMachine"
+      ],
+      "purpose": "gallery、chapterTransition、chapter、chapterLeaving 阶段查询与 frozen 判断。"
+    },
+    {
+      "file": "src/components/ThreeHome.vue",
+      "symbols": [
+        "render",
+        "runIntro",
+        "focusChapter",
+        "returnToGallery",
+        "rotateToFront",
+        "onPointerDown",
+        "onPointerUp",
+        "toggleIndex",
+        "prepareIndexPanel",
+        "enterIndexPanel",
+        "leaveIndexPanel"
+      ],
+      "purpose": "渲染、输入、按需 ticker、缩放/后退恢复和首页索引弹层。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "黄幕结束或 preloaderDone 启动开场；点击卡片进入全屏舞台，全屏卡再点击通过 startJump 进入独立子页；返回按钮/Escape 反向收起。",
+    "stages": [
+      {
+        "name": "entrance",
+        "description": "entrance:0→1，orbit:-75deg→0deg，六卡半径和比例同步展开，结束自动聚焦 ABOUT。",
+        "properties": [
+          "GalleryState.entrance",
+          "GalleryState.orbit"
+        ],
+        "timing": "3.6s；自定义 cubic-bezier(0.165,.84,.44,1)，非严格等价 GSAP power3.out。"
+      },
+      {
+        "name": "focus",
+        "description": "只把 focus 推到 1，选中卡的 x/z/rotateY/inset 逐渐归零、scale 到 1；其他卡保持位置并在 focus/.65 内淡出，轨道 tilt 从 -45deg 回到 0deg。",
+        "properties": [
+          "GalleryState.focus",
+          "transform",
+          "clip-path",
+          "opacity"
+        ],
+        "timing": "1.4s；focusEase=cubic-bezier(.215,.61,.355,1)。"
+      },
+      {
+        "name": "return",
+        "description": "从当前 focus 回到 0，支持聚焦未结束时直接退回；结束通知宿主恢复画廊并消费排队切卡。",
+        "properties": [
+          "GalleryState.focus"
+        ],
+        "timing": "max(.45,1.25*当前focus) 秒；减少动态时 timeline.progress(1) 直接落终态。"
+      },
+      {
+        "name": "orbit-input",
+        "description": "拖拽带惯性吸附到 60deg 卡间距；滚轮与左右键切前景卡，pointer 邻近和三层漂移按需唤醒 ticker。",
+        "properties": [
+          "GalleryState.orbit",
+          "drift",
+          "proximity"
+        ],
+        "timing": "普通导航 .9s power2.out；拖拽吸附 .5~1.3s；取消拖拽 .45s。"
+      },
+      {
+        "name": "home-index",
+        "description": "首页另有 Teleport 索引，面板淡入、六行从裁切下边上移；关闭淡出。它操作同一画廊焦点，不等同于子页 SubpageIndex 的路由菜单。",
+        "properties": [
+          "index-panel.opacity",
+          "index-row.yPercent"
+        ],
+        "timing": "淡入 .6s；行从 .15s 开始 .8s、stagger .04s；淡出 .4s。"
+      }
+    ],
+    "state": [
+      "渲染 Phase: intro / gallery / focusing / detail / returning",
+      "GalleryState: entrance、orbit、focus、selected",
+      "chapter machine 独立描述转场；同一时刻只持有一条章节时间线",
+      "restoreIndex、preloaderDone、autoEnterAbout 由 GalleryView 传入",
+      "lastFocusedCard / galleryLeavePosition 与 sessionStorage 面包屑完成后退识别"
+    ],
+    "propertyOwnership": [
+      "galleryMotion 只计算，ThreeHome.render 独占 .card-position/.card-plane 的 transform、clip-path、opacity。",
+      "卡内 GSAP 动效只写 CardVisual 子树，不能碰卡片空间摆放节点。",
+      "漂移层 stage/orbit/card-drift 各自套壳；聚焦时 reach=1-focus，防全屏卡漂移露出黑边。"
+    ],
+    "interruption": [
+      "每次聚焦/返回先 kill 旧章节时间线；退出从当前 focus 接续。",
+      "stopMotion 清理开场、转环、转场及拖拽状态；settleGallery 先重置状态机再 render。",
+      "开场 boot 有 12s 兜底；调试/后退恢复先 cancelBoot，避免迟到信号重置 state。",
+      "尺寸变化重新计算几何并重建 CardVisual；短小高度变化防抖 160ms，宽度或高度差>=80px 立即更新。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "将 ThreeHome 和数学层/转场层配套使用，按 CHAPTERS 维护六卡顺序。",
+      "传入当前首页进入来源和 Preloader 状态；后退恢复传 restoreIndex 0..5。",
+      "若只迁移 createChapterTransition，TransitionHost.state 必须与宿主每帧读的对象同一引用，并提供 render、完成回调。",
+      "保留 card-position→card-drift→card-plane→CardVisual 分层。",
+      "跨页跳转仍交给 App/PageCurtain；本效果的 focus 不是跨路由幕布。"
+    ],
+    "inputs": [
+      "restoreIndex?: number|null",
+      "preloaderDone?: boolean",
+      "autoEnterAbout?: boolean",
+      "鼠标、触控拖拽、滚轮、Enter/Space/Escape/左右键",
+      "TransitionHost 的 state、focusDuration、reduced、render 和回调"
+    ],
+    "outputs": [
+      "全屏卡与画廊两种布局",
+      "startJump('01'..'06')",
+      "lastFocusedCard / galleryLeavePosition",
+      "本机 localhost/127.0.0.1 且 ?galleryDebug 时 window.__galleryDebug"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "src/data/chapters.ts",
+      "CardVisual 注册表",
+      "useHomeIntroduction",
+      "useCursor",
+      "useTransition",
+      "usePageCurtain"
+    ],
+    "assets": [
+      "几何和卡面主要为 CSS/SVG；章节卡内容资源由 CardVisual 管理。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "挂载时读取媒体查询，开场与 focus 直接完成，指针漂移停用，转环采用短时长；本组件未监听该查询后续 change。",
+    "touch": "Pointer Events 处理拖拽、惯性、多指取消和点击抑制；局部 wheel 为非 passive，卡片内容 pointer-events:none。",
+    "keyboard": "卡片 role=button 支持 Enter/Space；左右键转环，Escape 收回；首页索引具 aria-modal、Tab 循环和关闭后焦点恢复。"
+  },
+  "lifecycle": {
+    "setup": [
+      "挂载注册 ResizeObserver、visualViewport resize、orientationchange 与输入事件。",
+      "按需添加 gsap.ticker；画面落定后移除，输入/补间可再次唤醒。"
+    ],
+    "cleanup": [
+      "卸载清 boot/resize/click 计时器、所有时间线、观察器、全局与局部输入事件及 ticker。",
+      "清 cursorLockState 和 window.__galleryDebug。"
+    ],
+    "knownLimitations": [
+      "是固定六卡的完整体验宿主，不是任意数量的通用 carousel；CARD_COUNT、ROTATIONS 和章节映射需成套修改。",
+      "正交 CSS 3D 中 z 会经倾斜投影影响屏幕 y，不能照透视图库逻辑额外加后退 z 轨。",
+      "CardVisual.remount 创建新动画实例，不能据 Base.introDone 推断跨实例保留入场完成标记。",
+      "useHomeIntroduction 在满足正常首访条件且 ABOUT 可见四秒后可自动进入 /about；迁移须审视该产品行为。"
+    ]
+  },
+  "agentNotes": [
+    "ThreeHome 中少量历史注释仍描述旧百分比切页；当前实际跨页走 startJump→App 的路由幕布。",
+    "首页索引已经在本效果源码与解析中覆盖；index-overlay 描述的是独立 SubpageIndex。",
+    "verification.commands 是已有仓库检查入口；没有宣称其覆盖所有视觉位姿。"
+  ],
+  "relatedEffects": [
+    "home-preloader",
+    "route-curtain",
+    "card-about",
+    "card-edit",
+    "card-color",
+    "card-news",
+    "card-poster",
+    "card-photo",
+    "index-overlay"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-runtime-navigation.mjs"
+    ],
+    "manualChecks": [
+      "刷新首页，检查六卡绽开、ABOUT 聚焦与进入子页。",
+      "聚焦中 Escape、连续切卡、拖拽后点击，检查不卡在中间状态。",
+      "子页后退与子页刷新后后退，确认恢复目标卡而非重播黄幕。",
+      "横竖屏切换及 844×390、320×568 视口检查裁切和控件。",
+      "在本机 /?galleryDebug=1 用 snapshot/seek 检查 focus 中间帧。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "css-3d",
+    "gallery",
+    "focus",
+    "clip-path",
+    "state-machine",
+    "pointer",
+    "history"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/六卡空间首页.vue",
+      "源码/项目源码/体验状态/转场/体验转场控制.ts",
+      "源码/项目源码/体验状态/体验状态.ts",
+      "源码/项目源码/工具/画廊动画控制.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/cardAnimations/about.ts",
+      "path": "源码/项目源码/卡片动画/关于我卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "4d7af532350c269c3c3b1c7bd7458fcd389d2baec743c27f57ad5c0cd2c2d548",
+      "originalBytes": 1718,
+      "sha256": "70b1b47c419c034e6cbb6d28dd79993793705a2d3cf688bd30e24edc199d0718",
+      "bytes": 1732
+    },
+    {
+      "original": "src/cardAnimations/base.ts",
+      "path": "源码/项目源码/卡片动画/卡片动画基础.ts",
+      "role": "dependency",
+      "originalSha256": "224b9d5f83d4610d948d34efe803b4013dc032fcfa759966265419a639f40057",
+      "originalBytes": 7501,
+      "sha256": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+      "bytes": 7514
+    },
+    {
+      "original": "src/cardAnimations/color.ts",
+      "path": "源码/项目源码/卡片动画/调色卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "4243fae7e25d96cf85b112b7d4efa89cd05bef11f2b8e1d0cbac2c57ed42291d",
+      "originalBytes": 5877,
+      "sha256": "763629d958a17b1d6cfa8de0f2e3ba047778e747f061fc5cff9c2a827b132324",
+      "bytes": 5891
+    },
+    {
+      "original": "src/cardAnimations/edit.ts",
+      "path": "源码/项目源码/卡片动画/剪辑卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "5e1f16002b6531fd2364dfaa69dc22766745850c9df31fa50c76f8baa4e19f4b",
+      "originalBytes": 4808,
+      "sha256": "d77847030de999501877aebb8f698f4a8a3bc021ab048a1693356e87aa9df994",
+      "bytes": 4822
+    },
+    {
+      "original": "src/cardAnimations/index.ts",
+      "path": "源码/项目源码/卡片动画/卡片动画注册表.ts",
+      "role": "dependency",
+      "originalSha256": "70536b9618e6241816e960e3226771d92aa21fb0056c527b6d186f0e924c1c65",
+      "originalBytes": 2116,
+      "sha256": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+      "bytes": 2218
+    },
+    {
+      "original": "src/cardAnimations/news.ts",
+      "path": "源码/项目源码/卡片动画/新闻卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "04cc0740f7e318c09e4aa4bb93160061871d7620d0523f93b6b7e374e8b3c89e",
+      "originalBytes": 8829,
+      "sha256": "ffaf4abf23a66a131389e334f21f76cf6ac46016681769a1a63f71a81433c64b",
+      "bytes": 8843
+    },
+    {
+      "original": "src/cardAnimations/photo.ts",
+      "path": "源码/项目源码/卡片动画/摄影卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "8921221c9efc68d7d32e128511f4d0ef89aa7a706c2bc131047cf23602dc14a7",
+      "originalBytes": 7955,
+      "sha256": "478223c2996478337d062ef345a3dabc692691b8c1adf95fc291329d612f0be1",
+      "bytes": 7982
+    },
+    {
+      "original": "src/cardAnimations/poster.ts",
+      "path": "源码/项目源码/卡片动画/海报卡动画.ts",
+      "role": "dependency",
+      "originalSha256": "ee93448e65f7c574fd22a4359dcdaa3cc6579af1caa7e953bda5f3aba9dfe839",
+      "originalBytes": 7477,
+      "sha256": "5b59d074ebef0e2d0d1a044b2c746dde682c0df3dd3765125117383bd587afc9",
+      "bytes": 7504
+    },
+    {
+      "original": "src/cardAnimations/types.ts",
+      "path": "源码/项目源码/卡片动画/卡片动画类型.ts",
+      "role": "dependency",
+      "originalSha256": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+      "originalBytes": 1600,
+      "sha256": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+      "bytes": 1600
+    },
+    {
+      "original": "src/components/CardVisual.vue",
+      "path": "源码/项目源码/组件/卡片视觉.vue",
+      "role": "dependency",
+      "originalSha256": "8c7356656c704ff4a48f1469202d9f580ffaa3300adfe6e697a82ece98afcee4",
+      "originalBytes": 8038,
+      "sha256": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+      "bytes": 8076
+    },
+    {
+      "original": "src/components/ThreeHome.vue",
+      "path": "源码/项目源码/组件/六卡空间首页.vue",
+      "role": "entry",
+      "originalSha256": "ec5e4d12a10f2e255da4bd6fb1ba5a46487cbc4830ef60410d4ad3635ac8d461",
+      "originalBytes": 55655,
+      "sha256": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+      "bytes": 55720
+    },
+    {
+      "original": "src/components/about/AboutExperience.vue",
+      "path": "源码/项目源码/组件/人物与作品/人物经历.vue",
+      "role": "dependency",
+      "originalSha256": "9a504f3050d9a0e753e970392a8b2479dcae196379a0d92291e7c8fc97a01a2a",
+      "originalBytes": 1993,
+      "sha256": "acd4d0a54dde3c5f76f259d0f7edb7ca6e9af3e8d6fab22123ccb09dca7c38b7",
+      "bytes": 1996
+    },
+    {
+      "original": "src/components/about/TemplateMark.vue",
+      "path": "源码/项目源码/组件/人物与作品/个人标志扫描.vue",
+      "role": "dependency",
+      "originalSha256": "ea2546bb4743e4f707d8a0e3fdd253e5ab72ed08d582fad14e049223419a172b",
+      "originalBytes": 5668,
+      "sha256": "ea2546bb4743e4f707d8a0e3fdd253e5ab72ed08d582fad14e049223419a172b",
+      "bytes": 5668
+    },
+    {
+      "original": "src/components/about/aboutExperience.css",
+      "path": "源码/项目源码/组件/人物与作品/人物经历样式.css",
+      "role": "dependency",
+      "originalSha256": "65465badc19c441516ea68615ffdd6b8402e081182fd7c94616e150ada9a2faa",
+      "originalBytes": 5139,
+      "sha256": "65465badc19c441516ea68615ffdd6b8402e081182fd7c94616e150ada9a2faa",
+      "bytes": 5139
+    },
+    {
+      "original": "src/components/about/aboutExperienceAnimation.ts",
+      "path": "源码/项目源码/组件/人物与作品/人物经历动画.ts",
+      "role": "dependency",
+      "originalSha256": "49128b6f718d1dfbc2bac98e4ba27490e92c920f61381aee4262f041b007c300",
+      "originalBytes": 4694,
+      "sha256": "49128b6f718d1dfbc2bac98e4ba27490e92c920f61381aee4262f041b007c300",
+      "bytes": 4694
+    },
+    {
+      "original": "src/components/cards/ColorCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/调色卡面.vue",
+      "role": "dependency",
+      "originalSha256": "f5b8425f010748c28f01c7487e1c2069683d3f0d2fb7ee1290c3f85a5074f55e",
+      "originalBytes": 8440,
+      "sha256": "f5b8425f010748c28f01c7487e1c2069683d3f0d2fb7ee1290c3f85a5074f55e",
+      "bytes": 8440
+    },
+    {
+      "original": "src/components/cards/EditCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/剪辑卡面.vue",
+      "role": "dependency",
+      "originalSha256": "9f239ae04c036b1219bcb50fe84b64541124633bc8da8f9d5c4afe733d414016",
+      "originalBytes": 5189,
+      "sha256": "9f239ae04c036b1219bcb50fe84b64541124633bc8da8f9d5c4afe733d414016",
+      "bytes": 5189
+    },
+    {
+      "original": "src/components/cards/NewsCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/新闻卡面.vue",
+      "role": "dependency",
+      "originalSha256": "571dafae0aeba0a0ef208fb5ed9d9a8382aa55ff67622e957464bad8964cb6de",
+      "originalBytes": 5952,
+      "sha256": "571dafae0aeba0a0ef208fb5ed9d9a8382aa55ff67622e957464bad8964cb6de",
+      "bytes": 5952
+    },
+    {
+      "original": "src/components/cards/PhotoCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/摄影卡面.vue",
+      "role": "dependency",
+      "originalSha256": "3ff57d55d8e14fd04a70334e965323bdc8f8af05c0e774602da39c64c482d11c",
+      "originalBytes": 4971,
+      "sha256": "3ff57d55d8e14fd04a70334e965323bdc8f8af05c0e774602da39c64c482d11c",
+      "bytes": 4971
+    },
+    {
+      "original": "src/components/cards/PosterCardVisual.vue",
+      "path": "源码/项目源码/组件/卡面/海报卡面.vue",
+      "role": "dependency",
+      "originalSha256": "baff294398f4f829d54da083f0d5cda7bf68a6b78b1623834a3374d02243847e",
+      "originalBytes": 6977,
+      "sha256": "baff294398f4f829d54da083f0d5cda7bf68a6b78b1623834a3374d02243847e",
+      "bytes": 6977
+    },
+    {
+      "original": "src/composables/useCursor.ts",
+      "path": "源码/项目源码/组合函数/动作光标控制.ts",
+      "role": "dependency",
+      "originalSha256": "6bc14283f9dad999dd62a3feee626a39653780916c9bc089a44a503db6fce80e",
+      "originalBytes": 1411,
+      "sha256": "6bc14283f9dad999dd62a3feee626a39653780916c9bc089a44a503db6fce80e",
+      "bytes": 1411
+    },
+    {
+      "original": "src/composables/useHomeIntroduction.ts",
+      "path": "源码/项目源码/组合函数/首页引导状态.ts",
+      "role": "dependency",
+      "originalSha256": "5d29f7b04a9d3dec0112ea6c9cff037e0924f1033178b331b0ac30bfc7872b8d",
+      "originalBytes": 1699,
+      "sha256": "5d29f7b04a9d3dec0112ea6c9cff037e0924f1033178b331b0ac30bfc7872b8d",
+      "bytes": 1699
+    },
+    {
+      "original": "src/composables/usePageCurtain.ts",
+      "path": "源码/项目源码/组合函数/页面幕布控制.ts",
+      "role": "dependency",
+      "originalSha256": "c3a4e2b07723684ac7d06ecb2fea597ab245f6cc23ceb7c42c530099e4111355",
+      "originalBytes": 1568,
+      "sha256": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+      "bytes": 1570
+    },
+    {
+      "original": "src/composables/useTransition.ts",
+      "path": "源码/项目源码/组合函数/应用转场状态.ts",
+      "role": "dependency",
+      "originalSha256": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+      "originalBytes": 8511,
+      "sha256": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+      "bytes": 8511
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/chapters.ts",
+      "path": "源码/项目源码/数据/作品章节资料.ts",
+      "role": "dependency",
+      "originalSha256": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+      "originalBytes": 1417,
+      "sha256": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+      "bytes": 1417
+    },
+    {
+      "original": "src/experience/galleryRenderer.ts",
+      "path": "源码/项目源码/体验状态/画廊姿态渲染器.ts",
+      "role": "dependency",
+      "originalSha256": "64867ca07574473e64c783efaaaa9e8c84422f4a0c511b9d9449ccb0b62cc9c5",
+      "originalBytes": 6903,
+      "sha256": "715847ba6b3e57a336c6d97088a13a504a8050251855256b34952fc4377130f3",
+      "bytes": 6915
+    },
+    {
+      "original": "src/experience/state.ts",
+      "path": "源码/项目源码/体验状态/体验状态.ts",
+      "role": "entry",
+      "originalSha256": "9b60ac8b0458db5fd8ddce9a5d6f03d691efc8e96b03d9c8336ac032c69019cc",
+      "originalBytes": 2107,
+      "sha256": "9b60ac8b0458db5fd8ddce9a5d6f03d691efc8e96b03d9c8336ac032c69019cc",
+      "bytes": 2107
+    },
+    {
+      "original": "src/experience/transitions/index.ts",
+      "path": "源码/项目源码/体验状态/转场/体验转场控制.ts",
+      "role": "entry",
+      "originalSha256": "ced8ce5a3eafd07399c20ecf157d74ece3f032f0fd0850629aac9e24fb4291d2",
+      "originalBytes": 5630,
+      "sha256": "e84cc04b52ed8c892432c3c58109990383672a66536e51feebbd7e77bbbd07f6",
+      "bytes": 5643
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/galleryMotion.ts",
+      "path": "源码/项目源码/工具/画廊动画控制.ts",
+      "role": "entry",
+      "originalSha256": "70a430bcc7de15635880aa899b260b3e541c535ca9029f6549f15cdc8a5978cf",
+      "originalBytes": 8458,
+      "sha256": "70a430bcc7de15635880aa899b260b3e541c535ca9029f6549f15cdc8a5978cf",
+      "bytes": 8458
+    },
+    {
+      "original": "src/views/GalleryView.vue",
+      "path": "集成示例/项目源码/页面/六卡画廊页.vue",
+      "role": "integration-context",
+      "originalSha256": "ea9a8ac95d077200331d760edce4721e0d19975f14a9ec21a70d4f17d94ee290",
+      "originalBytes": 4760,
+      "sha256": "24bc0876ee1effdb00da8260cddcbb36d2c7fb52f698cee5473a580ec1f43fe7",
+      "bytes": 4776
+    },
+    {
+      "original": "src/App.vue",
+      "path": "集成示例/项目源码/应用根组件.vue",
+      "role": "integration-context",
+      "originalSha256": "d3616de42ebe50434066d43ea8b45870be8584edcb944185e804d47f73c009af",
+      "originalBytes": 4374,
+      "sha256": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+      "bytes": 4375
+    }
+  ]
+}

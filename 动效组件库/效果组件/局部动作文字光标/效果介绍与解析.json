@@ -1,0 +1,301 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "action-cursor",
+  "title": {
+    "zh": "局部动作文字光标",
+    "en": "Contextual action cursor"
+  },
+  "category": "pointer",
+  "status": "active",
+  "summary": "在声明了真实动作的作品区域显示实心点与双语动词，原生 RAF 对位置做指数追随，Vue Transition 与 CSS 接力替换文字。页面滚动或动画时短时重新命中，静止后停止采样。配套 useCursor 仅提供画廊共享锁状态；本实现不使用 GSAP。",
+  "entryFiles": [
+    "src/components/CustomCursor.vue",
+    "src/composables/useCursor.ts"
+  ],
+  "integrationFiles": [
+    "src/App.vue",
+    "src/components/ThreeHome.vue",
+    "src/composables/useSubpageLanguage.ts",
+    "src/composables/usePageCurtain.ts",
+    "src/composables/useVisualViewer.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/CustomCursor.vue",
+      "symbols": [
+        "paint",
+        "updateZone",
+        "updateLabel",
+        "positionLabel"
+      ],
+      "purpose": "局部动作区域选择、平滑位置、标签防抖及靠右边界换侧。"
+    },
+    {
+      "file": "src/components/CustomCursor.vue",
+      "symbols": [
+        "recheck",
+        "checkHit",
+        "onSceneMotion",
+        "hide",
+        "stopSampling"
+      ],
+      "purpose": "滚动、DOM 及动画变化时按最近指针坐标重新命中，并在空闲停止 RAF。"
+    },
+    {
+      "file": "src/composables/useCursor.ts",
+      "symbols": [
+        "cursorLockState"
+      ],
+      "purpose": "跨组件共享 drag/locked/null；画廊写入，动作光标读取。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "鼠标 pointermove 或 pointerover 命中 [data-cursor]、[data-cursor-label] 或 .pg__btn，且精细指针、允许动态、无拖拽/幕布/查看器。",
+    "stages": [
+      {
+        "name": "命中与显示",
+        "description": "筛除原生输入、controls video、禁用/隐藏/inert 等目标，按当前语言读取动作标签；只对生效区域设置 data-cursor-active 以隐藏系统光标。",
+        "properties": [
+          "zone",
+          "shown",
+          "data-cursor-active",
+          "cursorColor",
+          "normalBlend"
+        ],
+        "timing": "首次进入立即显示文字；CSS opacity 与 color 为 0.3s。"
+      },
+      {
+        "name": "位置与文字",
+        "description": "位置用 1-exp(-26*dt) 追随目标，误差和小于 0.02px 后停 RAF。跨动作标签先防抖再由 Vue Transition 向上接力；靠近视口右侧时标签移至左侧。",
+        "properties": [
+          "transform",
+          "label",
+          "flipLabel"
+        ],
+        "timing": "标签防抖 50ms；文字 transform 0.45s、opacity 0.35s。"
+      },
+      {
+        "name": "场景重采样",
+        "description": "滚动、窗口变化、DOM 结构、场景 CSS transition/animation 或锁状态改变后用 elementFromPoint 复查；非动作区域、按下、失焦与遮罩立即隐藏。",
+        "properties": [
+          "hitUntil",
+          "hitFrame",
+          "shown"
+        ],
+        "timing": "滚动重采样 180ms，场景动画开始后最多 500ms；结束/cancel 再检查一次。"
+      }
+    ],
+    "state": [
+      "shown / label / flipLabel / normalBlend / cursorColor",
+      "zone / hasPosition / pressed",
+      "x/y 与 targetX/targetY",
+      "frame / hitFrame / hitUntil / labelTimer",
+      "cursorLockState: drag | locked | null"
+    ],
+    "propertyOwnership": [
+      "paint 独占光标根 transform；CSS 负责内层居中与标签入退场。",
+      "全局共享锁由画廊交互写入，CustomCursor 不改写锁值，仅切换 body.is-cursor-dragging。",
+      "difference 为默认混合；显式 normal 可用 data-cursor-color 或命中区的 computed color。"
+    ],
+    "interruption": [
+      "pointerdown、离开窗口、blur、隐藏标签页、锁定、幕布或大图查看器会停采样并隐藏。",
+      "偏好不再满足 hover/fine 或变为 reduce 后恢复系统指针，CSS 与 JS 双重保护。",
+      "命中 DOM 被移除时 paint 检查 isConnected，取消旧区域状态；语言变化后重新命中。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在应用根只挂载一份 CustomCursor，Teleport 会把视觉层放入 body。",
+      "在真实按钮/链接声明 data-cursor 或 data-cursor-label，可提供 data-cursor-zh/en。",
+      "原生控件区域声明 data-cursor=\"native\"；纯色舞台按需提供 data-cursor-blend=\"normal\" 与有效 CSS 颜色。",
+      "拖拽流程通过 cursorLockState 写 drag，聚焦/返回锁定写 locked，交互结束置 null；保留全局样式的区域限定。"
+    ],
+    "inputs": [
+      "DOM data-cursor、data-cursor-label、data-cursor-zh/en、data-cursor-blend、data-cursor-color",
+      "cursorLockState、subpageLanguage、routeCurtainActive、viewerActive"
+    ],
+    "outputs": [
+      "局部 data-cursor-active 标记、body.is-cursor-dragging 与 Teleport 视觉层；无 emits。"
+    ],
+    "dependencies": [
+      "vue",
+      "useCursor",
+      "useSubpageLanguage",
+      "usePageCurtain",
+      "useVisualViewer",
+      "MutationObserver",
+      "ResizeObserver",
+      "requestAnimationFrame",
+      "elementFromPoint"
+    ],
+    "assets": [
+      "无外部图片或字体要求；圆点和标签均由 DOM/CSS 绘制。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "完全隐藏自定义光标，保留系统光标；文字和显示 CSS transition 同时停用。",
+    "touch": "hover:none 或 pointer:coarse 不显示，非鼠标事件隐藏；不影响原生触屏动作。",
+    "keyboard": "视觉层 aria-hidden 且 pointer-events:none，不进入焦点序列；动作必须来自原本可访问的按钮/链接及其标签。"
+  },
+  "lifecycle": {
+    "setup": [
+      "挂载建立锁状态和语言 watcher，安装指针、scroll、resize、CSS 动画、可见性和媒体查询监听。",
+      "MutationObserver 只看结构与相关属性，不观察每帧 style；ResizeObserver 缓存整体宽度供标签换侧。"
+    ],
+    "cleanup": [
+      "卸载标记 dead，取消追随及命中两个 RAF、标签 timer，清掉动作区标记。",
+      "停止 watcher、断开两个 observer、移除所有事件及偏好监听，移除 body 的光标相关 class。"
+    ],
+    "knownLimitations": [
+      "强依赖应用的共享状态模块与全局 CSS，抽出复用时需显式提供替代状态。",
+      "以 elementFromPoint 判命中，视觉动画的持续时间若超过 500ms 且指针不动，后续位置变化未必持续采样。",
+      "label 文本不能替代宿主按钮的 aria-label；这是装饰提示，不是交互控件。"
+    ]
+  },
+  "agentNotes": [
+    "不要将其描述为 GSAP quickTo 光标；真实位置算法是原生 RAF。",
+    "不要全站强制 cursor:none，只有当前有效动作区域在满足媒体查询时才隐藏原生光标。",
+    "不要在 pointermove 中读取图片 canvas 估色；当前 difference 交给浏览器混合。"
+  ],
+  "relatedEffects": [
+    "visual-viewer-overlay",
+    "color-preview-trail",
+    "pointer-svg-trail",
+    "route-curtain"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "在作品、普通文字、输入框和禁用元素之间移动，只有真实动作区显示提示且退出恢复系统光标。",
+      "指针靠右、切换语言、页面滚动但不移动鼠标时检查标签换侧与命中更新。",
+      "拖拽、幕布和大图查看器、触屏与减少动态模式检查隐藏；静止时确认 RAF 不持续运行。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "pointer",
+    "raf",
+    "css-transition",
+    "bilingual",
+    "non-gsap"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/自定义光标.vue",
+      "源码/项目源码/组合函数/动作光标控制.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/CustomCursor.vue",
+      "path": "源码/项目源码/组件/自定义光标.vue",
+      "role": "entry",
+      "originalSha256": "0cb2f93bebd319232a116d985035b6829269be4cea1bab12e8c3c58d68c28730",
+      "originalBytes": 13615,
+      "sha256": "a75991e7b624aa96e485e8f3b920f5a5c684367e577e76a10dab9363eb008236",
+      "bytes": 13638
+    },
+    {
+      "original": "src/composables/useCursor.ts",
+      "path": "源码/项目源码/组合函数/动作光标控制.ts",
+      "role": "entry",
+      "originalSha256": "6bc14283f9dad999dd62a3feee626a39653780916c9bc089a44a503db6fce80e",
+      "originalBytes": 1411,
+      "sha256": "6bc14283f9dad999dd62a3feee626a39653780916c9bc089a44a503db6fce80e",
+      "bytes": 1411
+    },
+    {
+      "original": "src/composables/usePageCurtain.ts",
+      "path": "源码/项目源码/组合函数/页面幕布控制.ts",
+      "role": "dependency",
+      "originalSha256": "c3a4e2b07723684ac7d06ecb2fea597ab245f6cc23ceb7c42c530099e4111355",
+      "originalBytes": 1568,
+      "sha256": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+      "bytes": 1570
+    },
+    {
+      "original": "src/composables/useSubpageLanguage.ts",
+      "path": "源码/项目源码/组合函数/子页语言状态.ts",
+      "role": "dependency",
+      "originalSha256": "12e12aceae8fbfce2b97266e839c0ea8a05aaa0fc2a4d18f1801ba3596e216a2",
+      "originalBytes": 930,
+      "sha256": "2efc21b0891fd7c28a7b1cda9371e0ca5b76393a2c01d86c1dd4ecbadd749635",
+      "bytes": 932
+    },
+    {
+      "original": "src/composables/useVisualViewer.ts",
+      "path": "源码/项目源码/组合函数/作品查看器控制.ts",
+      "role": "dependency",
+      "originalSha256": "78a3e45d0ce8853705a13f271511cc54fbd89b1bca8e2694253dfbe475c05881",
+      "originalBytes": 7188,
+      "sha256": "ec8169f80998eeae00ad229d45c4d797ddfccabc1a496f0718aa4d5a6c30fa1c",
+      "bytes": 7193
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/visualPortfolio.ts",
+      "path": "源码/项目源码/数据/视觉作品资料.ts",
+      "role": "dependency",
+      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
+      "originalBytes": 22342,
+      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+      "bytes": 22342
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/App.vue",
+      "path": "集成示例/项目源码/应用根组件.vue",
+      "role": "integration-context",
+      "originalSha256": "d3616de42ebe50434066d43ea8b45870be8584edcb944185e804d47f73c009af",
+      "originalBytes": 4374,
+      "sha256": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+      "bytes": 4375
+    },
+    {
+      "original": "src/components/ThreeHome.vue",
+      "path": "集成示例/项目源码/组件/六卡空间首页.vue",
+      "role": "integration-context",
+      "originalSha256": "ec5e4d12a10f2e255da4bd6fb1ba5a46487cbc4830ef60410d4ad3635ac8d461",
+      "originalBytes": 55655,
+      "sha256": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+      "bytes": 55720
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "index-overlay",
+  "title": {
+    "zh": "子页作品索引覆盖菜单",
+    "en": "Subpage works-index overlay"
+  },
+  "category": "overlay",
+  "status": "active",
+  "summary": "跨子页常驻的作品索引菜单。右上按钮因滚动唤醒、桌面闲置隐藏；面板 Teleport 到 body，背景 inert 并独占滚动锁。GSAP 控制背景淡入和章节行从裁切区上移，点击链接交接全局路由导航。",
+  "entryFiles": [
+    "src/components/SubpageIndex.vue"
+  ],
+  "integrationFiles": [
+    "src/App.vue",
+    "src/composables/useSubpageLanguage.ts",
+    "src/composables/useTransition.ts",
+    "src/composables/usePageCurtain.ts",
+    "src/style.css"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/SubpageIndex.vue",
+      "symbols": [
+        "preparePanel",
+        "enterPanel",
+        "leavePanel",
+        "wake",
+        "show",
+        "close",
+        "finishClose",
+        "onKeydown"
+      ],
+      "purpose": "弹层入退场、滚动唤醒、输入锁、焦点管理和路由关闭。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "右上索引按钮点击 show；scroll、wheel、touchmove 唤醒按钮，触屏保持可见。route.fullPath 变化自动 close(false)。",
+    "stages": [
+      {
+        "name": "wake",
+        "description": "按钮 visible=true；桌面非悬停、非聚焦、非打开时闲置隐藏。",
+        "properties": [
+          "visible",
+          "opacity",
+          "transform"
+        ],
+        "timing": "闲置 1600ms；CSS 进入 .5s、退出 .2s。"
+      },
+      {
+        "name": "prepare",
+        "description": "面板初始 opacity=0，章节行 yPercent=100；设置 #app.inert 并添加 html.has-subpage-index。",
+        "properties": [
+          "panel.opacity",
+          "line.yPercent",
+          "app.inert"
+        ],
+        "timing": "Vue before-enter 同步设置。"
+      },
+      {
+        "name": "enter",
+        "description": "面板淡入，六个章节行沿 yPercent 归零，父链接 overflow:clip 限定可见区域。",
+        "properties": [
+          "panel.opacity",
+          "line.yPercent"
+        ],
+        "timing": ".6s power2.out；行从 .15s 开始 .8s、stagger .04s、power3.out。"
+      },
+      {
+        "name": "leave",
+        "description": "kill 旧时间线，面板 inert 并禁指针；淡出后移除自己的锁。导航关闭先撤锁便于新页归零。",
+        "properties": [
+          "panel.opacity",
+          "panel.pointerEvents",
+          "panel.inert"
+        ],
+        "timing": ".4s power2.in；减少动态模式立即 done。"
+      }
+    ],
+    "state": [
+      "open / visible / closing",
+      "hold 保留悬停入口",
+      "background 与 hadInert 保存原背景 inert",
+      "idleTimer 与 menuAnimation 属本实例"
+    ],
+    "propertyOwnership": [
+      "子页菜单只拥有 has-subpage-index，不能清除查看器或幕布的 no-scroll。",
+      "面板在 body，脱离被 inert 的 #app；背景原来的 inert 状态关闭时还原。"
+    ],
+    "interruption": [
+      "每次 prepare/leave 先 kill 旧 menuAnimation。",
+      "show 在 routeCurtainActive、no-scroll、已有查看器或页面旧 intro 幕存在时拒绝叠加。",
+      "路由变化关闭时不恢复入口焦点；普通关闭先把焦点还给按钮。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "按 App 当前方式跨六个子页常驻，保留 Teleport 与 #app 根节点约定。",
+      "以 CHAPTERS 生成顺序并用 jumpPathFor 导航。",
+      "保留 source 判断：query.from=cards 或旧 /card/* 的默认来源决定返回 /cards，其余返回 /。",
+      "在宿主样式提供 --stable-viewport-height / --dynamic-viewport-height；接入 overlayTouchGuard。"
+    ],
+    "inputs": [
+      "当前 route.path/fullPath/query.from",
+      "subpageLanguage: zh/en",
+      "CHAPTERS",
+      "routeCurtainActive"
+    ],
+    "outputs": [
+      "router links 至六章节并携带 from",
+      "has-subpage-index 滚动锁",
+      "语言状态变更",
+      "关闭时的焦点恢复"
+    ],
+    "dependencies": [
+      "vue",
+      "vue-router",
+      "gsap",
+      "src/data/chapters.ts",
+      "src/utils/overlayTouchGuard.ts"
+    ],
+    "assets": [
+      "无需图像；背景使用半透明暖白 + backdrop-filter:blur(40px)。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "prepare 直接把 opacity 和 yPercent 放终态，enter/leave 立即 done；CSS 的按钮和行 hover 位移也禁 transition。",
+    "touch": "coarse/无 hover 设备不因闲置隐藏入口；触摸守卫允许面板内部合法滚动并阻断背景滚动链；移动按钮>=44px。",
+    "keyboard": "role=dialog/aria-modal、aria-controls/expanded；打开聚焦关闭按钮，Tab 首尾循环、Escape 关闭，关闭还原入口焦点。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted wake、绑定触摸守卫、touchQuery change 和 scroll/wheel/touchmove。",
+      "watch route.fullPath 关闭弹层。"
+    ],
+    "cleanup": [
+      "卸载 releaseTouchGuard、kill 时间线、clearTimeout、移除监听、撤自己的锁并恢复背景 inert。"
+    ],
+    "knownLimitations": [
+      "依赖文档 id=app 的背景根节点及固定菜单 id；同文档不应重复挂载多个实例。",
+      "motionQuery 的 matches 在每次入退场读取，但未添加运行中 motionQuery change 的主动终止监听。",
+      "首页 ThreeHome.vue 含另一套索引弹层，已由 gallery-focus 收录；本文件不是首页那套菜单。"
+    ]
+  },
+  "agentNotes": [
+    "不要为了合并两套菜单而改变源文件：本次是解析与源码整理。",
+    "选择链接 close(false) 会立刻撤锁以允许 router.scrollBehavior 运行，而普通 close 等 after-leave 撤锁。"
+  ],
+  "relatedEffects": [
+    "route-curtain",
+    "gallery-focus"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-mobile-overlays.mjs"
+    ],
+    "manualChecks": [
+      "桌面滚动后闲置观察入口隐藏，聚焦/hover 时保持可见。",
+      "触屏静置入口仍在；长菜单内部可滚动且背景不穿透。",
+      "打开菜单循环 Tab、Escape 关闭、普通关闭恢复焦点。",
+      "菜单中跳转其他子页，检查背景 inert 和滚动锁正确交接。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "vue",
+    "teleport",
+    "dialog",
+    "index",
+    "clip",
+    "focus-management"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/子页作品索引.vue"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    },
+    {
+      "specifier": "vue-router",
+      "package": "vue-router",
+      "requested": "^4.6.4",
+      "locked": "4.6.4"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/SubpageIndex.vue",
+      "path": "源码/项目源码/组件/子页作品索引.vue",
+      "role": "entry",
+      "originalSha256": "6145bd5fd73584b57f5621c18445cf59aca92155f69c24a48d22a8d0c4b979e6",
+      "originalBytes": 14363,
+      "sha256": "0eabbe418d42f374440aca5496b7fe2f16ca8b5720b39d24c32a8e08d0c98b37",
+      "bytes": 14392
+    },
+    {
+      "original": "src/composables/usePageCurtain.ts",
+      "path": "源码/项目源码/组合函数/页面幕布控制.ts",
+      "role": "dependency",
+      "originalSha256": "c3a4e2b07723684ac7d06ecb2fea597ab245f6cc23ceb7c42c530099e4111355",
+      "originalBytes": 1568,
+      "sha256": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+      "bytes": 1570
+    },
+    {
+      "original": "src/composables/useSubpageLanguage.ts",
+      "path": "源码/项目源码/组合函数/子页语言状态.ts",
+      "role": "dependency",
+      "originalSha256": "12e12aceae8fbfce2b97266e839c0ea8a05aaa0fc2a4d18f1801ba3596e216a2",
+      "originalBytes": 930,
+      "sha256": "2efc21b0891fd7c28a7b1cda9371e0ca5b76393a2c01d86c1dd4ecbadd749635",
+      "bytes": 932
+    },
+    {
+      "original": "src/composables/useTransition.ts",
+      "path": "源码/项目源码/组合函数/应用转场状态.ts",
+      "role": "dependency",
+      "originalSha256": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+      "originalBytes": 8511,
+      "sha256": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+      "bytes": 8511
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/chapters.ts",
+      "path": "源码/项目源码/数据/作品章节资料.ts",
+      "role": "dependency",
+      "originalSha256": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+      "originalBytes": 1417,
+      "sha256": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+      "bytes": 1417
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/overlayTouchGuard.ts",
+      "path": "源码/项目源码/工具/覆盖层触摸保护.ts",
+      "role": "dependency",
+      "originalSha256": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+      "originalBytes": 2717,
+      "sha256": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+      "bytes": 2717
+    },
+    {
+      "original": "src/App.vue",
+      "path": "集成示例/项目源码/应用根组件.vue",
+      "role": "integration-context",
+      "originalSha256": "d3616de42ebe50434066d43ea8b45870be8584edcb944185e804d47f73c009af",
+      "originalBytes": 4374,
+      "sha256": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+      "bytes": 4375
+    }
+  ]
+}

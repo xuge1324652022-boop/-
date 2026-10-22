@@ -1,0 +1,37 @@
+{
+  "name": "job-application-template",
+  "compatibility_date": "2026-10-19",
+  "main_module": "media-range.mjs",
+  "bindings": [
+    {
+      "type": "assets",
+      "name": "ASSETS"
+    }
+  ],
+  "assets": {
+    "config": {
+      "html_handling": "none",
+      "not_found_handling": "none",
+      "run_worker_first": [
+        "/color/*",
+        "/color-previews/*",
+        "/resume.pdf"
+      ],
+      "_redirects": "/ /index.html 200\n/cards /cards/index.html 200\n/cards/ /cards/index.html 200\n/about /about/index.html 200\n/about/ /about/index.html 200\n/edit /edit/index.html 200\n/edit/ /edit/index.html 200\n/color /color/index.html 200\n/color/ /color/index.html 200\n/news /news/index.html 200\n/news/ /news/index.html 200\n/poster /poster/index.html 200\n/poster/ /poster/index.html 200\n/photo /photo/index.html 200\n/photo/ /photo/index.html 200\n/card/01 /about 301\n/card/01/ /about 301\n/card/02 /edit 301\n/card/02/ /edit 301\n/card/03 /color 301\n/card/03/ /color 301\n/card/04 /news 301\n/card/04/ /news 301\n/card/05 /poster 301\n/card/05/ /poster 301\n/card/06 /photo 301\n/card/06/ /photo 301\n",
+      "_headers": "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: SAMEORIGIN\n\n/*.html\n  Cache-Control: no-cache\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/color/*\n  Cache-Control: public, max-age=3600\n"
+    }
+  },
+  "observability": {
+    "enabled": true,
+    "redact_query_string": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "head_sampling_rate": 0.1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.01
+    }
+  }
+}

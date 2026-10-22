@@ -1,0 +1,330 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "editorial-wipe",
+  "title": {
+    "zh": "摄影原片到编辑版面的固定舞台擦除",
+    "en": "Pinned original to editorial wipe"
+  },
+  "category": "transition",
+  "status": "active",
+  "summary": "将相同比例的摄影原片与其编辑封面叠进同一取景框，滚动到舞台后由左向右擦出封面，并同步交叉淡化图注与推进细线。擦满后保留阅读行程再解除pin；向上滚可原路退回。窄屏、矮屏或减少动态保留两张完整静态对照。",
+  "entryFiles": [
+    "src/components/about/EditorialPair.vue",
+    "src/composables/setupEditorialScroll.ts"
+  ],
+  "integrationFiles": [
+    "src/views/PosterView.vue",
+    "src/composables/useAboutReveal.ts",
+    "src/utils/motionLayout.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/EditorialPair.vue",
+      "symbols": [
+        "props",
+        "emit",
+        "t"
+      ],
+      "purpose": "提供原片/版面语义、查看事件、data-morph标记，以及pin/静态两种CSS布局和键盘焦点可见覆盖。"
+    },
+    {
+      "file": "src/composables/setupEditorialScroll.ts",
+      "symbols": [
+        "setupEditorialScroll",
+        "NAV_HEIGHT",
+        "EDITORIAL_SCROLL_SCREENS",
+        "WIPE_RATIO",
+        "HOLD_RATIO",
+        "scrollScreens",
+        "wipeRatio",
+        "holdRatio",
+        "tl"
+      ],
+      "purpose": "按媒体条件创建独立pin时间线，区分海报页和默认行程，集中写裁切、进度与图注属性。"
+    },
+    {
+      "file": "src/composables/setupEditorialScroll.ts",
+      "symbols": [
+        "media",
+        "pinned",
+        "cancelRefresh",
+        "dispose"
+      ],
+      "purpose": "条件退出与路由卸载撤销pin、移除is-pinned并清除本分支内联样式。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "media为宽>=761px、高>=500px且允许动态；查找root内[data-morph]并要求存在[data-morph-after]。ScrollTrigger从top top开始，pin:scene、pinSpacing:true、scrub:true、anticipatePin:1。",
+    "stages": [
+      {
+        "name": "pin-and-overlap",
+        "description": "为scene加is-pinned，两个figure叠到同一grid-area，顶部留白56px；ScrollTrigger插入pin-spacer提供真实行程。",
+        "properties": [
+          "scene pin styles",
+          "is-pinned",
+          "--ep-nav-h:56px"
+        ],
+        "timing": "默认总行程round(innerHeight×1.35)px；root含pp类时海报页为round(innerHeight×1.75)px。"
+      },
+      {
+        "name": "wipe",
+        "description": "上层版面只改clip-path右边距，从完全裁掉到完整覆盖，细线同步由左向右延长。",
+        "properties": [
+          "after.clipPath:inset(0% 100% 0% 0%)→inset(0% 0% 0% 0%)",
+          "rule.scaleX:0→1"
+        ],
+        "timing": "默认时间线前50%，海报页前55%；ease:none，直接对应滚动而非秒。"
+      },
+      {
+        "name": "caption-crossfade",
+        "description": "原片图注先淡出，版面图注后淡入；两张图注保持同一行对齐。",
+        "properties": [
+          "beforeCap.opacity:1→0",
+          "afterCap.opacity:0→1"
+        ],
+        "timing": "原图注在wipe起点开始、占wipeRatio×0.3；新图注在wipeRatio×0.5处开始、持续wipeRatio×0.5。"
+      },
+      {
+        "name": "read-and-release",
+        "description": "完整版面保留纯滚动阅读距离，时间线结束后舞台释放。",
+        "properties": [
+          "timeline hold segment"
+        ],
+        "timing": "默认后50%，海报页后45%；不是setTimeout停留，不锁body或接管滚轮。"
+      }
+    ],
+    "state": [
+      "media",
+      "pinned",
+      "poster",
+      "scrollScreens",
+      "wipeRatio",
+      "holdRatio",
+      "cancelRefresh"
+    ],
+    "propertyOwnership": [
+      "setupEditorialScroll拥有after.clipPath、rule.scaleX与两张图注opacity；ScrollTrigger拥有scene pin布局。",
+      "EditorialPair在morph模式不给figure加data-reveal，避免通用揭示与固定舞台同时改构图。",
+      "上层clip-path决定可点击区域；下层原片不设置pointer-events:none，仍可点击露出的部分。",
+      "焦点可见时CSS临时覆盖after裁切与图注透明度；离焦后继续使用原滚动进度。"
+    ],
+    "interruption": [
+      "scrub:true使快速穿过终点时封面已经擦满；不使用数值scrub造成pin释放后还在追赶。",
+      "向上滚由同一时间线自然倒放，没有独立反向动画队列。",
+      "媒体条件变化由matchMedia撤销补间和pin，清除is-pinned与裁切/图注/进度内联状态，回到静态对照。",
+      "没有after的scene直接跳过，不留下空pin舞台。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在页面渲染EditorialPair并传相同比例的两张VisualAsset，设置morph；当前海报页为16:9原片与16:9版面。",
+      "加载幕撤掉并解除滚动锁后，针对页面root调用setupEditorialScroll；若已使用setupAboutReveal，该句柄已经自动创建editorial分支，不要重复调用。",
+      "监听open(item,trigger)接入作品查看器。",
+      "页面卸载调用dispose；如果由setupAboutReveal管理，用其dispose按先pin、后其他context的顺序清理。"
+    ],
+    "inputs": [
+      "EditorialPair.items:readonly VisualAsset[]，预期成对且比例相同",
+      "EditorialPair.lang:Lang",
+      "EditorialPair.morph=false默认静态，true启用data-morph",
+      "setupEditorialScroll(root:HTMLElement)",
+      "root.classList.contains('pp')选择海报节奏"
+    ],
+    "outputs": [
+      "open(item:VisualAsset,trigger:HTMLElement)",
+      "EditorialScrollHandle.dispose()"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "gsap/ScrollTrigger",
+      "src/utils/motionLayout.ts",
+      "src/data/aboutProfile.ts",
+      "src/data/visualPortfolio.ts",
+      "CSS :has/:focus-visible用于键盘构图覆盖"
+    ],
+    "assets": [
+      "items[0]原片与items[1]编辑版面；宽高需一致比例，资源由页面数据提供。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "减少动态不建立任何本分支tween或pin，保留两张完整静态对照；偏好改变可动态建立/撤销。",
+    "touch": "不拦截触摸与滚轮；窄于761px无固定舞台，760px以下改上下排列，短视口也保持静态。",
+    "keyboard": "两张作品各有带aria-label的原生查看按钮；focus-visible临时显示对应完整图及其图注，焦点离开后恢复滚动构图。"
+  },
+  "lifecycle": {
+    "setup": [
+      "函数无须调用方先判断媒体条件，始终登记scoped gsap.matchMedia，使以后拉宽窗口或恢复动态仍可安装场景。",
+      "建立pin后申请共享布局刷新；end函数在refresh时根据最新innerHeight重算。"
+    ],
+    "cleanup": [
+      "分支退出移除is-pinned和--ep-nav-h，并从after、rule和图注移除本分支写入的clip-path/opacity/transform。",
+      "dispose取消待刷新请求并media.revert，撤销所有补间、pin与pin-spacer。"
+    ],
+    "knownLimitations": [
+      "两张素材必须相同比例才能严格叠齐；当前布局的最大宽度按16:9与视口留白设计，不是任意画幅自适配转场。",
+      "EditorialPair自身不创建GSAP，只有组件DOM而没有setupEditorialScroll调用时，morph会保持普通静态对照。",
+      "键盘完整图覆盖使用CSS :has；复用到不支持该选择器的旧浏览器需额外提供等效焦点状态处理。"
+    ]
+  },
+  "agentNotes": [
+    "海报页行程1.75视口、擦除55%；默认1.35视口、擦除50%，不要只引用旧常量忽略pp分支。",
+    "所有擦除/阅读时标均为滚动比例，不能写成自动播放秒数。",
+    "不得重新为morph figure加data-reveal，或屏蔽原片pointer-events。"
+  ],
+  "relatedEffects": [
+    "about-scroll-reveal",
+    "photo-chapter-wipe",
+    "text-line-reveal"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "npm run build"
+    ],
+    "manualChecks": [
+      "擦除0%、50%、100%时舞台位置稳定，两张图矩形严格重合且边界单调推进。",
+      "快速滚过末点封面已完整，倒滚恢复原片；点击两侧可见区域分别打开对应作品。",
+      "用Tab聚焦原片和版面，两者可各自完整查看，离焦恢复原进度。",
+      "窄屏、矮屏和减少动态无残留pin-spacer、叠图或半张裁切。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "gsap",
+    "ScrollTrigger",
+    "pin",
+    "scrub",
+    "clip-path",
+    "before-after",
+    "keyboard"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/人物与作品/摄影编辑对照.vue",
+      "源码/项目源码/组合函数/编辑版面滚动控制.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/about/EditorialPair.vue",
+      "path": "源码/项目源码/组件/人物与作品/摄影编辑对照.vue",
+      "role": "entry",
+      "originalSha256": "126c0aa50499928cba1278925109dd98f6e8cc382ec6082caa801e464f668153",
+      "originalBytes": 8462,
+      "sha256": "454db24d73009cd63c1e6553d93e9a22788fceade51dfa80e4ea8620fd5d238e",
+      "bytes": 8470
+    },
+    {
+      "original": "src/composables/setupEditorialScroll.ts",
+      "path": "源码/项目源码/组合函数/编辑版面滚动控制.ts",
+      "role": "entry",
+      "originalSha256": "ec3f1016c9c7ca41a43cf01d6b9678a57edc3478b1e00cb7a15eebb32e069d1b",
+      "originalBytes": 9515,
+      "sha256": "8d958dda15929f170c5675db9863b59a01dd965efc90971dea5ae593648517a1",
+      "bytes": 9522
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/imageVariants.json",
+      "path": "源码/项目源码/数据/图片实际尺寸.json",
+      "role": "dependency",
+      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "originalBytes": 12182,
+      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "bytes": 12182
+    },
+    {
+      "original": "src/data/visualPortfolio.ts",
+      "path": "源码/项目源码/数据/视觉作品资料.ts",
+      "role": "dependency",
+      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
+      "originalBytes": 22342,
+      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+      "bytes": 22342
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/motionLayout.ts",
+      "path": "源码/项目源码/工具/动效布局调度.ts",
+      "role": "dependency",
+      "originalSha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "originalBytes": 3222,
+      "sha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "bytes": 3222
+    },
+    {
+      "original": "src/utils/responsiveImage.ts",
+      "path": "源码/项目源码/工具/响应式图片.ts",
+      "role": "dependency",
+      "originalSha256": "3f4f4a263ee92ff55c4048446ad55eaaf37a31d6c83f1905c3027f85f02b0714",
+      "originalBytes": 1118,
+      "sha256": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+      "bytes": 1125
+    },
+    {
+      "original": "src/views/PosterView.vue",
+      "path": "集成示例/项目源码/页面/海报作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "61cb26ac58819bcc1deb631a6ac6d60765e63670f712ff28f426ab19517137fd",
+      "originalBytes": 12143,
+      "sha256": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+      "bytes": 12234
+    },
+    {
+      "original": "src/composables/useAboutReveal.ts",
+      "path": "集成示例/项目源码/组合函数/数据标记揭示控制.ts",
+      "role": "integration-context",
+      "originalSha256": "d92ec43cadd7fb8e9942dbcc132f94538f2f48386f89bb450875e7ff74eaa3e9",
+      "originalBytes": 27185,
+      "sha256": "1d761144ace56445d1a5d893053c493f809c3c71c4f5e70060fc2b32d5b166f8",
+      "bytes": 27199
+    }
+  ]
+}

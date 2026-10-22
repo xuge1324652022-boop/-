@@ -1,0 +1,32 @@
+{
+  "name": "@xuge1324652022-boop/animation-source-package",
+  "version": "0.2.2",
+  "description": "动效源码包：求职应聘模板网站配套的 38 个遮罩、转场与滚动效果，包含中文源码、集成示例及 agent 可读 JSON 解析。",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xuge1324652022-boop/job-application-template.git"
+  },
+  "homepage": "https://github.com/xuge1324652022-boop/job-application-template#readme",
+  "bugs": {
+    "url": "https://github.com/xuge1324652022-boop/job-application-template/issues"
+  },
+  "keywords": [
+    "portfolio",
+    "source-bundle",
+    "gsap",
+    "vue",
+    "animation",
+    "agent-metadata"
+  ],
+  "files": [
+    "动效组件库/",
+    "LICENSE",
+    "NOTICE.md",
+    "docs/AI工具图标来源.md",
+    "README.md"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

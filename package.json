@@ -1,0 +1,48 @@
+{
+  "name": "portfolio-vue",
+  "private": true,
+  "version": "0.2.2",
+  "description": "求职应聘模板与动效源码包，包含 Vue 3、TypeScript、GSAP 遮罩、转场与滚动动效。",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "build:motion": "node scripts/生成动效组件库.mjs --write",
+    "check:motion": "node scripts/生成动效组件库.mjs --check",
+    "build:motion-source": "node scripts/打包源码资料包.mjs",
+    "publish:motion-source": "node scripts/发布源码资料包.mjs",
+    "test:deployment": "node scripts/verify-runtime-navigation.mjs && node scripts/verify-mobile-overlays.mjs && node scripts/verify-wechat-color-media.mjs && node scripts/verify-mobile-artwork.mjs && node scripts/verify-about-mobile-runtime.mjs && node scripts/verify-cloudflare-range.mjs && node scripts/verify-cloudflare-ci.mjs && node scripts/verify-public-media-isolation.mjs && node scripts/verify-public-privacy.mjs",
+    "build:cloudflare": "npm run check:privacy && npm run lint && npm run check:motion && npm run check:images && npm run typecheck && npm run test:unit && npm run test:deployment && npm run build && node scripts/verify-route-head.mjs --dist && node scripts/cloudflare-ci.mjs",
+    "deploy:cloudflare": "node scripts/cloudflare-ci.mjs --deploy",
+    "lint": "eslint src scripts deploy tests eslint.config.mjs vite.config.js --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{js,ts,vue,css}\" \"scripts/*.mjs\" \"deploy/*.mjs\" \"tests/**/*.mjs\" \"*.config.{js,mjs}\" .prettierrc.json",
+    "format:check": "prettier --check \"src/**/*.{js,ts,vue,css}\" \"scripts/*.mjs\" \"deploy/*.mjs\" \"tests/**/*.mjs\" \"*.config.{js,mjs}\" .prettierrc.json",
+    "test:unit": "node --experimental-strip-types --test tests/*.test.mjs scripts/verify-navigation-state.mjs scripts/verify-route-head.mjs scripts/verify-responsive-images.mjs",
+    "check:images": "node scripts/生成响应式图片清单.mjs --check",
+    "check:privacy": "node scripts/检查公开隐私.mjs"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "vue": "^3.5.32",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.11.1",
+    "globals": "^16.5.0",
+    "prettier": "^3.9.10",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.0",
+    "vite": "^8.0.9",
+    "vue-tsc": "^2.1.10"
+  },
+  "engines": {
+    "node": "^22.16.0 || ^24.0.0"
+  }
+}

@@ -1,0 +1,399 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "color-scroll-gate",
+  "title": {
+    "zh": "调色首屏滚动闸门与进度阻尼",
+    "en": "Colour intro scroll gate"
+  },
+  "category": "scroll",
+  "status": "active",
+  "summary": "调色页首屏先把滚轮或触屏纵向位移喂给底部白条，累计一趟首屏高度后一次性放行正文滚动；显示值由原生 RAF 指数收敛。本效果没有独立组件或独立 GSAP 时间轴，而是 ColorView 页面内逻辑，并与现有 useSmoothScroll 配合。该文件还含文字和正文媒体生命周期，文档明确保留这些集成边界。",
+  "entryFiles": [
+    "src/views/ColorView.vue"
+  ],
+  "integrationFiles": [
+    "src/composables/useSmoothScroll.ts",
+    "src/composables/usePageCurtain.ts",
+    "src/composables/useTransition.ts",
+    "src/composables/useLoopFade.ts",
+    "src/components/color/ColorWave.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/views/ColorView.vue",
+      "symbols": [
+        "progressP",
+        "barFrame",
+        "syncBar",
+        "feedGate",
+        "updateProgress",
+        "onTouchStart",
+        "onTouchMove"
+      ],
+      "purpose": "本效果核心：输入累计、一次放行、进度显示和触摸消费。"
+    },
+    {
+      "file": "src/composables/useSmoothScroll.ts",
+      "symbols": [
+        "useSmoothScroll"
+      ],
+      "purpose": "唯一的 wheel 控制器把归一化位移传给 gate；放行后继续原有滚轮阻尼。"
+    },
+    {
+      "file": "src/views/ColorView.vue",
+      "symbols": [
+        "covered",
+        "startObservers",
+        "syncBodyMedia",
+        "warmVideo",
+        "releaseVideo",
+        "playVideo",
+        "onMediaMotionChange"
+      ],
+      "purpose": "同文件的集成上下文：等待揭幕后触发文字 CSS 遮罩，管理正文播放器可见性；这些不属于 feedGate 算法。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "滚轮经 useSmoothScroll(feedGate) 输入，或首屏非控件上的单指纵向 touchmove；运动偏好、覆盖层与锁屏状态会限制接管。",
+    "stages": [
+      {
+        "name": "累计",
+        "description": "gateFed 在 0 至 intro.offsetHeight 内累计；progressP 取累计比例与实际 scrollY/首屏高的最大值并钳到 0..1。",
+        "properties": [
+          "gateFed",
+          "gateTravel",
+          "scrollP",
+          "progressP"
+        ],
+        "timing": "逐次输入计算，无固定入场时长。"
+      },
+      {
+        "name": "白条追赶",
+        "description": "progressShown 用 1-exp(-dt/0.16) 追目标，写 --p 与 aria-valuenow；进度差小于 0.0015 即吸附并停止 RAF。",
+        "properties": [
+          "progressShown",
+          "--p",
+          "aria-valuenow",
+          "progressIndex"
+        ],
+        "timing": "时间常数 0.16s；单帧 dt 最多 0.1s。"
+      },
+      {
+        "name": "一次放行",
+        "description": "累计到 travel-0.5 即 gateOpen；推满的这次输入仍消费，下一次才滚正文。实际 scrollY>1 也开闩，支持键盘、锚点与历史恢复。",
+        "properties": [
+          "gateOpen"
+        ],
+        "timing": "本次页面实例内一次性开闩，返回首屏不重新锁住。"
+      }
+    ],
+    "state": [
+      "gateFed / gateOpen / scrollP / gateTravel",
+      "progressShown / barRaf / barLast",
+      "touchId / touchX / touchY",
+      "reduceMotion / covered"
+    ],
+    "propertyOwnership": [
+      "wheel 只有 useSmoothScroll 一个监听所有者，ColorView 只提供 gate 回调。",
+      "白条显示只读 progressShown，不直接写 progressP；其 RAF 与页面滚轮阻尼是独立读数层。",
+      "正文容器 .cview__media 的 CSS opacity 与 attachLoopFade 写 video.opacity 分层。"
+    ],
+    "interruption": [
+      "触摸多指、横向主导、控件或 data-native-scroll 区域、不可取消事件以及覆盖/滚动锁不被闸门消费。",
+      "reduce 模式停止白条 RAF 并直接对齐显示，不安装触摸闸门；useSmoothScroll 同样不接管滚轮。",
+      "原生键盘、滚动条、锚点与程序化滚动直接放行；开闩不会随回顶重新关闭。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "复用 ColorView 内 introRef、进度 ref/computed、feedGate、barFrame 与触摸监听，保留进度条模板的 --p 和 ARIA。",
+      "传 feedGate 给现有 useSmoothScroll；不要再注册另一个 wheel 消费器。",
+      "移植 gate 时单独识别同文件的媒体逻辑：300px 预热、25% 可见播放、幕布/索引暂停、离开预热释放 src，以及视频循环淡化均是正文媒体能力。",
+      "保留 covered 与 routeCurtainActive 门禁；初始文字观察器需等待幕布不再覆盖再建立。"
+    ],
+    "inputs": [
+      "首屏 offsetHeight",
+      "归一化 wheel pixels",
+      "单指 touch 的相邻纵向位移",
+      "window.scrollY 与全局覆盖状态"
+    ],
+    "outputs": [
+      "feedGate 返回 boolean：true 表示该次位移已消费。",
+      "progressShown、progressIndex 与 gateOpen 供页面模板显示。"
+    ],
+    "dependencies": [
+      "vue",
+      "useSmoothScroll（内部使用 gsap/ScrollTrigger.update）",
+      "requestAnimationFrame",
+      "matchMedia",
+      "页面全局幕布及过渡状态"
+    ],
+    "assets": [
+      "闸门本身不需要媒体资源。",
+      "同文件正文媒体来自 /color/color%20grade-N.mp4，poster 与首屏预览来自 /color-previews/；不应误当作闸门必需资产。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "直接更新进度显示，停用平滑滚轮与触摸闸门；正文视频仅显示 poster，不自动播放。",
+    "touch": "只消费首屏非控件的单指纵向手势；达到门限后还原原生惯性，不接管双指缩放。",
+    "keyboard": "不拦键盘、锚点及滚动条，实际移动后直接开闩；进度条用 aria-valuenow 报告百分比。"
+  },
+  "lifecycle": {
+    "setup": [
+      "Vue watch(progressP) 驱动显示更新，挂载测量首屏并安装 scroll/resize 与按偏好启用的 touch 监听。",
+      "同文件另行 watch covered 与 routeCurtainActive，建立文字/媒体观察器并同步播放器。"
+    ],
+    "cleanup": [
+      "卸载取消白条 RAF、移除 scroll/resize/touch/matchMedia 监听；useSmoothScroll 自行卸载其控制器。",
+      "页面同时释放覆盖 watch、文字和媒体观察器、循环淡化、视频地址及播放请求状态。"
+    ],
+    "knownLimitations": [
+      "effect 核心仍嵌在完整 ColorView，直接复制该文件会同时带入正文、媒体和导航内容。",
+      "只管理当前挂载实例的一次放行，重建页面会重新累计。",
+      "无真实滚动时进度条推满仍需下一次手势才能离开首屏，这是当前消费契约。"
+    ]
+  },
+  "agentNotes": [
+    "不要把同文件所有动效称为 GSAP：进度白条是 RAF，文字揭示是 CSS，循环淡化才直接使用 GSAP。",
+    "正文媒体在被临时遮挡时仅暂停，真实离屏才 rewind；异步 play 使用 Symbol 防止过期回调错误更新拒播状态。",
+    "现有 verify-wechat-color-media 主要检查媒体与触摸边界；白条手感仍需浏览器手动确认。"
+  ],
+  "relatedEffects": [
+    "color-preview-trail",
+    "video-loop-fade",
+    "route-curtain",
+    "text-line-reveal"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-wechat-color-media.mjs"
+    ],
+    "manualChecks": [
+      "从顶部分格滚动并触屏上滑，白条推满前正文不动，推满之后一次放行。",
+      "使用 PageDown、锚点、拖滚动条再触摸，确认不会在正文重新被锁。",
+      "开索引、切换页面及系统运动偏好后确认没有输入误消费，白条静止后 RAF 停止。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "scroll-gate",
+    "raf",
+    "progress",
+    "touch",
+    "media-lifecycle",
+    "non-gsap-core"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/页面/调色作品页.vue"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/SplitText",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    },
+    {
+      "specifier": "vue-router",
+      "package": "vue-router",
+      "requested": "^4.6.4",
+      "locked": "4.6.4"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/assets/color-frames/frame-07.jpg",
+      "path": "源码/项目源码/素材/调色帧/调色第7帧.jpg",
+      "role": "imported-asset",
+      "originalSha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
+      "originalBytes": 28192,
+      "sha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
+      "bytes": 28192
+    },
+    {
+      "original": "src/components/ReferenceIntroduction.ts",
+      "path": "源码/项目源码/组件/引导文字状态.ts",
+      "role": "dependency",
+      "originalSha256": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+      "originalBytes": 678,
+      "sha256": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+      "bytes": 678
+    },
+    {
+      "original": "src/components/ReferenceIntroduction.vue",
+      "path": "源码/项目源码/组件/引导文字揭示.vue",
+      "role": "dependency",
+      "originalSha256": "96d05f989179d82ecb2a7d18bef925d254c2e7cf680e3cb95fcf2d122560cf74",
+      "originalBytes": 17515,
+      "sha256": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+      "bytes": 17524
+    },
+    {
+      "original": "src/components/WorkContinuation.vue",
+      "path": "源码/项目源码/组件/作品续读导航.vue",
+      "role": "dependency",
+      "originalSha256": "a388b8b11350e3e7b417f3db375d04cbf4d1b7462fbf559b9fb1c9d7ee0517a6",
+      "originalBytes": 8620,
+      "sha256": "3dc02b058d955de9b1b8855ff30821d4c3d10cd8ebb6f234f3c4e8313e6b6e94",
+      "bytes": 8628
+    },
+    {
+      "original": "src/components/color/ColorWave.vue",
+      "path": "源码/项目源码/组件/调色/调色波形.vue",
+      "role": "dependency",
+      "originalSha256": "4f8d16156c6b2c2e8157d3664925b738799fde2c27a6fae51cf8da1af477b580",
+      "originalBytes": 31747,
+      "sha256": "4f8d16156c6b2c2e8157d3664925b738799fde2c27a6fae51cf8da1af477b580",
+      "bytes": 31747
+    },
+    {
+      "original": "src/composables/useLoopFade.ts",
+      "path": "源码/项目源码/组合函数/视频接缝淡化.ts",
+      "role": "dependency",
+      "originalSha256": "3a47dd107b858ee26b58e4550a10bb80621cd3205c6aca47303663a9876547d1",
+      "originalBytes": 5144,
+      "sha256": "3a47dd107b858ee26b58e4550a10bb80621cd3205c6aca47303663a9876547d1",
+      "bytes": 5144
+    },
+    {
+      "original": "src/composables/usePageCurtain.ts",
+      "path": "源码/项目源码/组合函数/页面幕布控制.ts",
+      "role": "dependency",
+      "originalSha256": "c3a4e2b07723684ac7d06ecb2fea597ab245f6cc23ceb7c42c530099e4111355",
+      "originalBytes": 1568,
+      "sha256": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+      "bytes": 1570
+    },
+    {
+      "original": "src/composables/useSmoothScroll.ts",
+      "path": "源码/项目源码/组合函数/平滑滚动控制.ts",
+      "role": "dependency",
+      "originalSha256": "87e885b95054644460c2b57d782145ed904a8ea29073fac3089ece48714f9fae",
+      "originalBytes": 4384,
+      "sha256": "1243deebb1c283cc722dd90c8c3ecaaf1b66d921833c354e34e33be868a6e6c3",
+      "bytes": 4398
+    },
+    {
+      "original": "src/composables/useSubpageLanguage.ts",
+      "path": "源码/项目源码/组合函数/子页语言状态.ts",
+      "role": "dependency",
+      "originalSha256": "12e12aceae8fbfce2b97266e839c0ea8a05aaa0fc2a4d18f1801ba3596e216a2",
+      "originalBytes": 930,
+      "sha256": "2efc21b0891fd7c28a7b1cda9371e0ca5b76393a2c01d86c1dd4ecbadd749635",
+      "bytes": 932
+    },
+    {
+      "original": "src/composables/useTransition.ts",
+      "path": "源码/项目源码/组合函数/应用转场状态.ts",
+      "role": "dependency",
+      "originalSha256": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+      "originalBytes": 8511,
+      "sha256": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+      "bytes": 8511
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/colorPage.ts",
+      "path": "源码/项目源码/数据/调色页资料.ts",
+      "role": "dependency",
+      "originalSha256": "1dc468203dee430c60a2da1b4fd7302e6d88fb96f349ce2584fe6038e02bdac0",
+      "originalBytes": 7624,
+      "sha256": "1dc468203dee430c60a2da1b4fd7302e6d88fb96f349ce2584fe6038e02bdac0",
+      "bytes": 7624
+    },
+    {
+      "original": "src/data/visualPortfolio.ts",
+      "path": "源码/项目源码/数据/视觉作品资料.ts",
+      "role": "dependency",
+      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
+      "originalBytes": 22342,
+      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+      "bytes": 22342
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/motionLayout.ts",
+      "path": "源码/项目源码/工具/动效布局调度.ts",
+      "role": "dependency",
+      "originalSha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "originalBytes": 3222,
+      "sha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "bytes": 3222
+    },
+    {
+      "original": "src/utils/viewportEntrance.ts",
+      "path": "源码/项目源码/工具/视口入场控制.ts",
+      "role": "dependency",
+      "originalSha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "originalBytes": 1233,
+      "sha256": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+      "bytes": 1233
+    },
+    {
+      "original": "src/utils/wheel.ts",
+      "path": "源码/项目源码/工具/滚轮事件工具.ts",
+      "role": "dependency",
+      "originalSha256": "264a6775b28195d15fb913b677010a432de3c7a1a795e22cdd7805dc67212a3a",
+      "originalBytes": 1630,
+      "sha256": "264a6775b28195d15fb913b677010a432de3c7a1a795e22cdd7805dc67212a3a",
+      "bytes": 1630
+    },
+    {
+      "original": "src/views/ColorView.vue",
+      "path": "源码/项目源码/页面/调色作品页.vue",
+      "role": "entry",
+      "originalSha256": "f2585b1b01ee0ca57f1fea6cb40e38d3167adb81f41b92e660a56c9e5a34a266",
+      "originalBytes": 43088,
+      "sha256": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+      "bytes": 43103
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "card-photo",
+  "title": {
+    "zh": "摄影卡相纸显影与缓慢视差",
+    "en": "Photography card development and slow parallax"
+  },
+  "category": "card",
+  "status": "active",
+  "summary": "相纸、卡纸框、PHOTO 与元数据以较小位移和较长阻尼模拟安静暗房构图。聚焦显影仅改变透明度：卡纸轮廓先出现，照片浮现，边框合焦变亮再回落，最后信息出现。",
+  "entryFiles": [
+    "src/cardAnimations/photo.ts"
+  ],
+  "integrationFiles": [
+    "src/components/CardVisual.vue",
+    "src/components/ThreeHome.vue",
+    "src/cardAnimations/index.ts",
+    "src/data/chapters.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/cardAnimations/photo.ts",
+      "symbols": [
+        "PhotoAnimation",
+        "LAYERS",
+        "mount",
+        "setActive",
+        "destroy",
+        "apply",
+        "toBase",
+        "buildIntro"
+      ],
+      "purpose": "定义该卡参数、指针映射与可选时间线。"
+    },
+    {
+      "file": "src/cardAnimations/base.ts",
+      "symbols": [
+        "BaseAnimation",
+        "BoundLayer"
+      ],
+      "purpose": "共享 mount/play/pause/reset/restart/destroy 与受 host 限制的查询。"
+    },
+    {
+      "file": "src/components/CardVisual.vue",
+      "symbols": [
+        "build",
+        "remount",
+        "play",
+        "pause",
+        "restart",
+        "setMedia"
+      ],
+      "purpose": "提供对应 cv-* DOM/CSS，按 index 创建动画实例并向 ThreeHome 暴露控制。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "CardVisual.mount 建立动画，ThreeHome 在聚焦时 restart；window.pointermove 在 active 时驱动视口坐标归一化。",
+    "stages": [
+      {
+        "name": "pointer-parallax",
+        "description": ".cv-photo__image:30/22px/1.15s；.cv-photo__frame:22/15px/1.25s；.cv-photo__type:15/10px/1.35s；.cv-photo__meta:8/6px/1.45s。指针从视口坐标归一化至 [-1,1]，每层用 gsap.quickTo 写 x/y，pointerleave 或失焦回零。",
+        "properties": [
+          "layer.x",
+          "layer.y"
+        ],
+        "timing": "各层 duration 见描述，统一 power3.out；没有持续轮询指针的 RAF。"
+      },
+      {
+        "name": "mount-outline",
+        "description": "卡纸框内层 opacity 三段 0→.22→.8→.6，避免与外层 frame 的指针位移冲突。",
+        "properties": [
+          "frame-box.opacity"
+        ],
+        "timing": "0s/.25s；.4s/.32s；.72s/.26s。"
+      },
+      {
+        "name": "photo-development",
+        "description": "照片 plate 透明度到 1，PHOTO 到 1，元数据、光线与说明错峰显现；immediateRender:false 保留画廊初始构图。",
+        "properties": [
+          "plate.opacity",
+          "type.opacity",
+          "tails.opacity"
+        ],
+        "timing": "plate:.2s/.5s；type:.5s/.35s；tails:.58s/.28s、stagger .025s；introDelay=.08s。"
+      },
+      {
+        "name": "media-slot",
+        "description": "image src 写入相纸 plate 背景，cover/center，隐藏 PLACEHOLDER 标签。",
+        "properties": [
+          "plate.backgroundImage",
+          "plate.backgroundSize",
+          "plate.backgroundPosition",
+          "plate-label.opacity"
+        ],
+        "timing": "同步设置；无额外加载时间线。"
+      }
+    ],
+    "state": [
+      "BaseAnimation 保存 host、环境 tl、可选 intro 与 introDone。",
+      "active 只约束指针响应；失焦调用 toBase，play/pause 控制时间线。",
+      "图层幅度与 quickTo 设置器存于同一对象，缺少一个 selector 只跳过该层。"
+    ],
+    "propertyOwnership": [
+      "只写 host 内部指定图层的属性；禁止写 .card-position 或 .card-plane，它们属于 galleryMotion/ThreeHome。",
+      "指针 quickTo 负责图层 x/y，静态信息保持固定构图；入场需要改位移时应使用内层节点，避免与视差争用。"
+    ],
+    "interruption": [
+      "quickTo 复用每个属性的补间，新的指针目标替换目标值。",
+      "setActive(false) 将图层缓动回 x=0/y=0。",
+      "CardVisual.build 在重建前 destroy 旧实例；remount 忽略 0x0 隐藏子树，避免无效测量。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "通过注册表 createCardAnimation(index) 创建新实例，并提供 CardVisual 中对应的 cv-* DOM/CSS。",
+      "mount(host) 后按宿主可见性调用 play/pause；聚焦章节时 restart()，active 状态调用 setActive。",
+      "通过 destroy() 撤销实例；不能仅删除宿主 DOM。",
+      "保持 CHAPTERS 与 CardVisual.index/kind 的顺序一致；本效果类不自行创建卡面 DOM。"
+    ],
+    "inputs": [
+      "mount(host:HTMLElement)",
+      "play()/pause()/reset()/restart()",
+      "setActive(active:boolean)",
+      "window pointermove 的 clientX/clientY",
+      "setMedia({type:'image',src})"
+    ],
+    "outputs": [
+      "只修改宿主子树内图层样式；不发起路由导航、不派发业务事件。"
+    ],
+    "dependencies": [
+      "gsap",
+      "src/cardAnimations/base.ts",
+      "src/cardAnimations/types.ts",
+      "Vue CardVisual 宿主"
+    ],
+    "assets": [
+      "默认相纸为 CSS 暗色渐变与 PLACEHOLDER 文字；可选调用方提供照片 image src。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "mount 时减少动态偏好会跳过指针监听；buildIntro 未检查 reduced，restart 仍可播放相纸显影透明度时间线。",
+    "touch": "监听全局 Pointer Events，使用 passive:true 只读取坐标，不拦截画廊拖拽；未按 pointerType 过滤，触控指针也可提供坐标。",
+    "keyboard": "卡面装饰内容 aria-hidden，键盘选择与导航由 ThreeHome 的 card-plane 提供；本动画类没有可聚焦控件。"
+  },
+  "lifecycle": {
+    "setup": [
+      "mount 先 super.mount 创建暂停的 Base 时间线，再按实际匹配到的 selector 绑定 x/y quickTo。",
+      "非减少动态模式注册 window.pointermove 与 document.pointerleave。"
+    ],
+    "cleanup": [
+      "移除 window.pointermove 与 document.pointerleave，清空 layers，再调用 BaseAnimation.destroy 杀环境与入场时间线。"
+    ],
+    "knownLimitations": [
+      "此类 destroy 没有显式逐个 kill quickTo 返回的 tween，仅移除监听并清空引用；不要据此承诺销毁后立即不存在在途 quickTo。",
+      "BaseAnimation.introDone 仅在同一实例再次 mount 时保留；当前 CardVisual.remount 会创建新实例。",
+      "减少动态偏好在 mount 注册监听时读取，类未监听偏好后续变化。",
+      "setMedia 没有图片加载/解码失败处理，也没有清空 src 时恢复默认相纸的分支。"
+    ]
+  },
+  "agentNotes": [
+    "所有 ax/ay 是视口指针归一化至 [-1,1] 后乘出的卡片局部 CSS 像素；duration 单位为秒，缓动 power3.out。",
+    "BaseAnimation.restart 使用 intro.restart(false,true)，因此聚焦重播跳过 intro 自身初始 delay；introDelay 不是聚焦后额外等待时间。",
+    "verification.commands 为可运行的现有检查入口，并不等价于视觉效果已通过浏览器验收。"
+  ],
+  "relatedEffects": [
+    "gallery-focus",
+    "card-edit",
+    "card-color"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "聚焦 06 检查边框从淡轮廓到变亮再稳定在 .6，相片不飞入/缩放。",
+      "指针移动时照片响应最大、元数据最小，落定速度比剪辑卡更慢。",
+      "调用 setMedia({type:'image',src}) 后检查框、光和信息保持原构图。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "vue",
+    "card",
+    "quickTo",
+    "pointer",
+    "parallax",
+    "intro"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "poster-motion-tile",
+  "title": { "zh": "产品主题描线与词语交互动效", "en": "Product motion tile and word transitions" },
+  "category": "card",
+  "status": "active",
+  "summary": "每个实习产品章节的小型SVG/CSS交互演示。图形首次真实可见后描线一次，圆球与块在可见期间循环；词语按钮切换产品语义和图形姿态，鼠标只通过局部CSS变量制造视差。该效果不使用GSAP，与海报原图碎片遮罩分开管理。",
+  "entryFiles": ["src/components/about/InternshipMotionTile.vue", "src/data/internshipPosterMotion.ts"],
+  "integrationFiles": ["src/components/about/InternshipPosterGallery.vue", "src/components/ReferenceIntroduction.ts", "src/views/PosterView.vue"],
+  "sourceSections": [
+    { "file": "src/components/about/InternshipMotionTile.vue", "symbols": ["running", "visible", "readyToDraw", "entered", "settled", "completeDrawing"], "purpose": "以真实可见面积、页面门禁、标签页可见性和偏好管理首次描线与离屏暂停。" },
+    { "file": "src/components/about/InternshipMotionTile.vue", "symbols": ["choice", "move", "leave", "preference", "visibility", "pointerFrame", "pointer"], "purpose": "词语选择与每帧最多一次的鼠标坐标读取，暂停或离开时归零局部变量。" },
+    { "file": "src/data/internshipPosterMotion.ts", "symbols": ["InternshipMotionTheme", "INTERNSHIP_MOTION_THEMES"], "purpose": "工程引导、激光测量和智能草坪的词组、配色、模型名与SVG图形类别配置。" }
+  ],
+  "mechanism": {
+    "trigger": "IntersectionObserver threshold为[0,0.14]；画面至少可见14%、gate放行、标签页可见且允许动态时记entered。running还要求当前仍可见。词语由原生按钮点击切换；仅mouse触发指针视差。",
+    "stages": [
+      { "name": "draw-route", "description": "SVG path的stroke-dashoffset由1400降到0，实际animationend后记settled，已完成路线不再反复擦除。", "properties": ["stroke-dashoffset:1400→0", "settled"], "timing": "CSS imt-route 0.7秒，cubic-bezier(.2,.65,.2,1)，默认paused；仅running播放。" },
+      { "name": "ambient-motion", "description": "可见期间圆球缓慢平移缩放，两个几何块往返平移旋转，离屏或后台暂停。", "properties": ["orb.transform", "block.transform", "animation-play-state"], "timing": "圆球5秒ease-in-out infinite alternate；块6秒cubic-bezier(.45,0,.2,1) infinite alternate，第二块delay为-3秒。" },
+      { "name": "word-and-graphic", "description": "choice驱动Vue out-in词语过渡，同时SVG按索引旋转和缩放；中文词语随当前索引显示。", "properties": ["word.translateY/opacity", "drawing-svg.rotate:choice×7deg", "drawing-svg.scale:1-choice×0.04", "--choice"], "timing": "词语离场和入场各0.32秒，cubic-bezier(.4,0,.2,1)；SVG姿态0.75秒同曲线。" },
+      { "name": "pointer-depth", "description": "指针位置归一并钳制为[-0.5,0.5]，绘图和文字朝相反方向移动。", "properties": ["--mx", "--my", "drawing.translate:variable×20px", "type.translate:variable×-10px"], "timing": "rAF每帧最多一次布局读取并批量写变量，CSS transform过渡0.25秒ease-out。" }
+    ],
+    "state": ["choice", "visible", "readyToDraw", "entered", "pageGate", "documentVisible", "reduced", "settled", "running", "pointerFrame"],
+    "propertyOwnership": ["Vue负责choice、running/settled类与--choice；指针函数只写root的--mx/--my。", "CSS负责drawing/type变换、SVG姿态、描线和循环动画，不再由GSAP重复驱动同一transform。", "本组件是产品主题演示，不挖孔或裁切相邻海报原图。"],
+    "interruption": ["离屏、门禁关闭、后台或减少动态导致running=false时leave取消指针rAF并清零变量，CSS动画暂停。", "只有route实际animationend才settled，布局刷新和短暂离屏不冒充描线完成。", "减少动态立即settled并关闭运动；恢复后保持已完成路线。"]
+  },
+  "integration": {
+    "steps": ["在产品章节中传theme和lang；源项目从INTERNSHIP_MOTION_THEMES按group.id取配置。", "通过referenceIntroductionGate关联页面加载幕；保留IntersectionObserver对实际卡片的观察。", "新增主题时按InternshipMotionTheme提供非空words、kind和配色；SVG分支目前为guidance/laser/lawn。", "与原版海报并置可说明产品语义，完整作品查看由相邻MotionCard承担。"],
+    "inputs": ["theme:InternshipMotionTheme", "lang:Lang", "注入referenceIntroductionGate（默认true）", "theme.words[].zh/en", "theme.kind:guidance|laser|lawn", "theme.model/background/accent"],
+    "outputs": ["内部choice和对应图形/词语呈现；无组件事件输出。"],
+    "dependencies": ["vue", "src/data/internshipPosterMotion.ts", "src/data/aboutProfile.ts", "src/components/ReferenceIntroduction.ts", "IntersectionObserver", "requestAnimationFrame", "document.hidden/visibilitychange", "window.matchMedia", "CSS animations", "SVG"],
+    "assets": ["SVG路线与图形直接在组件模板中定义，无外部位图。"]
+  },
+  "accessibility": {
+    "reducedMotion": "禁用描线、圆球和块的动画，路线保持完整；词语、按钮与指针相关CSS transition关闭。",
+    "touch": "忽略触摸指针视差，hover:none改为点击词语的提示；主题切换仍使用按钮。",
+    "keyboard": "词语控件为原生button，aria-pressed表示选择；focus-visible有清晰描边。装饰绘图区aria-hidden，主题词语保留文本。"
+  },
+  "lifecycle": {
+    "setup": ["onMounted建立[0,0.14]阈值的IntersectionObserver，登记visibilitychange与媒体偏好change。", "watch综合门禁与可见状态记entered，watch running在暂停时leave。"],
+    "cleanup": ["卸载标记dead，取消pointerFrame，断开观察器，移除document visibilitychange与媒体change监听。"],
+    "knownLimitations": ["模板直接读取theme.words[choice].en/zh，要求非空words数组；当前不提供空主题占位。", "组件直接读取document.hidden与window.matchMedia，适用于当前客户端Vue应用；SSR复用需移入客户端生命周期。", "该效果无open事件和查看器职责，不能当作原图展示卡片替代品。"]
+  },
+  "agentNotes": ["这是独立的CSS/SVG动效，不属于createInternshipArtworkMotion的GSAP裁片时间线。", "首次entered保留与当前visible区分，才能保证首次描线和离屏暂停同时正确。", "图形状态归CSS管理，若添加GSAP必须先明确属性归属，避免与现有CSS动画抢transform。"],
+  "relatedEffects": ["poster-artwork-reveal", "poster-depth"],
+  "verification": { "commands": ["npm run typecheck", "npm run build"], "manualChecks": ["仅露出少量边缘时不提前描线，达到14%且门禁放行后才开始。", "描线完成后往返滚动保留完整路线；未完成时离屏暂停、回屏继续。", "后台标签页或减少动态停止循环；词语按钮在鼠标、触屏和键盘下均可切换。"] },
+  "tags": ["vue", "css-animation", "SVG", "stroke-dashoffset", "pointer", "visibility", "word-transition", "non-gsap"]
+}

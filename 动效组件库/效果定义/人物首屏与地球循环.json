@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "about-hero",
+  "title": {
+    "zh": "人物页首屏上移与地球循环",
+    "en": "About hero entrance and globe"
+  },
+  "category": "transition",
+  "status": "active",
+  "summary": "双语人物标题与地球轨道共同上移入场；GSAP负责一次性位移，CSS负责可暂停的装饰循环，页面active门闩决定何时可见。",
+  "entryFiles": [
+    "src/components/about/AboutHero.vue"
+  ],
+  "integrationFiles": [
+    "src/views/AboutView.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/AboutHero.vue",
+      "symbols": [
+        "play",
+        "played",
+        "awake",
+        "entrance",
+        "hero-meridian"
+      ],
+      "purpose": "分开管理一次性上移、视口可见性和CSS循环。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "onMounted后排入prepareMotionLayout，准备完成且active=true才播放；IntersectionObserver更新awake。",
+    "stages": [
+      {
+        "name": "准备",
+        "description": "等待自然布局后创建matchMedia动画，保持paused直到页面门闩放行。",
+        "properties": [
+          "y"
+        ],
+        "timing": "prepareMotionLayout共享队列，每帧最多一个准备任务"
+      },
+      {
+        "name": "标题与轨道上移",
+        "description": "桌面从视口高度的50%上移；540px以下从10%上移；两元素错开。",
+        "properties": [
+          "y",
+          "transform"
+        ],
+        "timing": "1.5s，stagger 0.07s，expo.out，完成clearProps:transform"
+      },
+      {
+        "name": "地球与悬停颜色",
+        "description": "awake且active才运行经线、倾斜及颜色CSS动画。",
+        "properties": [
+          "width",
+          "transform",
+          "background",
+          "opacity"
+        ],
+        "timing": "经线2.7s、倾斜5.4s、颜色6s；CSS循环"
+      }
+    ],
+    "state": [
+      "played只在组件实例中记录，禁止重复入场",
+      "awake来自IntersectionObserver",
+      "active由AboutView提供"
+    ],
+    "propertyOwnership": [
+      "GSAP写headline与rail的y，完成后清除transform",
+      "CSS循环只写地球内层，不能与首屏入场共用同一个transform节点"
+    ],
+    "interruption": [
+      "媒体查询变化由matchMedia撤销旧动画",
+      "页面覆盖时暂停CSS循环；已经开始的上移不会因active变false自动倒播"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在Vue浏览器页面中挂载AboutHero并传入active和lang。",
+      "从路由揭幕门闩派生active，避免在遮罩后提前演完。",
+      "保留标题、轨道与地球子层结构及共享纸色色板。"
+    ],
+    "inputs": [
+      "active:boolean",
+      "lang:zh|en"
+    ],
+    "outputs": [
+      "渲染双语标题和#profile锚点"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "prepareMotionLayout"
+    ],
+    "assets": [
+      "无外部图片；地球由CSS绘制",
+      "src/style.css中的--ab-*变量"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "no-preference不匹配时保留自然可读布局；CSS关闭所有装饰循环。",
+    "touch": "普通文档滚动与链接；不接管触摸。",
+    "keyboard": "原生锚点链接可聚焦；地球aria-hidden。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted创建可见性观察器并登记可取消布局准备",
+      "准备回调创建gsap.matchMedia"
+    ],
+    "cleanup": [
+      "dead标记拒绝迟到准备",
+      "取消准备、disconnect观察器、media.revert()"
+    ],
+    "knownLimitations": [
+      "组件文案仍是当前求职者示例，应按应聘者身份替换。",
+      "装饰循环含width动画，不能声称全部只用合成层属性。"
+    ]
+  },
+  "agentNotes": [
+    "一次性上移和地球循环是两个控制域。",
+    "这是人物页首屏，首页01卡片见card-about。"
+  ],
+  "relatedEffects": [
+    "route-curtain",
+    "motion-layout-scheduler",
+    "card-about"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "直达/about及从卡片进入时，标题随揭幕开始；滚出首屏后装饰循环暂停。",
+      "切换减少动态与语言，确认标题可读且不重复入场。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "vue",
+    "hero",
+    "css-globe",
+    "gate"
+  ]
+}

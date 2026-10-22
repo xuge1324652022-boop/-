@@ -1,0 +1,322 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "visual-viewer-overlay",
+  "title": {
+    "zh": "完整作品查看器遮罩",
+    "en": "Visual artwork viewer overlay"
+  },
+  "category": "overlay",
+  "status": "active",
+  "summary": "摄影与海报共用的大图弹层，通过 Teleport 脱离页面裁切，以 CSS opacity 入场、contain 保持原构图。模块级 composable 持有唯一作品序列和索引，组件处理焦点圈定、锁滚与输入；关闭后可取消地恢复原位置和触发焦点。该效果未使用 GSAP。",
+  "entryFiles": [
+    "src/components/about/VisualViewer.vue",
+    "src/composables/useVisualViewer.ts"
+  ],
+  "integrationFiles": [
+    "src/views/AboutView.vue",
+    "src/views/PhotoView.vue",
+    "src/views/PosterView.vue",
+    "src/utils/overlayTouchGuard.ts",
+    "src/data/visualPortfolio.ts",
+    "src/data/aboutProfile.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/VisualViewer.vue",
+      "symbols": [
+        "onKey",
+        "onWheel",
+        "focusables",
+        "revealCurrentThumbnail",
+        "shown"
+      ],
+      "purpose": "弹层 DOM、CSS 入场、键盘/滚轮导航、缩略图局部滚动与锁滚生命周期。"
+    },
+    {
+      "file": "src/composables/useVisualViewer.ts",
+      "symbols": [
+        "useVisualViewer",
+        "open",
+        "openAt",
+        "step",
+        "goTo",
+        "close",
+        "reset",
+        "cancelRestore"
+      ],
+      "purpose": "模块级单例状态、组内循环索引及版本化的关闭位置恢复。"
+    },
+    {
+      "file": "src/utils/overlayTouchGuard.ts",
+      "symbols": [
+        "guardOverlayTouchScroll"
+      ],
+      "purpose": "仅拦截弹层内部不能消费的单指滚动链，保留内部滚动与多指缩放。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "页面调用 open(item, trigger) 或 openAt(items, index, trigger)，并以 active 的 v-if 挂载查看器。",
+    "stages": [
+      {
+        "name": "打开",
+        "description": "先记录 scrollY 与触发元素；组件保存既有 no-scroll 状态并上锁、安装输入监听，将焦点移到关闭按钮。nextTick 后下一帧设置 shown。",
+        "properties": [
+          "active",
+          "list",
+          "index",
+          "html.no-scroll",
+          "shown",
+          "opacity"
+        ],
+        "timing": "CSS 入场 opacity 0.3s ease；组件层不含 GSAP 时间轴。"
+      },
+      {
+        "name": "浏览",
+        "description": "组件只发 step/goTo，composable 独占索引；多张支持箭头、缩略图、左右键和舞台纵向滚轮。主图读取 large，缩略图读取 thumb。",
+        "properties": [
+          "index",
+          "active",
+          "aria-current",
+          "thumbs.scrollLeft"
+        ],
+        "timing": "滚轮阈值 32px、180ms 空闲或反向重置、切换后锁定 360ms；主图直接换 src，无溶解补间。"
+      },
+      {
+        "name": "关闭",
+        "description": "active 置空使组件卸载并还原锁状态，再在 nextTick 加一帧后恢复 scrollY 和 trigger.focus({preventScroll:true})。",
+        "properties": [
+          "active",
+          "list",
+          "index",
+          "html.no-scroll",
+          "window.scrollY",
+          "focus"
+        ],
+        "timing": "无离场淡出：v-if 直接卸载；恢复任务在下一帧执行并受版本号保护。"
+      }
+    ],
+    "state": [
+      "模块级 active / list / index / total / trigger",
+      "savedScrollY / restoreRaf / restoreVersion",
+      "组件 shown / hadNoScroll / disposed",
+      "wheelLock / wheelLastAt / wheelSum"
+    ],
+    "propertyOwnership": [
+      "当前作品和索引只归 useVisualViewer；VisualViewer 不复制索引，仅发事件。",
+      "no-scroll 的添加/原状恢复归组件，scrollY 和焦点恢复归 composable，顺序由 nextTick 保证。",
+      "大图保持 max-width/max-height 与 object-fit:contain；不要把主图改成统一裁切比例。"
+    ],
+    "interruption": [
+      "重新打开或 reset 会 cancelRestore 并增加版本号，旧的关闭恢复不能滚动新页面。",
+      "路由离开必须 reset，而非会恢复旧页面坐标的 close。",
+      "单张不接管左右键和滚轮；Ctrl/Meta+wheel、横向滚动及缩略图区域放行。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "页面取得 useVisualViewer 单例，以 active 条件渲染一份 VisualViewer。",
+      "绑定 item、items=list、index、lang，并把 close/step/goTo 事件连接到同一 composable 的方法。",
+      "作品按钮将 currentTarget 作为 trigger 传入 open/openAt。",
+      "每个使用页面 onBeforeUnmount 调用 reset，避免单例状态残留；保留全站 html.no-scroll 样式。"
+    ],
+    "inputs": [
+      "组件 props：item: VisualAsset、lang、items?、index?",
+      "VisualAsset：id、title/alt 双语、width/height、src/large/thumb、note?",
+      "composable openAt(items,index,trigger?) 与 open(item,trigger?)"
+    ],
+    "outputs": [
+      "组件 emits close、step(-1|1)、goTo(index)",
+      "共享 active/list/index/total/trigger 及 open/openAt/step/goTo/close/reset"
+    ],
+    "dependencies": [
+      "vue",
+      "aboutProfile.pick",
+      "VisualAsset 类型",
+      "guardOverlayTouchScroll",
+      "Teleport",
+      "requestAnimationFrame"
+    ],
+    "assets": [
+      "调用方VisualAsset的thumb/src/large；响应式候选按真实宽度和舞台宽高选择，手机不再固定下载2560档，缩略导航仍用400档。",
+      "基础图由 scripts/build-portfolio-images.py 等素材流程生成，快照不自动附带作品图。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "组件 CSS 在减少动态时停用 transition；仍保留完整大图和所有控件。",
+    "touch": "点击箭头/缩略图切图，横向缩略图条可滚动；触摸守卫阻止背景滚动链且保留多指缩放。未实现 swipe 切图。",
+    "keyboard": "role=dialog、aria-modal、双语按钮标签；Esc 关闭、多张左右键循环；Tab/Shift+Tab 动态圈定弹层内焦点，关闭还原触发按钮。"
+  },
+  "lifecycle": {
+    "setup": [
+      "挂载保存锁状态，安装 keydown/wheel 与触摸守卫，下一帧入场并聚焦关闭按钮。",
+      "index watcher 只滚动缩略图条自身，避免 scrollIntoView 误动正文。"
+    ],
+    "cleanup": [
+      "卸载取消入场 RAF，移除 keydown/wheel、释放触摸守卫，仅在原本未锁时移除 no-scroll。",
+      "宿主 reset 清除共享序列、触发元素、已保存位置并取消待执行恢复。"
+    ],
+    "knownLimitations": [
+      "共享状态保证打开接口一次只接受一组，但宿主仍需确保同页只渲染一个 Viewer；这不是多弹层锁计数器。",
+      "当前没有关闭淡出或图片切换过渡，不能把 0.3s 入场描述为完整双向转场。",
+      "顶层浏览器 API 与模块级状态需要移植时考虑 SSR 和页面实例隔离。"
+    ]
+  },
+  "agentNotes": [
+    "此效果是 CSS 与原生事件实现，归档于转场相关组件，不应添加虚构 GSAP 依赖。",
+    "大图 grid 两层均需 minmax(0,1fr) 与 min-height:0，避免竖图把图注推离视口。",
+    "关闭恢复的版本号是快速关闭再导航的正确性约束，不是可删除的冗余代码。"
+  ],
+  "relatedEffects": [
+    "poster-palette",
+    "poster-color-chapters",
+    "action-cursor",
+    "route-curtain"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-mobile-overlays.mjs",
+      "node scripts/verify-mobile-artwork.mjs"
+    ],
+    "manualChecks": [
+      "打开横图/竖图、单张/多张，在 320px 与桌面确认完整图、图注和缩略图都在可见区域。",
+      "Tab/Shift+Tab、Esc、左右键及滚轮轻滑一次只切一张；缩略图横滚与 Ctrl/Meta 缩放可用。",
+      "关闭后立刻切路由或重开，确认旧恢复任务不会抢新页面的焦点与位置；已有 no-scroll 锁保持。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "teleport",
+    "overlay",
+    "css-transition",
+    "focus-trap",
+    "gallery",
+    "non-gsap"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/人物与作品/完整作品查看器.vue",
+      "源码/项目源码/组合函数/作品查看器控制.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/about/VisualViewer.vue",
+      "path": "源码/项目源码/组件/人物与作品/完整作品查看器.vue",
+      "role": "entry",
+      "originalSha256": "f294e8fbb5ad44dcab1dee3e6f203f6b8c8dde95c44cb321e9cdea9a853af37a",
+      "originalBytes": 20270,
+      "sha256": "515cfc811f8a3c9724620898c72719666c902599f8a9f53734ac719bdfb278b1",
+      "bytes": 20283
+    },
+    {
+      "original": "src/composables/useVisualViewer.ts",
+      "path": "源码/项目源码/组合函数/作品查看器控制.ts",
+      "role": "entry",
+      "originalSha256": "78a3e45d0ce8853705a13f271511cc54fbd89b1bca8e2694253dfbe475c05881",
+      "originalBytes": 7188,
+      "sha256": "ec8169f80998eeae00ad229d45c4d797ddfccabc1a496f0718aa4d5a6c30fa1c",
+      "bytes": 7193
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/imageVariants.json",
+      "path": "源码/项目源码/数据/图片实际尺寸.json",
+      "role": "dependency",
+      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "originalBytes": 12182,
+      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "bytes": 12182
+    },
+    {
+      "original": "src/data/visualPortfolio.ts",
+      "path": "源码/项目源码/数据/视觉作品资料.ts",
+      "role": "dependency",
+      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
+      "originalBytes": 22342,
+      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+      "bytes": 22342
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/overlayTouchGuard.ts",
+      "path": "源码/项目源码/工具/覆盖层触摸保护.ts",
+      "role": "dependency",
+      "originalSha256": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+      "originalBytes": 2717,
+      "sha256": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+      "bytes": 2717
+    },
+    {
+      "original": "src/utils/responsiveImage.ts",
+      "path": "源码/项目源码/工具/响应式图片.ts",
+      "role": "dependency",
+      "originalSha256": "3f4f4a263ee92ff55c4048446ad55eaaf37a31d6c83f1905c3027f85f02b0714",
+      "originalBytes": 1118,
+      "sha256": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+      "bytes": 1125
+    },
+    {
+      "original": "src/views/AboutView.vue",
+      "path": "集成示例/项目源码/页面/人物介绍页.vue",
+      "role": "integration-context",
+      "originalSha256": "c1e07514949a15015f63c108c9dbd002f008ae927fbc586f7914a21618949acd",
+      "originalBytes": 4389,
+      "sha256": "85bbda99d9f976be7a97dd313b5a5393c2fdc32c14089a8b28f8996762752326",
+      "bytes": 4483
+    },
+    {
+      "original": "src/views/PhotoView.vue",
+      "path": "集成示例/项目源码/页面/摄影作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "1def0b25e43fde58989fd906e1e38e7d8c5f5591e265ca9195ec9800cd1535a3",
+      "originalBytes": 18541,
+      "sha256": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+      "bytes": 18629
+    },
+    {
+      "original": "src/views/PosterView.vue",
+      "path": "集成示例/项目源码/页面/海报作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "61cb26ac58819bcc1deb631a6ac6d60765e63670f712ff28f426ab19517137fd",
+      "originalBytes": 12143,
+      "sha256": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+      "bytes": 12234
+    }
+  ]
+}

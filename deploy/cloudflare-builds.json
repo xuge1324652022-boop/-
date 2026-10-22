@@ -1,0 +1,41 @@
+{
+  "worker_name": "job-application-template",
+  "worker_tag": "<worker-tag>",
+  "repository": {
+    "provider_type": "github",
+    "provider_account_id": "<github-account-id>",
+    "provider_account_name": "xuge1324652022-boop",
+    "repo_id": "<repository-id>",
+    "repo_name": "job-application-template"
+  },
+  "production": {
+    "trigger_name": "作品集 main 自动上线",
+    "root_directory": "/",
+    "branch_includes": [
+      "main"
+    ],
+    "branch_excludes": [],
+    "path_includes": [
+      "*"
+    ],
+    "path_excludes": [
+      "docs/**",
+      "outputs/**",
+      "*.md"
+    ],
+    "build_caching_enabled": true,
+    "build_command": "npm run build:cloudflare",
+    "deploy_command": "npm run deploy:cloudflare"
+  },
+  "environment_variables": {
+    "NODE_VERSION": {
+      "value": "22.16.0",
+      "is_secret": false
+    },
+    "CLOUDFLARE_ACCOUNT_ID": {
+      "value": "<cloudflare-account-id>",
+      "is_secret": false
+    }
+  },
+  "previews_enabled": false
+}

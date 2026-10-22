@@ -1,0 +1,268 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "home-preloader",
+  "title": {
+    "zh": "黄色开场双幕撕裂",
+    "en": "Yellow split-screen home preloader"
+  },
+  "category": "mask",
+  "status": "active",
+  "summary": "首页两份完全相同的黄底版面先重叠，显示视觉百分比和文字序列，再用 clipPath 各保留上下半屏，向相反方向移走，将画面同步交接给六卡画廊。百分比不是资源下载进度。",
+  "entryFiles": [
+    "src/components/Preloader.vue"
+  ],
+  "integrationFiles": [
+    "src/views/GalleryView.vue",
+    "src/components/ThreeHome.vue",
+    "src/main.ts",
+    "index.html"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/Preloader.vue",
+      "symbols": [
+        "finish",
+        "releaseScroll",
+        "onMounted",
+        "onBeforeUnmount"
+      ],
+      "purpose": "字符生成、七阶段主时间线、滚动锁和完成信号。"
+    },
+    {
+      "file": "src/views/GalleryView.vue",
+      "symbols": [
+        "showPreloader",
+        "onPreloaderComplete",
+        "restoreIndex"
+      ],
+      "purpose": "正常首页渲染加载幕，浏览器返回与调试模式跳过。"
+    },
+    {
+      "file": "src/components/ThreeHome.vue",
+      "symbols": [
+        "boot",
+        "runIntro",
+        "cancelBoot"
+      ],
+      "purpose": "等待完成信号后才开始可见画廊开场。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "GalleryView 的 showPreloader 为 true 时挂载。后退恢复和 URL 包含 galleryDebug 参数时不渲染；减少动态效果时挂载后立即 finish。",
+    "stages": [
+      {
+        "name": "visual-progress",
+        "description": "代理对象 val 从 0 到 100，onUpdate 将四舍五入后的值同步写入两层百分比，再淡出百分比。",
+        "properties": [
+          "percentObj.val",
+          "loader-percent.opacity"
+        ],
+        "timing": "1.8s power2.inOut + .3s 淡出。"
+      },
+      {
+        "name": "character-drop",
+        "description": "WELCOME TO MY 拆为有裁切容器的字符，每个 inner span 先放在负 charH 像素处，再落入、上移消失；charH 从 offsetHeight 测量，兜底 80px。",
+        "properties": [
+          ".char span.y"
+        ],
+        "timing": "入场 .4s、stagger .02s；等待 .1s 后退场 .35s、stagger .02s。"
+      },
+      {
+        "name": "portfolio",
+        "description": "PORTFOLIO 从 yPercent=100、opacity=0 上滑显现，然后外壳放大到 4 倍。",
+        "properties": [
+          ".outro-title h1.yPercent",
+          ".outro-title h1.opacity",
+          ".outro-title.scale"
+        ],
+        "timing": "淡入 .5s，与上一段重叠 .1s；缩放 .8s power2.out。"
+      },
+      {
+        "name": "split",
+        "description": "主层 clipPath 保留上半屏，副层保留下半屏；两层分别 y=-100% 和 +100%，结束同步 finish。",
+        "properties": [
+          "preloader.clipPath",
+          "split-overlay.clipPath",
+          "preloader.y",
+          "split-overlay.y"
+        ],
+        "timing": "裁切后等待 .1s；双层位移 .9s expo.inOut。"
+      }
+    ],
+    "state": [
+      "completed 防重复通知",
+      "disposed 防卸载后回调",
+      "timeline / context 持有当前实例动画",
+      "savedOverflow 保存本实例修改前的 html/body 内联 overflow"
+    ],
+    "propertyOwnership": [
+      "只改 rootRef 子树的文字与两层幕布。",
+      "临时持有 html/body 内联 overflow；释放时只还原仍为 hidden 的值。"
+    ],
+    "interruption": [
+      "onBeforeUnmount kill 主时间线并 revert context。",
+      "完成通过 context.ignore(finish) 交棒，避免随后卸载本层时 revert 下一段 ThreeHome 动画。",
+      "ref 缺失立即 finish，防永久遮挡。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "保留双份相同模板及两层的 z-index 9999/9998。",
+      "GalleryView 在 complete 事件时让 v-if 卸载；不要手动 remove Vue 模板节点。",
+      "同时监听组件 complete 和窗口 preloader-complete 的各自职责：前者收起幕布，后者通知画廊和静态 boot-splash。",
+      "先在黄幕下挂载 ThreeHome，再在完成事件启动运动。"
+    ],
+    "inputs": [
+      "Vue 挂载",
+      "prefers-reduced-motion",
+      "window.innerWidth<=1000 决定 PORTFOLIO 初始 fontSize"
+    ],
+    "outputs": [
+      "emit('complete')",
+      "window CustomEvent('preloader-complete')"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap"
+    ],
+    "assets": [
+      "文字与 CSS 组成，无外部图片。",
+      "静态首屏 #boot-splash 位于 index.html，由 main.ts 接收就绪信号。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "整个大幅开场跳过，仍触发 complete 和 preloader-complete，避免静态黄幕残留。",
+    "touch": "动画期间通过 html/body overflow:hidden 锁滚动；两层幕布 pointer-events:none。",
+    "keyboard": "本组件无交互控件，也没有独立的键盘跳过按钮；可读文字仍在模板中。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted nextTick 后检查 refs；创建 root 范围 gsap.context，动态拆分字符。",
+      "保存并设置 overflow，构建单个 timeline。"
+    ],
+    "cleanup": [
+      "finish 先恢复本实例滚动锁，再发出两个完成信号。",
+      "onBeforeUnmount 标记 disposed，kill timeline、revert context、releaseScroll。"
+    ],
+    "knownLimitations": [
+      "原始注释称约 5 秒，但实际总时长还受两份字符目标数量与 stagger 影响，应以 timeline.duration() 或运行结果为准。",
+      "视觉计数固定 1.8s，不挂接资源加载事件。",
+      "当前文案和色值直接写在组件里；迁移为模板时需显式替换。",
+      "动态字符依赖内联 display/overflow 和像素 y；Vue scoped CSS 无法覆盖动态创建节点。"
+    ]
+  },
+  "agentNotes": [
+    "保留同步交棒；给 finish 额外加 setTimeout 会改变画廊与黑底交接。",
+    "verification.commands 为现有源码检查建议，浏览器观感仍需 manualChecks。"
+  ],
+  "relatedEffects": [
+    "gallery-focus",
+    "route-curtain"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-runtime-navigation.mjs"
+    ],
+    "manualChecks": [
+      "正常刷新 /，确认两层读数一致、字符被逐字裁切、上下幕无缝分离。",
+      "在开场中离开路由，确认旧 complete 不能启动新首页。",
+      "减少动态模式直接进入画廊，#boot-splash 不残留。",
+      "后退返回首页与 ?galleryDebug=1 时检查无需再次等待黄幕。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "vue",
+    "preloader",
+    "split",
+    "clip-path",
+    "stagger"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/开场预加载幕.vue"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/Preloader.vue",
+      "path": "源码/项目源码/组件/开场预加载幕.vue",
+      "role": "entry",
+      "originalSha256": "214142eddda59e63eb69b605d075af05e1ee5b5e33c36f4d318fac1d51d61efa",
+      "originalBytes": 12627,
+      "sha256": "214142eddda59e63eb69b605d075af05e1ee5b5e33c36f4d318fac1d51d61efa",
+      "bytes": 12627
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/views/GalleryView.vue",
+      "path": "集成示例/项目源码/页面/六卡画廊页.vue",
+      "role": "integration-context",
+      "originalSha256": "ea9a8ac95d077200331d760edce4721e0d19975f14a9ec21a70d4f17d94ee290",
+      "originalBytes": 4760,
+      "sha256": "24bc0876ee1effdb00da8260cddcbb36d2c7fb52f698cee5473a580ec1f43fe7",
+      "bytes": 4776
+    },
+    {
+      "original": "src/components/ThreeHome.vue",
+      "path": "集成示例/项目源码/组件/六卡空间首页.vue",
+      "role": "integration-context",
+      "originalSha256": "ec5e4d12a10f2e255da4bd6fb1ba5a46487cbc4830ef60410d4ad3635ac8d461",
+      "originalBytes": 55655,
+      "sha256": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+      "bytes": 55720
+    },
+    {
+      "original": "src/main.ts",
+      "path": "集成示例/项目源码/应用入口.ts",
+      "role": "integration-context",
+      "originalSha256": "59422eb2699e1b071a57e9c19436378349ea53380a0c3c8ef4ef53dd5ed89465",
+      "originalBytes": 2923,
+      "sha256": "f711f248a132dd3b55f76a2ae43f906c4b345dae76520da2e1790633e8e6e484",
+      "bytes": 2971
+    },
+    {
+      "original": "index.html",
+      "path": "集成示例/开场页面.html",
+      "role": "integration-context",
+      "originalSha256": "6b231c39d279d31bd94a295974bf283cf627a5ff4ac40a6760b8bc879a0c6efe",
+      "originalBytes": 2947,
+      "sha256": "6b231c39d279d31bd94a295974bf283cf627a5ff4ac40a6760b8bc879a0c6efe",
+      "bytes": 2947
+    }
+  ]
+}

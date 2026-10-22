@@ -1,0 +1,222 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "poster-stack",
+  "title": {
+    "zh": "实习海报透视收拢与逐页覆盖",
+    "en": "Internship perspective stack and page wipes"
+  },
+  "category": "card",
+  "status": "active",
+  "summary": "海报从透视空间推入并收拢为正面纸面，随后逐张从上向下覆盖。每个阶段、当前页、可点击可见区域和按钮跳转都由同一个以舞台高度为单位的数学行程决定。运动由scrollY/rAF直接写样式，ScrollTrigger只参与全站布局刷新通知。",
+  "entryFiles": [
+    "src/components/about/InternshipPosterStack.vue",
+    "src/components/about/internshipStackMotion.ts"
+  ],
+  "integrationFiles": [
+    "src/views/PosterView.vue",
+    "src/data/internshipPosters.ts",
+    "src/utils/motionLayout.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/internshipStackMotion.ts",
+      "symbols": [
+        "STACK_ENTER_END",
+        "STACK_FOLD_START",
+        "STACK_FOLD_END",
+        "STACK_GALLERY_START",
+        "STACK_WIPE_LENGTH",
+        "STACK_PAGE_STEP",
+        "stackState",
+        "stackTravel",
+        "stackPagePosition",
+        "stackLastPagePosition"
+      ],
+      "purpose": "可倒放的纯计算编排，定义运动段、阅读停留、页序与按钮落点。"
+    },
+    {
+      "file": "src/components/about/InternshipPosterStack.vue",
+      "symbols": [
+        "paint",
+        "measure",
+        "scroll",
+        "requestFrame",
+        "frame",
+        "go"
+      ],
+      "purpose": "测量纸面，直接采样实际滚动位置，更新3D变换/双向遮罩，并让控制按钮跳到完整阅读区。"
+    },
+    {
+      "file": "src/components/about/InternshipPosterStack.vue",
+      "symbols": [
+        "configure",
+        "requestMeasure",
+        "staticLayout",
+        "preparedCount"
+      ],
+      "purpose": "提供真实宽度srcset、可取消的布局测量，以及短视口/减少动态回退。"
+    },
+    {
+      "file": "src/utils/responsiveImage.ts",
+      "symbols": [
+        "visualImageSources"
+      ],
+      "purpose": "从生成的真实像素尺寸表构造400/1600/2560档候选，保留缓存参数，不将最长边当作图片宽度。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "舞台CSS sticky；position=clamp((scrollY-origin)/stageHeight,0,stackTravel(count))。IntersectionObserver使离屏停止采样和绘制。所有时序单位是舞台高度倍数，不是秒。",
+    "stages": [
+      {
+        "name": "enter",
+        "description": "纸张从下方推入，透视深度随收拢减少；窄屏初始scale0.8，宽屏0.6。",
+        "properties": [
+          "sheet.translate3d",
+          "sheet.rotateX",
+          "sheet.scale",
+          "footer.opacity"
+        ],
+        "timing": "入场0→0.798屏（0.42×1.9），正弦easeOut；收拢在入场结束前接上。"
+      },
+      {
+        "name": "fold",
+        "description": "scale趋于1、rotateX从-14.4deg归零、z深度归零；标题淡出上移24px。收拢完成后切为平面，z-index固定按页序。",
+        "properties": [
+          "sheet.transform",
+          "sheet.zIndex",
+          "heading.opacity",
+          "heading.translateY"
+        ],
+        "timing": "0.342→1.235屏（0.18×1.9到0.65×1.9），正弦easeOut。"
+      },
+      {
+        "name": "first-read",
+        "description": "首张完整正面显示，下一张尚不进入。",
+        "properties": [
+          "reveals[0]=1",
+          "reveals[1..]=0"
+        ],
+        "timing": "1.235→1.555屏，首张停留0.32屏。"
+      },
+      {
+        "name": "page-wipes",
+        "description": "新页从顶向下揭开，同时裁掉旧页已被覆盖的顶部；新页原图轻移上缘并由1.04回到1，避免窄边缝隙。",
+        "properties": [
+          "sheet.clipPath",
+          "sheet.visibility",
+          "image.translateY",
+          "image.scale",
+          "active",
+          "phase"
+        ],
+        "timing": "每次擦入0.665屏（0.35×1.9），使用五次平滑曲线；每页步长0.945屏，含0.28屏完整阅读；最后再停留0.56屏。"
+      }
+    ],
+    "state": [
+      "active",
+      "phase",
+      "preparedCount",
+      "displayWidths",
+      "origin",
+      "target",
+      "current",
+      "inView",
+      "layoutReady",
+      "lastPaintedPosition",
+      "staticLayout"
+    ],
+    "propertyOwnership": [
+      "纯函数只返回状态；组件paint拥有sheet的transform/clipPath/zIndex/visibility/backgroundColor与image transform。",
+      "art按钮尺寸由measure按真实画幅写入，纸面统一裁切矩形；不能让作品图片反过来撑大遮罩。",
+      "go只改变文档滚动位置，不另建GSAP切图时间线。"
+    ],
+    "interruption": [
+      "快速换向直接重算stackState，无旧补间排队；折叠后固定页序，不随倒滚重新排序纸张。",
+      "可见旧图和新图的命中区由实际clipPath决定，active只负责标题与键盘焦点入口。",
+      "媒体条件变化configure清除旧纸面样式并重测；语言、字体与全局ScrollTrigger refresh使origin重新读取。",
+      "preparedCount只增不减，已开放高清候选在倒滚时不反复撤回。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在海报页传精选VisualAsset数组与lang，监听open接入完整作品查看器。",
+      "保留internshipStackMotion纯函数和完整sticky舞台结构；根高度由measure按1+stackTravel计算。",
+      "保留共享motionLayout队列及ScrollTrigger refresh监听，避免上方双语段落重排后按钮按旧起点跳转。",
+      "更改数量时同步核对projectNames默认三个产品名称和数据顺序；按钮跳转必须继续使用stackPagePosition。"
+    ],
+    "inputs": [
+      "items:readonly VisualAsset[]",
+      "lang:Lang",
+      "主题--ab-bg/--ab-ink/--ab-soft与--stable-viewport-height"
+    ],
+    "outputs": [
+      "open(item:VisualAsset,trigger:HTMLElement)",
+      "组件内部active/phase用于标题、状态提示与aria-current"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap/ScrollTrigger（刷新事件）",
+      "src/components/about/internshipStackMotion.ts",
+      "src/utils/motionLayout.ts",
+      "src/data/aboutProfile.ts",
+      "src/data/visualPortfolio.ts",
+      "ResizeObserver",
+      "IntersectionObserver",
+      "requestAnimationFrame"
+    ],
+    "assets": [
+      "items[].thumb、src、large；visualImageSources从imageVariants.json读取每个WebP的真实像素宽度，按舞台sizes和设备像素比选图。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "减少动态或视口高<=500px时改普通作品流，所有作品可读，隐藏滚动导航；不建立叠层行程。",
+    "touch": "不接管触摸手势；使用页面自然滚动与原生按钮。短视口改自然流避免纸面被标题/页脚挤压。",
+    "keyboard": "动态模式只有active海报tabindex=0；导航按钮保持原生键盘可用并以aria-current标当前项，点击落到目标页完整静止区。"
+  },
+  "lifecycle": {
+    "setup": [
+      "挂载请求共享测量，ResizeObserver监视stage，IntersectionObserver管理inView，字体ready后重测。",
+      "登记被动scroll、ScrollTrigger refresh与两个媒体查询change；lang变化后nextTick重测。"
+    ],
+    "cleanup": [
+      "卸载设置dead并取消rAF、准备测量与刷新任务，断开两个观察器。",
+      "移除window scroll、ScrollTrigger refresh与reduced/compact媒体查询监听。"
+    ],
+    "knownLimitations": [
+      "模板直接读取items[active].title，要求非空数据；默认导航名针对EC100/V10L/VELA三组精选。",
+      "这是数学滚动组件；不能把相对屏数当GSAP秒数，或再叠加一个进度追赶阻尼。"
+    ]
+  },
+  "agentNotes": [
+    "三张示例的stackTravel为3.725屏，连同sticky本屏总高度4.725屏。",
+    "收拢结束后关闭3D合成并双向裁切旧/新页，是避免共面图层细线的关键。",
+    "已有纯函数验证覆盖1/3/5张、反向顺序与按钮落到完整阅读区；不等同于浏览器画质和帧率验证。"
+  ],
+  "relatedEffects": [
+    "photo-chapter-wipe",
+    "poster-depth",
+    "poster-artwork-reveal"
+  ],
+  "verification": {
+    "commands": [
+      "node scripts/verify-internship-motion.mjs",
+      "npm run typecheck",
+      "npm run build"
+    ],
+    "manualChecks": [
+      "逐张完整观看并倒滚，标题在揭开过半后才变更，边缘无旧图细线。",
+      "从前向后及从后向前点击导航，都到目标纸张完整静止区。",
+      "快速滚出再滚回、换语言和字体落位后位置一致；短视口和减少动态展示所有原图。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "sticky",
+    "3d",
+    "clip-path",
+    "scrollY",
+    "requestAnimationFrame",
+    "pure-function",
+    "non-gsap-timeline"
+  ]
+}

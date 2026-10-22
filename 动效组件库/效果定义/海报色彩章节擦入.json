@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "poster-color-chapters",
+  "title": { "zh": "海报色彩章节双向擦入", "en": "Poster colour chapter wipes" },
+  "category": "mask",
+  "status": "active",
+  "summary": "按稳定素材 id 将海报划为四个色彩章节，以原生 sticky 舞台和滚动进度叠层擦入：换组由下向上揭示，同组由右向左揭示。GSAP CustomEase 只映射进度，遮罩由 RAF 单一写入者控制，并只保留底图和正在揭开的顶图可见。减少动态或短视口时逐张普通流展示。",
+  "entryFiles": ["src/components/about/PosterColourChapters.vue"],
+  "integrationFiles": ["src/views/PosterView.vue", "src/data/posterPage.ts", "src/data/visualPortfolio.ts", "src/data/aboutProfile.ts", "src/utils/motionLayout.ts"],
+  "sourceSections": [
+    { "file": "src/components/about/PosterColourChapters.vue", "symbols": ["groups", "frames", "groupChanges"], "purpose": "稳定 id 归组并保留原 items 索引，确保分组后仍打开正确大图。" },
+    { "file": "src/components/about/PosterColourChapters.vue", "symbols": ["revealEase", "render", "scroll"], "purpose": "滚动阻尼、分段进度与方向判断，以及 clipPath/visibility 的唯一写入。" },
+    { "file": "src/components/about/PosterColourChapters.vue", "symbols": ["measure", "move", "preference", "visibility"], "purpose": "sticky 行程、按钮滚动定位与静态布局回退。" }
+  ],
+  "mechanism": {
+    "trigger": "舞台位于视口前后 120px 内且页面可见时，原生滚动驱动按需 RAF；前后按钮通过 scrollTo 到目标阅读段。",
+    "stages": [
+      { "name": "编排与测量", "description": "将已知 id 按火光/旷野/冷调/橄榄归组，每帧保留原列表 index；step=max(840,stageHeight*1.75)，root 高为舞台高加 frames.length*step。", "properties": ["frames", "origin", "step", "root.height"], "timing": "排队测量，语言、frames、尺寸与全局 refresh 后重算。" },
+      { "name": "追赶与揭示", "description": "有效 scrollY 被限制在本章节范围，displayedScroll 指数追赶；每件作品前半程完整停留，后半程揭下一件。CustomEase(.42,0,.3,1) 映射 p，换组写 inset(top)，同组写 inset(right)。", "properties": ["displayedScroll", "panel.clipPath", "active"], "timing": "SMOOTH_TAU=120ms；dt 最多64ms；REVEAL_WINDOW=0.5 个步长，不是固定秒数补间。" },
+      { "name": "可见层与回退", "description": "完成揭示的最新层为 base，正在展开的为 top，最多两层 visible；倒滚仍按相同 p 恢复旧层。p>=0.5 的最新项决定 active 与可聚焦按钮。", "properties": ["panel.visibility", "lastReveal", "lastVisibility", "active"], "timing": "仅数值或可见性变化时写样式；误差<0.2px 后吸附停止 RAF。" }
+    ],
+    "state": ["frames / active / groupChanges", "panels / lastReveal / lastVisibility", "origin / step / displayedScroll / lastFrame / raf", "reduced / compact / staticLayout / nearViewport"],
+    "propertyOwnership": ["render 独占活动模式的 panel.clipPath 和 visibility；没有额外 CSS transition 与它争进度。", "CSS 负责 sticky、叠层和静态流布局；CustomEase 只返回映射值，不持有独立遮罩 tween。", "frame.index 是原 items 位置，不能用色彩分组后的帧序号直接打开查看器。"],
+    "interruption": ["离舞台、页面隐藏或目标跨度大于 step 时直接对齐，避免长距离追赶或后台循环。", "快速反向滚动从当前 displayedScroll 连续回退，不 restart 单独的入场动画。", "偏好变化取消 RAF，nextTick 后移除内联 clip-path/visibility 再测量，避免静态布局残留裁切。"]
+  },
+  "integration": {
+    "steps": ["传入含已知稳定 id 的 VisualAsset 列表与 lang，更新 groups 可更换主题与素材匹配规则。", "监听 open(originalIndex,trigger)，以原列表传给统一 useVisualViewer.openAt。", "保留布局队列与 ScrollTrigger.refresh 监听，使前序章节高度变化后 origin 正确。", "保留静态 CSS 与 prefers-reduced-motion/短视口响应逻辑；不要只截取 render 而缺少 reset 样式。"],
+    "inputs": ["items: readonly VisualAsset[]", "lang: zh | en", "window.scrollY 与舞台尺寸", "reduce 与短视口媒体查询"],
+    "outputs": ["open(index,trigger)：index 对应原 items，不是 frames 顺序。"],
+    "dependencies": ["vue", "gsap", "gsap/CustomEase", "gsap/ScrollTrigger 的 refresh 事件", "motionLayout 工具", "aboutProfile.pick", "ResizeObserver", "IntersectionObserver", "requestAnimationFrame"],
+    "assets": ["VisualAsset.src，当前为 /portfolio/<id>-1600.webp。", "四组 paper/ink/name/description 与 groups 中的 id 是源码内容配置，移植时需要替换。"]
+  },
+  "accessibility": { "reducedMotion": "staticLayout=true：取消 sticky 长轨道，清除遮罩与隐藏样式，所有作品逐张展示。", "touch": "不注册 touch 监听，保留原生滚动；可见擦入层保留触摸命中，不按 active 中点切 inert。", "keyboard": "当前 active 作品按钮可 Tab 进入，前后导航是原生 button；静态模式所有作品按钮可聚焦，完整图片使用 alt。" },
+  "lifecycle": {
+    "setup": ["注册 CustomEase 并建立 revealEase；挂载排测量、监听尺寸、可见性、滚动、全局 refresh 与两类媒体查询。", "字体 ready、语言或 frames 变化后重新排测量。"],
+    "cleanup": ["卸载取消测量与刷新请求、断开观察器、取消 RAF，移除所有窗口/文档/refresh/偏好监听。"],
+    "knownLimitations": ["groups 是现有九张海报的固定 id 白名单，不在列表中的素材不会自动出现；新内容需更新分组。", "页脚章节总数写为 04，修改分组数量也要同步模板。", "顶部注释曾写 95ms，实际执行常量为 SMOOTH_TAU=120；读取代码时以执行常量为准。", "导航按钮使用浏览器 smooth scroll；减少动态模式不渲染该导航，普通作品按钮仍可用。"]
+  },
+  "agentNotes": ["这不是 ScrollTrigger pin/scrub 时间轴；舞台靠 CSS sticky，ScrollTrigger 仅用于共享 refresh，CustomEase 仅参与数值映射。", "只绘制 base/top 是性能和命中正确性的约束；倒滚必须恢复历史层可见性。", "保护 contain 和源素材比例，颜色只作用于舞台背景与文字，不给海报加滤镜。"],
+  "relatedEffects": ["poster-palette", "visual-viewer-overlay", "action-cursor"],
+  "verification": { "commands": ["npm run typecheck", "node scripts/verify-mobile-artwork.mjs"], "manualChecks": ["顺滚与倒滚跨同组/跨组，检查擦入方向、没有空白层或旧层永久隐藏。", "点击每个重新分组后的作品，核对打开的是原列表中的正确大图。", "快速跳段、短横屏、运动偏好和语言切换后检查完整图与静态流无残留裁切。"] },
+  "tags": ["vue", "gsap-custom-ease", "clip-path", "sticky", "raf", "poster", "scroll"]
+}

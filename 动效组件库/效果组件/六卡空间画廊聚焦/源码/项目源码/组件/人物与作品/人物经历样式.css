@@ -1,0 +1,184 @@
+/*
+ * 01 / ABOUT —— 首页画廊「关于我」卡片的三层空间，不是 /about 正文样式。
+ *
+ * 层次（由远及近）：
+ *   1. 巨型 ABOUT 排版  —— 尺度最大、位移最小（远）
+ *   2. DEMO 几何图形     —— 尺度中等、位移中等（中景）
+ *   3. 文字信息层       —— 尺度最小、位移最大（近）
+ *
+ * 这份文件只负责**静止时**的样子：位置、尺度、层级、颜色。
+ * 指针引起的位移一律交给 aboutExperienceAnimation.ts 用 transform 写，
+ * 所以这里任何一层都**不许**写 transform —— 否则会被 GSAP 整块覆盖掉。
+ * 定位全部用 left / top / bottom，不用 translate 居中，就是为此。
+ *
+ * 颜色只有一档：冷灰白 rgba(241,241,236,…)，靠透明度分深浅。
+ * 没有渐变、没有发光、没有第二套强调色 —— 唯一的「强调」是那条 1px 细线
+ * 和 DEMO 图形里的扫描线。
+ */
+
+.about-exp {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+}
+
+/*
+ * 第 1 层 —— 巨型 ABOUT。
+ * 主导尺度：明显大于下面任何东西。允许溢出容器（参考站的做法：
+ * 超尺寸排版被裁掉一部分，反而读起来像空间而不是版面）。
+ */
+.about-exp__type {
+  position: absolute;
+  left: -1%;
+  top: 13%;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(64px, 21vw, 360px);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  color: rgba(241, 241, 236, 0.9);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/*
+ * 第 2 层 —— DEMO 几何图形。
+ * 尺度明显小于 ABOUT：它是被 ABOUT 压着的物体，不是和它平起平坐的标识。
+ */
+.about-exp__logo {
+  position: absolute;
+  left: 52%;
+  top: 30%;
+  z-index: 2;
+  width: clamp(110px, 26%, 300px);
+  user-select: none;
+}
+
+/*
+ * 第 3 层 —— 文字信息。
+ * 尺度最小，锚在左下，向右留出空间给 ABOUT 的那个 A。
+ */
+.about-exp__info {
+  position: absolute;
+  left: 6%;
+  bottom: 8%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 62%;
+}
+
+.about-exp__index {
+  font-size: clamp(9px, 0.82vw, 13px);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: rgba(241, 241, 236, 0.34);
+  margin-bottom: 1.6vh;
+}
+
+/* 唯一的强调元素：一条 1px 细线，长度固定（属于构图，不做动画） */
+.about-exp__rule {
+  width: 58%;
+  height: 1px;
+  background: rgba(241, 241, 236, 0.28);
+  margin-bottom: 2.4vh;
+}
+
+.about-exp__lead {
+  margin: 0 0 1.8vh;
+  font-size: clamp(20px, 3.1vw, 52px);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: rgba(241, 241, 236, 0.92);
+}
+
+.about-exp__name {
+  margin-bottom: 2.2vh;
+  font-size: clamp(15px, 1.9vw, 32px);
+  font-weight: 300;
+  letter-spacing: 0.11em;
+  color: rgba(241, 241, 236, 0.8);
+}
+
+.about-exp__role {
+  font-size: clamp(9px, 1.02vw, 16px);
+  font-weight: 400;
+  letter-spacing: 0.19em;
+  line-height: 1.9;
+  color: rgba(241, 241, 236, 0.52);
+}
+
+.about-exp__meta {
+  margin-top: 2.4vh;
+  display: flex;
+  gap: clamp(16px, 2.2vw, 40px);
+  font-size: clamp(9px, 0.82vw, 13px);
+  font-weight: 400;
+  letter-spacing: 0.26em;
+  color: rgba(241, 241, 236, 0.34);
+}
+
+/* 手机端：ABOUT 收一点，DEMO 挪到右下角，避免和小字抢位置。
+   字号统一放大一档：桌面 info 是 clamp(9–16px)，这里拉到 clamp(11–17px)，
+   否则在 320–390 宽下「VIDEO EDITOR」只剩 9px，基本读不清。 */
+@media (max-width: 640px) {
+  .about-exp__type {
+    top: 10%;
+    font-size: clamp(52px, 26vw, 140px);
+  }
+  .about-exp__logo {
+    left: 48%;
+    top: 38%;
+    width: 44%;
+  }
+  /*
+   * bottom 必须抬到 deck-controls（右下角 01 / 06 切换控件）之上。
+   * 那个控件是 bottom:26px、高约 36px —— 从卡片底边往上占掉 ~62px。
+   * 窄屏（320×568）下 info 若还留在 bottom:6%（34px），文字会直接压在
+   * 控件上：既挡住数字，也让那块区域点不动。抬到 74px 留出 12px 余量。
+   */
+  .about-exp__info {
+    left: 6%;
+    bottom: 74px;
+    max-width: 88%;
+  }
+  .about-exp__index {
+    font-size: clamp(10px, 2.6vw, 14px);
+  }
+  .about-exp__lead {
+    font-size: clamp(22px, 6.4vw, 44px);
+  }
+  .about-exp__name {
+    font-size: clamp(16px, 4vw, 28px);
+  }
+  .about-exp__role {
+    font-size: clamp(11px, 2.4vw, 14px);
+  }
+  .about-exp__meta {
+    font-size: clamp(10px, 2.2vw, 13px);
+    gap: clamp(12px, 3vw, 28px);
+  }
+  /* 横屏短高（h ≤ 520）：info 上挪到 DEMO 下方，避免和右下角 deck-controls 撞 */
+  @media (max-height: 520px) and (orientation: landscape) {
+    .about-exp__type {
+      top: 8%;
+      font-size: clamp(44px, 16vw, 100px);
+    }
+    .about-exp__logo {
+      top: 30%;
+      width: 28%;
+    }
+    /* 横屏卡片高度只有 390px，info 不能再用 74px bottom（会顶到中央）。
+       把它收到左上、改用 max-width:55% + 字号压一档，远离右下控件。 */
+    .about-exp__info {
+      bottom: auto;
+      top: 38%;
+      max-width: 55%;
+    }
+    .about-exp__role { font-size: clamp(10px, 2vw, 13px); }
+  }
+}

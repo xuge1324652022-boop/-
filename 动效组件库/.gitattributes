@@ -1,0 +1,7 @@
+# JSON manifests hash normalized UTF-8/LF source snapshots on all platforms.
+* text eol=lf
+*.jpg -text
+*.jpeg -text
+*.png -text
+*.webp -text
+*.svg -text

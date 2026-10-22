@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-*/
+tmp/
+outputs/
+backups/
+动效组件库/
+作品/
+参考资料/
+上线交付/
+网站部署文件/
+逆向工程工具/
+.workbuddy-ai/
+public/
+media/
+package-lock.json

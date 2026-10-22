@@ -1,0 +1,1548 @@
+{
+  "schemaVersion": "1.0.0",
+  "title": "求职者应聘模板网站 · 遮罩、转场与动效源码库",
+  "description": "按视觉效果归档的真实 Vue/TypeScript/CSS 源码与 agent 解析；包含 GSAP、原生 RAF、CSS 和 Web Animations 的协作边界。",
+  "language": "zh-CN",
+  "repository": "https://github.com/xuge1324652022-boop/job-application-template",
+  "sourceOfTruth": "src/",
+  "definitionDirectory": "动效组件库/效果定义/",
+  "generatedDirectory": "动效组件库/效果组件/",
+  "definitionSchema": "解析格式规范.json",
+  "namingMap": "命名映射.json",
+  "sourceDigest": "9d4be019a3cd9ec677c0280ca1387185abd2473c30f3203d498b63683fe71f33",
+  "effectCount": 38,
+  "uniqueSourceFileCount": 100,
+  "gsapCoverage": {
+    "directlyImportingGSAP": [
+      "src/cardAnimations/about.ts",
+      "src/cardAnimations/base.ts",
+      "src/cardAnimations/color.ts",
+      "src/cardAnimations/edit.ts",
+      "src/cardAnimations/news.ts",
+      "src/cardAnimations/photo.ts",
+      "src/cardAnimations/poster.ts",
+      "src/components/PageCurtain.vue",
+      "src/components/Preloader.vue",
+      "src/components/ReferenceIntroduction.vue",
+      "src/components/SubpageIndex.vue",
+      "src/components/ThreeHome.vue",
+      "src/components/about/AboutHero.vue",
+      "src/components/about/ContactEnd.vue",
+      "src/components/about/InternshipAnimatedArtwork.vue",
+      "src/components/about/InternshipDepthComposition.vue",
+      "src/components/about/InternshipMotionCard.vue",
+      "src/components/about/InternshipPosterGallery.vue",
+      "src/components/about/InternshipPosterStack.vue",
+      "src/components/about/PhotoRunway.vue",
+      "src/components/about/PosterColourChapters.vue",
+      "src/components/about/PosterPalette.vue",
+      "src/components/about/ProfileIntro.vue",
+      "src/components/about/aboutExperienceAnimation.ts",
+      "src/components/about/internshipArtworkMotion.ts",
+      "src/components/color/ColorWave.vue",
+      "src/composables/setupEditorialScroll.ts",
+      "src/composables/useAboutReveal.ts",
+      "src/composables/useLoopFade.ts",
+      "src/composables/useSmoothScroll.ts",
+      "src/experience/transitions/index.ts",
+      "src/utils/motionLayout.ts",
+      "src/utils/viewportEntrance.ts",
+      "src/views/FoundationView.vue",
+      "src/views/PhotoView.vue",
+      "src/views/PosterView.vue"
+    ],
+    "explainedCount": 36,
+    "unexplained": []
+  },
+  "agentReadOrder": [
+    "组件索引.json",
+    "效果组件/<中文效果名>/效果介绍与解析.json",
+    "bundle.entryFiles 中的中文源码入口",
+    "sources 中 role 为 dependency 的文件",
+    "集成示例与验证说明"
+  ],
+  "regeneration": {
+    "write": "npm run build:motion",
+    "check": "npm run check:motion"
+  },
+  "licensing": {
+    "code": "MIT; see ../LICENSE",
+    "mediaAndMarks": "See ../NOTICE.md; artwork and third-party marks are not relicensed by this catalog."
+  },
+  "effects": [
+    {
+      "id": "poster-motion-tile",
+      "title": {
+        "zh": "产品主题描线与词语交互动效",
+        "en": "Product motion tile and word transitions"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "每个实习产品章节的小型SVG/CSS交互演示。图形首次真实可见后描线一次，圆球与块在可见期间循环；词语按钮切换产品语义和图形姿态，鼠标只通过局部CSS变量制造视差。该效果不使用GSAP，与海报原图碎片遮罩分开管理。",
+      "tags": [
+        "vue",
+        "css-animation",
+        "SVG",
+        "stroke-dashoffset",
+        "pointer",
+        "visibility",
+        "word-transition",
+        "non-gsap"
+      ],
+      "manifest": "效果组件/产品描线与词语交互/效果介绍与解析.json",
+      "readme": "效果组件/产品描线与词语交互/使用说明.md",
+      "entryFiles": [
+        "效果组件/产品描线与词语交互/源码/项目源码/组件/人物与作品/实习海报交互单元.vue",
+        "效果组件/产品描线与词语交互/源码/项目源码/数据/实习海报动效数据.ts"
+      ],
+      "sourceFileCount": 6,
+      "contextFileCount": 2
+    },
+    {
+      "id": "profile-scroll-scene",
+      "title": {
+        "zh": "人物照片收框与工具弹出场景",
+        "en": "Profile frame morph and tool reveal"
+      },
+      "category": "scroll",
+      "status": "active",
+      "summary": "同一张4:3人物原图从视口中央的自然比例取景框，随滚动迁移到身份介绍右侧的终点框。框使用clip-path、原图使用transform，两者读取同一测量结果；工具按钮在行程后段才开放交互，第一次可见时弹出一次。",
+      "tags": [
+        "vue",
+        "gsap",
+        "ScrollTrigger",
+        "clip-path",
+        "sticky",
+        "portrait",
+        "one-shot"
+      ],
+      "manifest": "效果组件/人物照片收框与工具弹出/效果介绍与解析.json",
+      "readme": "效果组件/人物照片收框与工具弹出/使用说明.md",
+      "entryFiles": [
+        "效果组件/人物照片收框与工具弹出/源码/项目源码/组件/人物与作品/人物照片介绍.vue"
+      ],
+      "sourceFileCount": 8,
+      "contextFileCount": 1
+    },
+    {
+      "id": "about-hero",
+      "title": {
+        "zh": "人物页首屏上移与地球循环",
+        "en": "About hero entrance and globe"
+      },
+      "category": "transition",
+      "status": "active",
+      "summary": "双语人物标题与地球轨道共同上移入场；GSAP负责一次性位移，CSS负责可暂停的装饰循环，页面active门闩决定何时可见。",
+      "tags": [
+        "gsap",
+        "vue",
+        "hero",
+        "css-globe",
+        "gate"
+      ],
+      "manifest": "效果组件/人物首屏与地球循环/效果介绍与解析.json",
+      "readme": "效果组件/人物首屏与地球循环/使用说明.md",
+      "entryFiles": [
+        "效果组件/人物首屏与地球循环/源码/项目源码/组件/人物与作品/人物首屏.vue"
+      ],
+      "sourceFileCount": 4,
+      "contextFileCount": 1
+    },
+    {
+      "id": "subpage-heading-reveal",
+      "title": {
+        "zh": "作品子页大标题揭示",
+        "en": "Subpage heading entrance"
+      },
+      "category": "text",
+      "status": "active",
+      "summary": "摄影、海报、剪辑/新闻三类宿主使用同一揭幕门闩，先播放标题的上移渐显，再放行介绍与正文入场；本目录保留各宿主完整实现供迁移对照。",
+      "tags": [
+        "gsap",
+        "heading",
+        "route-gate",
+        "one-shot"
+      ],
+      "manifest": "效果组件/作品子页大标题揭示/效果介绍与解析.json",
+      "readme": "效果组件/作品子页大标题揭示/使用说明.md",
+      "entryFiles": [
+        "效果组件/作品子页大标题揭示/源码/项目源码/页面/摄影作品页.vue",
+        "效果组件/作品子页大标题揭示/源码/项目源码/页面/海报作品页.vue",
+        "效果组件/作品子页大标题揭示/源码/项目源码/页面/基础作品页.vue"
+      ],
+      "sourceFileCount": 45,
+      "contextFileCount": 1
+    },
+    {
+      "id": "card-list-expand",
+      "title": {
+        "zh": "作品索引扇牌展开",
+        "en": "Work-index fanned card expansion"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "/cards 的六张扇形牌堆使用每卡独立 CSS 变量配置缩放、旋转、缓动与原点。点击或键盘激活先展开当前卡，再导航至对应子页并交由全局路由幕布覆盖；该展开本身没有 GSAP。",
+      "tags": [
+        "vue",
+        "css-transition",
+        "card",
+        "fan",
+        "navigation",
+        "no-gsap"
+      ],
+      "manifest": "效果组件/作品索引扇牌展开/效果介绍与解析.json",
+      "readme": "效果组件/作品索引扇牌展开/使用说明.md",
+      "entryFiles": [
+        "效果组件/作品索引扇牌展开/源码/项目源码/页面/卡片列表页.vue"
+      ],
+      "sourceFileCount": 5,
+      "contextFileCount": 2
+    },
+    {
+      "id": "route-curtain",
+      "title": {
+        "zh": "全站弧形路由幕布",
+        "en": "Global curved route curtain"
+      },
+      "category": "mask",
+      "status": "active",
+      "summary": "用上下椭圆帽和整屏位移实现跨路由覆盖、停留与揭幕。PageCurtain只承担视觉动作；useRouteCurtainNavigation显式接收router与幕布引用，等待路由和首轮布局、控制门禁及处理异常。App保留渲染，首访子页从已覆盖状态起步。",
+      "tags": [
+        "gsap",
+        "vue",
+        "route",
+        "curtain",
+        "mask",
+        "web-animations",
+        "navigation"
+      ],
+      "manifest": "效果组件/全站弧形路由幕布/效果介绍与解析.json",
+      "readme": "效果组件/全站弧形路由幕布/使用说明.md",
+      "entryFiles": [
+        "效果组件/全站弧形路由幕布/源码/项目源码/组件/页面幕布.vue",
+        "效果组件/全站弧形路由幕布/源码/项目源码/组合函数/页面幕布控制.ts"
+      ],
+      "sourceFileCount": 5,
+      "contextFileCount": 6
+    },
+    {
+      "id": "gallery-focus",
+      "title": {
+        "zh": "六卡空间画廊与全屏聚焦",
+        "en": "Six-card gallery and fullscreen focus"
+      },
+      "category": "transition",
+      "status": "active",
+      "summary": "以 CSS 3D 正交环承载六个求职作品方向。几何由纯函数计算，宿主统一渲染，GSAP 只插值 entrance、orbit 与 focus；章节转场单独只推进 focus，让选中卡铺满视口、其余卡原地淡出。",
+      "tags": [
+        "gsap",
+        "css-3d",
+        "gallery",
+        "focus",
+        "clip-path",
+        "state-machine",
+        "pointer",
+        "history"
+      ],
+      "manifest": "效果组件/六卡空间画廊聚焦/效果介绍与解析.json",
+      "readme": "效果组件/六卡空间画廊聚焦/使用说明.md",
+      "entryFiles": [
+        "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/六卡空间首页.vue",
+        "效果组件/六卡空间画廊聚焦/源码/项目源码/体验状态/转场/体验转场控制.ts",
+        "效果组件/六卡空间画廊聚焦/源码/项目源码/体验状态/体验状态.ts",
+        "效果组件/六卡空间画廊聚焦/源码/项目源码/工具/画廊动画控制.ts"
+      ],
+      "sourceFileCount": 31,
+      "contextFileCount": 2
+    },
+    {
+      "id": "smooth-scroll",
+      "title": {
+        "zh": "共享滚轮平滑控制器",
+        "en": "Shared smooth wheel controller"
+      },
+      "category": "scroll",
+      "status": "active",
+      "summary": "精确指针设备使用原生RAF与指数曲线推进window.scrollTo，并同步ScrollTrigger.update；尊重原生内部滚动、路由锁与调色页闸门。",
+      "tags": [
+        "raf",
+        "wheel",
+        "scrolltrigger",
+        "input-gate"
+      ],
+      "manifest": "效果组件/共享滚轮平滑控制/效果介绍与解析.json",
+      "readme": "效果组件/共享滚轮平滑控制/使用说明.md",
+      "entryFiles": [
+        "效果组件/共享滚轮平滑控制/源码/项目源码/组合函数/平滑滚动控制.ts",
+        "效果组件/共享滚轮平滑控制/源码/项目源码/工具/滚轮事件工具.ts"
+      ],
+      "sourceFileCount": 3,
+      "contextFileCount": 2
+    },
+    {
+      "id": "card-about",
+      "title": {
+        "zh": "关于我卡视差与 DEMO 扫描遮罩",
+        "en": "About card parallax and DEMO scan mask"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "首页 ABOUT 卡由三层空间构图、DEMO 几何 SVG 扫描线和聚焦落定组成。AboutAnimation 只为 card-visual 宿主做轻微淡入/缩放/位移；真实指针视差在 AboutExperience 独立实现，扫描线通过 SVG mask 只在几何结构内部显示。",
+      "tags": [
+        "gsap",
+        "vue",
+        "quickTo",
+        "about",
+        "svg",
+        "mask",
+        "css-animation",
+        "parallax"
+      ],
+      "manifest": "效果组件/关于我卡扫描遮罩/效果介绍与解析.json",
+      "readme": "效果组件/关于我卡扫描遮罩/使用说明.md",
+      "entryFiles": [
+        "效果组件/关于我卡扫描遮罩/源码/项目源码/卡片动画/关于我卡动画.ts",
+        "效果组件/关于我卡扫描遮罩/源码/项目源码/组件/人物与作品/人物经历.vue",
+        "效果组件/关于我卡扫描遮罩/源码/项目源码/组件/人物与作品/个人标志扫描.vue",
+        "效果组件/关于我卡扫描遮罩/源码/项目源码/组件/人物与作品/人物经历动画.ts",
+        "效果组件/关于我卡扫描遮罩/源码/项目源码/组件/人物与作品/人物经历样式.css"
+      ],
+      "sourceFileCount": 8,
+      "contextFileCount": 4
+    },
+    {
+      "id": "card-edit",
+      "title": {
+        "zh": "剪辑卡三层指针视差",
+        "en": "Editing card pointer parallax"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "巨型 EDIT、抽象时间线与双帧按三种幅度和阻尼响应指针。没有自动播放头、环境循环和一次性入场，动效只做位移，以静态信息作为构图参照。",
+      "tags": [
+        "gsap",
+        "vue",
+        "card",
+        "quickTo",
+        "pointer",
+        "parallax"
+      ],
+      "manifest": "效果组件/剪辑卡三层视差/效果介绍与解析.json",
+      "readme": "效果组件/剪辑卡三层视差/使用说明.md",
+      "entryFiles": [
+        "效果组件/剪辑卡三层视差/源码/项目源码/卡片动画/剪辑卡动画.ts"
+      ],
+      "sourceFileCount": 4,
+      "contextFileCount": 4
+    },
+    {
+      "id": "motion-layout-scheduler",
+      "title": {
+        "zh": "动效布局预热与刷新调度",
+        "en": "Motion layout preparation scheduler"
+      },
+      "category": "layout",
+      "status": "active",
+      "summary": "共享可取消队列按元素与视口的距离排序，每帧准备一个组件，并在批次结束后合并ScrollTrigger刷新；它是效果基础设施，不直接绘制动画。",
+      "tags": [
+        "gsap",
+        "scrolltrigger",
+        "raf",
+        "scheduler",
+        "performance"
+      ],
+      "manifest": "效果组件/动效布局刷新调度/效果介绍与解析.json",
+      "readme": "效果组件/动效布局刷新调度/使用说明.md",
+      "entryFiles": [
+        "效果组件/动效布局刷新调度/源码/项目源码/工具/动效布局调度.ts",
+        "效果组件/动效布局刷新调度/源码/项目源码/工具/视口入场控制.ts"
+      ],
+      "sourceFileCount": 3,
+      "contextFileCount": 1
+    },
+    {
+      "id": "card-animation-lifecycle",
+      "title": {
+        "zh": "卡内动画生命周期与注册表",
+        "en": "Card animation lifecycle and registry"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "BaseAnimation把可选的一次性intro与环境循环tl分开管理；注册表按CHAPTERS稳定key创建六类实例，CardVisual负责宿主挂载与播放转发。",
+      "tags": [
+        "gsap",
+        "lifecycle",
+        "registry",
+        "vue",
+        "ownership"
+      ],
+      "manifest": "效果组件/卡片动画生命周期/效果介绍与解析.json",
+      "readme": "效果组件/卡片动画生命周期/使用说明.md",
+      "entryFiles": [
+        "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/卡片动画基础.ts",
+        "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/卡片动画类型.ts",
+        "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/卡片动画注册表.ts",
+        "效果组件/卡片动画生命周期/源码/项目源码/组件/卡片视觉.vue"
+      ],
+      "sourceFileCount": 21,
+      "contextFileCount": 1
+    },
+    {
+      "id": "pointer-svg-trail",
+      "title": {
+        "zh": "历史指针 SVG 绘线",
+        "en": "Legacy pointer SVG trail"
+      },
+      "category": "pointer",
+      "status": "legacy",
+      "summary": "按真实指针历史采样生成多笔 SVG 二次贝塞尔路径，以时间淘汰旧点，尾部随轨迹老化自然消退。源码保留 createPointerTrail 工厂，但当前 src 中没有调用者，因此属于可供参考的历史实现，不代表网站正在运行的效果。未使用 GSAP。",
+      "tags": [
+        "legacy",
+        "svg",
+        "pointer",
+        "raf",
+        "bezier",
+        "non-gsap",
+        "unreferenced"
+      ],
+      "manifest": "效果组件/历史指针矢量绘线/效果介绍与解析.json",
+      "readme": "效果组件/历史指针矢量绘线/使用说明.md",
+      "entryFiles": [
+        "效果组件/历史指针矢量绘线/源码/项目源码/组合函数/指针矢量轨迹.ts"
+      ],
+      "sourceFileCount": 2,
+      "contextFileCount": 0
+    },
+    {
+      "id": "editorial-wipe",
+      "title": {
+        "zh": "摄影原片到编辑版面的固定舞台擦除",
+        "en": "Pinned original to editorial wipe"
+      },
+      "category": "transition",
+      "status": "active",
+      "summary": "将相同比例的摄影原片与其编辑封面叠进同一取景框，滚动到舞台后由左向右擦出封面，并同步交叉淡化图注与推进细线。擦满后保留阅读行程再解除pin；向上滚可原路退回。窄屏、矮屏或减少动态保留两张完整静态对照。",
+      "tags": [
+        "vue",
+        "gsap",
+        "ScrollTrigger",
+        "pin",
+        "scrub",
+        "clip-path",
+        "before-after",
+        "keyboard"
+      ],
+      "manifest": "效果组件/原片到编辑版面擦除/效果介绍与解析.json",
+      "readme": "效果组件/原片到编辑版面擦除/使用说明.md",
+      "entryFiles": [
+        "效果组件/原片到编辑版面擦除/源码/项目源码/组件/人物与作品/摄影编辑对照.vue",
+        "效果组件/原片到编辑版面擦除/源码/项目源码/组合函数/编辑版面滚动控制.ts"
+      ],
+      "sourceFileCount": 8,
+      "contextFileCount": 2
+    },
+    {
+      "id": "fit-text",
+      "title": {
+        "zh": "大标题字号拟合",
+        "en": "Single-line title fitting"
+      },
+      "category": "layout",
+      "status": "active",
+      "summary": "按容器真实宽度和当前字体度量拟合单行大标题，避免遮罩与视口裁切隐藏末尾字母；使用原生Range和观察器，不由GSAP驱动。",
+      "tags": [
+        "native-dom",
+        "typography",
+        "range",
+        "responsive"
+      ],
+      "manifest": "效果组件/大标题字号拟合/效果介绍与解析.json",
+      "readme": "效果组件/大标题字号拟合/使用说明.md",
+      "entryFiles": [
+        "效果组件/大标题字号拟合/源码/项目源码/组合函数/标题字号拟合.ts"
+      ],
+      "sourceFileCount": 2,
+      "contextFileCount": 2
+    },
+    {
+      "id": "index-overlay",
+      "title": {
+        "zh": "子页作品索引覆盖菜单",
+        "en": "Subpage works-index overlay"
+      },
+      "category": "overlay",
+      "status": "active",
+      "summary": "跨子页常驻的作品索引菜单。右上按钮因滚动唤醒、桌面闲置隐藏；面板 Teleport 到 body，背景 inert 并独占滚动锁。GSAP 控制背景淡入和章节行从裁切区上移，点击链接交接全局路由导航。",
+      "tags": [
+        "gsap",
+        "vue",
+        "teleport",
+        "dialog",
+        "index",
+        "clip",
+        "focus-management"
+      ],
+      "manifest": "效果组件/子页作品索引覆盖菜单/效果介绍与解析.json",
+      "readme": "效果组件/子页作品索引覆盖菜单/使用说明.md",
+      "entryFiles": [
+        "效果组件/子页作品索引覆盖菜单/源码/项目源码/组件/子页作品索引.vue"
+      ],
+      "sourceFileCount": 8,
+      "contextFileCount": 1
+    },
+    {
+      "id": "visual-viewer-overlay",
+      "title": {
+        "zh": "完整作品查看器遮罩",
+        "en": "Visual artwork viewer overlay"
+      },
+      "category": "overlay",
+      "status": "active",
+      "summary": "摄影与海报共用的大图弹层，通过 Teleport 脱离页面裁切，以 CSS opacity 入场、contain 保持原构图。模块级 composable 持有唯一作品序列和索引，组件处理焦点圈定、锁滚与输入；关闭后可取消地恢复原位置和触发焦点。该效果未使用 GSAP。",
+      "tags": [
+        "vue",
+        "teleport",
+        "overlay",
+        "css-transition",
+        "focus-trap",
+        "gallery",
+        "non-gsap"
+      ],
+      "manifest": "效果组件/完整作品查看器遮罩/效果介绍与解析.json",
+      "readme": "效果组件/完整作品查看器遮罩/使用说明.md",
+      "entryFiles": [
+        "效果组件/完整作品查看器遮罩/源码/项目源码/组件/人物与作品/完整作品查看器.vue",
+        "效果组件/完整作品查看器遮罩/源码/项目源码/组合函数/作品查看器控制.ts"
+      ],
+      "sourceFileCount": 8,
+      "contextFileCount": 3
+    },
+    {
+      "id": "poster-gallery-reveal",
+      "title": {
+        "zh": "实习海报章节标题遮罩",
+        "en": "Internship gallery heading masks"
+      },
+      "category": "mask",
+      "status": "active",
+      "summary": "海报编排层将章节标题的内层文字从行遮罩下方揭示一次；作品碎片、CSS演示和空间叠层由下层效果分别负责。",
+      "tags": [
+        "gsap",
+        "scrolltrigger",
+        "line-mask",
+        "poster",
+        "once"
+      ],
+      "manifest": "效果组件/实习海报章节标题遮罩/效果介绍与解析.json",
+      "readme": "效果组件/实习海报章节标题遮罩/使用说明.md",
+      "entryFiles": [
+        "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/人物与作品/实习海报画廊.vue"
+      ],
+      "sourceFileCount": 19,
+      "contextFileCount": 1
+    },
+    {
+      "id": "poster-stack",
+      "title": {
+        "zh": "实习海报透视收拢与逐页覆盖",
+        "en": "Internship perspective stack and page wipes"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "海报从透视空间推入并收拢为正面纸面，随后逐张从上向下覆盖。每个阶段、当前页、可点击可见区域和按钮跳转都由同一个以舞台高度为单位的数学行程决定。运动由scrollY/rAF直接写样式，ScrollTrigger只参与全站布局刷新通知。",
+      "tags": [
+        "vue",
+        "sticky",
+        "3d",
+        "clip-path",
+        "scrollY",
+        "requestAnimationFrame",
+        "pure-function",
+        "non-gsap-timeline"
+      ],
+      "manifest": "效果组件/实习海报透视叠层/效果介绍与解析.json",
+      "readme": "效果组件/实习海报透视叠层/使用说明.md",
+      "entryFiles": [
+        "效果组件/实习海报透视叠层/源码/项目源码/组件/人物与作品/实习海报叠层.vue",
+        "效果组件/实习海报透视叠层/源码/项目源码/组件/人物与作品/实习海报叠层控制.ts"
+      ],
+      "sourceFileCount": 8,
+      "contextFileCount": 2
+    },
+    {
+      "id": "action-cursor",
+      "title": {
+        "zh": "局部动作文字光标",
+        "en": "Contextual action cursor"
+      },
+      "category": "pointer",
+      "status": "active",
+      "summary": "在声明了真实动作的作品区域显示实心点与双语动词，原生 RAF 对位置做指数追随，Vue Transition 与 CSS 接力替换文字。页面滚动或动画时短时重新命中，静止后停止采样。配套 useCursor 仅提供画廊共享锁状态；本实现不使用 GSAP。",
+      "tags": [
+        "vue",
+        "pointer",
+        "raf",
+        "css-transition",
+        "bilingual",
+        "non-gsap"
+      ],
+      "manifest": "效果组件/局部动作文字光标/效果介绍与解析.json",
+      "readme": "效果组件/局部动作文字光标/使用说明.md",
+      "entryFiles": [
+        "效果组件/局部动作文字光标/源码/项目源码/组件/自定义光标.vue",
+        "效果组件/局部动作文字光标/源码/项目源码/组合函数/动作光标控制.ts"
+      ],
+      "sourceFileCount": 8,
+      "contextFileCount": 2
+    },
+    {
+      "id": "video-loop-fade",
+      "title": {
+        "zh": "循环视频接缝淡化",
+        "en": "Video loop seam fade"
+      },
+      "category": "media",
+      "status": "active",
+      "summary": "监听 HTMLVideoElement 的播放时间，在接近片尾时将 video 自身淡至透明，浏览器 loop 回绕后再淡回；暂停立即恢复不透明，避免遮挡或离屏中断留下半透明画面。调用方负责静音、循环、可见性与减少动态策略。",
+      "tags": [
+        "gsap",
+        "video",
+        "opacity",
+        "loop",
+        "cleanup"
+      ],
+      "manifest": "效果组件/循环视频接缝淡化/效果介绍与解析.json",
+      "readme": "效果组件/循环视频接缝淡化/使用说明.md",
+      "entryFiles": [
+        "效果组件/循环视频接缝淡化/源码/项目源码/组合函数/视频接缝淡化.ts"
+      ],
+      "sourceFileCount": 2,
+      "contextFileCount": 1
+    },
+    {
+      "id": "color-preview-trail",
+      "title": {
+        "zh": "指针轨迹视频遮罩预览",
+        "en": "Pointer video preview trail"
+      },
+      "category": "mask",
+      "status": "active",
+      "summary": "调色页首屏沿主指针轨迹弹出轻量视频：固定位置外框、polygon 揭示层和缩放内容层分工，最多保留五个预览；离场或被遮挡时依次缩回并释放播放器。标题另用 quickTo 轻微跟随。这是 Vue 页面中的组合效果，尚未封装为独立包。",
+      "tags": [
+        "vue",
+        "gsap",
+        "clip-path",
+        "video",
+        "pointer",
+        "fifo",
+        "lazy-media"
+      ],
+      "manifest": "效果组件/指针轨迹视频遮罩/效果介绍与解析.json",
+      "readme": "效果组件/指针轨迹视频遮罩/使用说明.md",
+      "entryFiles": [
+        "效果组件/指针轨迹视频遮罩/源码/项目源码/组件/调色/调色波形.vue"
+      ],
+      "sourceFileCount": 2,
+      "contextFileCount": 1
+    },
+    {
+      "id": "card-photo",
+      "title": {
+        "zh": "摄影卡相纸显影与缓慢视差",
+        "en": "Photography card development and slow parallax"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "相纸、卡纸框、PHOTO 与元数据以较小位移和较长阻尼模拟安静暗房构图。聚焦显影仅改变透明度：卡纸轮廓先出现，照片浮现，边框合焦变亮再回落，最后信息出现。",
+      "tags": [
+        "gsap",
+        "vue",
+        "card",
+        "quickTo",
+        "pointer",
+        "parallax",
+        "intro"
+      ],
+      "manifest": "效果组件/摄影卡相纸显影/效果介绍与解析.json",
+      "readme": "效果组件/摄影卡相纸显影/使用说明.md",
+      "entryFiles": [
+        "效果组件/摄影卡相纸显影/源码/项目源码/卡片动画/摄影卡动画.ts"
+      ],
+      "sourceFileCount": 4,
+      "contextFileCount": 4
+    },
+    {
+      "id": "photo-chapter-wipe",
+      "title": {
+        "zh": "摄影双列章节与纵向遮罩接力",
+        "en": "Photo chapter and dual lane wipe"
+      },
+      "category": "mask",
+      "status": "active",
+      "summary": "摄影页按色彩分章，每章将横图与竖图分为两个等高窗口，滚动时同一位置推进两列照片。横列从底向上揭开、竖列从顶向下揭开；一章末张完成并停留后，下一章整屏从下方揭入。该效果使用scrollY、requestAnimationFrame和纯数学日程，不由GSAP时间线驱动。",
+      "tags": [
+        "vue",
+        "clip-path",
+        "sticky",
+        "requestAnimationFrame",
+        "scrollY",
+        "photo",
+        "dual-lane",
+        "non-gsap"
+      ],
+      "manifest": "效果组件/摄影双列章节遮罩/效果介绍与解析.json",
+      "readme": "效果组件/摄影双列章节遮罩/使用说明.md",
+      "entryFiles": [
+        "效果组件/摄影双列章节遮罩/源码/项目源码/组件/人物与作品/摄影双列章节.vue",
+        "效果组件/摄影双列章节遮罩/源码/项目源码/工具/摄影叙事计算.ts"
+      ],
+      "sourceFileCount": 9,
+      "contextFileCount": 1
+    },
+    {
+      "id": "photo-runway",
+      "title": {
+        "zh": "摄影取景框展开、翻图与指针视差",
+        "en": "Photo runway, slide wipe and pointer parallax"
+      },
+      "category": "media",
+      "status": "active",
+      "summary": "保留原图比例的摄影展示舞台，整合可选宽屏滚动展开、左右裁切翻图、横拖切换和轻微鼠标视差。frame、surface、track和item分层分别承接滚动裁切、指针倾斜、拖动反馈和切图，避免同一transform被多个控制器争用。",
+      "tags": [
+        "vue",
+        "gsap",
+        "ScrollTrigger",
+        "clip-path",
+        "carousel",
+        "pointer",
+        "drag",
+        "keyboard"
+      ],
+      "manifest": "效果组件/摄影取景框与翻图/效果介绍与解析.json",
+      "readme": "效果组件/摄影取景框与翻图/使用说明.md",
+      "entryFiles": [
+        "效果组件/摄影取景框与翻图/源码/项目源码/组件/人物与作品/摄影取景舞台.vue"
+      ],
+      "sourceFileCount": 6,
+      "contextFileCount": 2
+    },
+    {
+      "id": "about-scroll-reveal",
+      "title": {
+        "zh": "数据标记滚动揭示控制器",
+        "en": "Data attribute scroll reveal controller"
+      },
+      "category": "scroll",
+      "status": "active",
+      "summary": "以 data 属性集中创建单元素、分组错峰、章节线条和成果数字入场，并保留聊天气泡的双轴展开分支。通用揭示和聊天使用两个 GSAP context，编辑对照另有独立 matchMedia 句柄；当前直接集成在海报页与摄影页。",
+      "tags": [
+        "gsap",
+        "ScrollTrigger",
+        "data-attributes",
+        "stagger",
+        "counter",
+        "chat",
+        "clip-path"
+      ],
+      "manifest": "效果组件/数据标记滚动揭示/效果介绍与解析.json",
+      "readme": "效果组件/数据标记滚动揭示/使用说明.md",
+      "entryFiles": [
+        "效果组件/数据标记滚动揭示/源码/项目源码/组合函数/数据标记揭示控制.ts"
+      ],
+      "sourceFileCount": 5,
+      "contextFileCount": 3
+    },
+    {
+      "id": "card-news",
+      "title": {
+        "zh": "新闻卡擦开与播报环境循环",
+        "en": "News card wipes and broadcast ambience"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "新闻卡结合四层指针视差、一次性视频框/头条擦开，以及固定 30px/s 的跑马灯和直播圆点呼吸。框、横条与视差分别使用内外节点，避免不同动画同时写相同 transform。",
+      "tags": [
+        "gsap",
+        "vue",
+        "card",
+        "quickTo",
+        "pointer",
+        "parallax",
+        "intro"
+      ],
+      "manifest": "效果组件/新闻卡擦开与循环/效果介绍与解析.json",
+      "readme": "效果组件/新闻卡擦开与循环/使用说明.md",
+      "entryFiles": [
+        "效果组件/新闻卡擦开与循环/源码/项目源码/卡片动画/新闻卡动画.ts"
+      ],
+      "sourceFileCount": 4,
+      "contextFileCount": 4
+    },
+    {
+      "id": "legacy-page-loader",
+      "title": {
+        "zh": "旧百分比加载幕",
+        "en": "Legacy percentage loader"
+      },
+      "category": "overlay",
+      "status": "legacy",
+      "summary": "保留的旧加载屏以RAF推动0–100%，到100后发ready，再等待canReveal允许CSS淡出；当前网站路由已使用route-curtain，此效果仅供历史迁移参考。",
+      "tags": [
+        "legacy",
+        "raf",
+        "css",
+        "loader",
+        "percentage"
+      ],
+      "manifest": "效果组件/旧百分比加载幕/效果介绍与解析.json",
+      "readme": "效果组件/旧百分比加载幕/使用说明.md",
+      "entryFiles": [
+        "效果组件/旧百分比加载幕/源码/项目源码/组件/旧页面加载幕.vue"
+      ],
+      "sourceFileCount": 2,
+      "contextFileCount": 0
+    },
+    {
+      "id": "card-poster",
+      "title": {
+        "zh": "海报卡分层显影与指针视差",
+        "en": "Poster card development and parallax"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "印刷设计板的四个层级按指针产生不同阻尼位移，聚焦时只按透明度依次显现参考线、印张、裁切标记、巨型 POSTER 和说明信息。没有自动漂移或旋转，真实海报可通过 setMedia 替换印张。",
+      "tags": [
+        "gsap",
+        "vue",
+        "card",
+        "quickTo",
+        "pointer",
+        "parallax",
+        "intro"
+      ],
+      "manifest": "效果组件/海报卡分层显影/效果介绍与解析.json",
+      "readme": "效果组件/海报卡分层显影/使用说明.md",
+      "entryFiles": [
+        "效果组件/海报卡分层显影/源码/项目源码/卡片动画/海报卡动画.ts"
+      ],
+      "sourceFileCount": 4,
+      "contextFileCount": 4
+    },
+    {
+      "id": "poster-artwork-reveal",
+      "title": {
+        "zh": "海报局部碎片遮罩揭示",
+        "en": "Masked poster fragment reveal"
+      },
+      "category": "mask",
+      "status": "active",
+      "summary": "用归一化矩形选出海报标题与图形区域，短暂在完整底图上挖出对应区域，再由复用同一张图片的裁片完成运动。MotionCard负责普通文档流自动触发与手动重播，AnimatedArtwork接受父空间场景的revealed/completed信号；两者共享同一片段时间线，完成后恢复完整原图消除拼接细缝。",
+      "tags": [
+        "vue",
+        "gsap",
+        "timeline",
+        "svg-mask",
+        "image-fragments",
+        "decode",
+        "one-shot",
+        "replay"
+      ],
+      "manifest": "效果组件/海报局部碎片揭示/效果介绍与解析.json",
+      "readme": "效果组件/海报局部碎片揭示/使用说明.md",
+      "entryFiles": [
+        "效果组件/海报局部碎片揭示/源码/项目源码/组件/人物与作品/实习海报碎片动效.vue",
+        "效果组件/海报局部碎片揭示/源码/项目源码/组件/人物与作品/实习海报动效卡.vue",
+        "效果组件/海报局部碎片揭示/源码/项目源码/组件/人物与作品/实习海报碎片控制.ts",
+        "效果组件/海报局部碎片揭示/源码/项目源码/数据/实习海报动效数据.ts"
+      ],
+      "sourceFileCount": 11,
+      "contextFileCount": 3
+    },
+    {
+      "id": "poster-depth",
+      "title": {
+        "zh": "海报色域收缩、空间叠层与侧转离场",
+        "en": "Poster field contraction and depth composition"
+      },
+      "category": "scroll",
+      "status": "active",
+      "summary": "为V10L原稿12–15构建连续滚动场景：满屏色域、实字和原图先收为首张海报，再让三张附属稿依次从下方进入，正面停留阅读后侧转65度随页面离场。纸张空间运动可倒放，纸内碎片标题通过introduced/settled记忆只揭示一次。",
+      "tags": [
+        "vue",
+        "gsap",
+        "ScrollTrigger",
+        "sticky",
+        "3d",
+        "FLIP",
+        "cqw",
+        "one-shot-artwork"
+      ],
+      "manifest": "效果组件/海报空间叠层与离场/效果介绍与解析.json",
+      "readme": "效果组件/海报空间叠层与离场/使用说明.md",
+      "entryFiles": [
+        "效果组件/海报空间叠层与离场/源码/项目源码/组件/人物与作品/实习海报空间构图.vue"
+      ],
+      "sourceFileCount": 13,
+      "contextFileCount": 2
+    },
+    {
+      "id": "poster-palette",
+      "title": {
+        "zh": "海报色带展开与裁切",
+        "en": "Poster colour strip accordion"
+      },
+      "category": "layout",
+      "status": "active",
+      "summary": "海报页的色带舞台按滚动段或按钮选择展开作品，以一个 GSAP 标量补间同时更新所有色带权重，保证权重和为一。内部画幅保持固定尺寸，CSS 按权重控制色带占比、遮罩和面板透明度，避免图像随展开被挤压。短视口和减少动态切换为普通流手动阅读。",
+      "tags": [
+        "vue",
+        "gsap",
+        "accordion",
+        "clip-path",
+        "sticky",
+        "weighted-layout",
+        "poster"
+      ],
+      "manifest": "效果组件/海报色带展开裁切/效果介绍与解析.json",
+      "readme": "效果组件/海报色带展开裁切/使用说明.md",
+      "entryFiles": [
+        "效果组件/海报色带展开裁切/源码/项目源码/组件/人物与作品/海报色带.vue"
+      ],
+      "sourceFileCount": 8,
+      "contextFileCount": 1
+    },
+    {
+      "id": "poster-color-chapters",
+      "title": {
+        "zh": "海报色彩章节双向擦入",
+        "en": "Poster colour chapter wipes"
+      },
+      "category": "mask",
+      "status": "active",
+      "summary": "按稳定素材 id 将海报划为四个色彩章节，以原生 sticky 舞台和滚动进度叠层擦入：换组由下向上揭示，同组由右向左揭示。GSAP CustomEase 只映射进度，遮罩由 RAF 单一写入者控制，并只保留底图和正在揭开的顶图可见。减少动态或短视口时逐张普通流展示。",
+      "tags": [
+        "vue",
+        "gsap-custom-ease",
+        "clip-path",
+        "sticky",
+        "raf",
+        "poster",
+        "scroll"
+      ],
+      "manifest": "效果组件/海报色彩章节擦入/效果介绍与解析.json",
+      "readme": "效果组件/海报色彩章节擦入/使用说明.md",
+      "entryFiles": [
+        "效果组件/海报色彩章节擦入/源码/项目源码/组件/人物与作品/海报色彩章节.vue"
+      ],
+      "sourceFileCount": 7,
+      "contextFileCount": 2
+    },
+    {
+      "id": "text-line-reveal",
+      "title": {
+        "zh": "真实视觉行文字揭示",
+        "en": "Visual line text reveal"
+      },
+      "category": "text",
+      "status": "active",
+      "summary": "共享双语介绍组件，按最终排版的真实行切分。标题从行遮罩底部上移，正文用段落与行的独立淡入位移。页面门禁、视口预热与播放触发相互分离；字体、语言和排版变化后延续已播放进度，避免重读内容再次隐藏。",
+      "tags": [
+        "vue",
+        "gsap",
+        "SplitText",
+        "ScrollTrigger",
+        "line-mask",
+        "bilingual",
+        "one-shot"
+      ],
+      "manifest": "效果组件/真实视觉行文字揭示/效果介绍与解析.json",
+      "readme": "效果组件/真实视觉行文字揭示/使用说明.md",
+      "entryFiles": [
+        "效果组件/真实视觉行文字揭示/源码/项目源码/组件/引导文字揭示.vue",
+        "效果组件/真实视觉行文字揭示/源码/项目源码/组件/引导文字状态.ts"
+      ],
+      "sourceFileCount": 6,
+      "contextFileCount": 6
+    },
+    {
+      "id": "contact-orb",
+      "title": {
+        "zh": "结尾弧形衔接与磁吸联系球",
+        "en": "Footer curve and magnetic contact orb"
+      },
+      "category": "pointer",
+      "status": "active",
+      "summary": "关于页页脚把滚动驱动的弧形收束、内容/箭头/联系位置位移，与精细鼠标驱动的磁吸球和文字分层组合。ScrollTrigger scrub 负责进入页脚的连续衔接，quickTo 负责局部磁吸，离开后弹性归位；邮件、简历和作品导航仍是原生入口。",
+      "tags": [
+        "vue",
+        "gsap",
+        "scrolltrigger",
+        "magnetic",
+        "quickTo",
+        "footer",
+        "contact"
+      ],
+      "manifest": "效果组件/结尾弧形与磁吸联系球/效果介绍与解析.json",
+      "readme": "效果组件/结尾弧形与磁吸联系球/使用说明.md",
+      "entryFiles": [
+        "效果组件/结尾弧形与磁吸联系球/源码/项目源码/组件/人物与作品/结尾联系球.vue"
+      ],
+      "sourceFileCount": 4,
+      "contextFileCount": 1
+    },
+    {
+      "id": "card-color",
+      "title": {
+        "zh": "调色卡五层指针视差",
+        "en": "Colour-grading card pointer parallax"
+      },
+      "category": "card",
+      "status": "active",
+      "summary": "巨型 COLOR、色条、胶片框、曲线与色轮组成静止调色构图，五层只按指针位移。卡面不携带真实调色视频、不自动转色轮、不随指针改色；真实作品位于独立 /color 页面。",
+      "tags": [
+        "gsap",
+        "vue",
+        "card",
+        "quickTo",
+        "pointer",
+        "parallax"
+      ],
+      "manifest": "效果组件/调色卡五层视差/效果介绍与解析.json",
+      "readme": "效果组件/调色卡五层视差/使用说明.md",
+      "entryFiles": [
+        "效果组件/调色卡五层视差/源码/项目源码/卡片动画/调色卡动画.ts"
+      ],
+      "sourceFileCount": 4,
+      "contextFileCount": 4
+    },
+    {
+      "id": "color-scroll-gate",
+      "title": {
+        "zh": "调色首屏滚动闸门与进度阻尼",
+        "en": "Colour intro scroll gate"
+      },
+      "category": "scroll",
+      "status": "active",
+      "summary": "调色页首屏先把滚轮或触屏纵向位移喂给底部白条，累计一趟首屏高度后一次性放行正文滚动；显示值由原生 RAF 指数收敛。本效果没有独立组件或独立 GSAP 时间轴，而是 ColorView 页面内逻辑，并与现有 useSmoothScroll 配合。该文件还含文字和正文媒体生命周期，文档明确保留这些集成边界。",
+      "tags": [
+        "vue",
+        "scroll-gate",
+        "raf",
+        "progress",
+        "touch",
+        "media-lifecycle",
+        "non-gsap-core"
+      ],
+      "manifest": "效果组件/调色首屏滚动闸门/效果介绍与解析.json",
+      "readme": "效果组件/调色首屏滚动闸门/使用说明.md",
+      "entryFiles": [
+        "效果组件/调色首屏滚动闸门/源码/项目源码/页面/调色作品页.vue"
+      ],
+      "sourceFileCount": 18,
+      "contextFileCount": 0
+    },
+    {
+      "id": "home-preloader",
+      "title": {
+        "zh": "黄色开场双幕撕裂",
+        "en": "Yellow split-screen home preloader"
+      },
+      "category": "mask",
+      "status": "active",
+      "summary": "首页两份完全相同的黄底版面先重叠，显示视觉百分比和文字序列，再用 clipPath 各保留上下半屏，向相反方向移走，将画面同步交接给六卡画廊。百分比不是资源下载进度。",
+      "tags": [
+        "gsap",
+        "vue",
+        "preloader",
+        "split",
+        "clip-path",
+        "stagger"
+      ],
+      "manifest": "效果组件/黄色开场双幕撕裂/效果介绍与解析.json",
+      "readme": "效果组件/黄色开场双幕撕裂/使用说明.md",
+      "entryFiles": [
+        "效果组件/黄色开场双幕撕裂/源码/项目源码/组件/开场预加载幕.vue"
+      ],
+      "sourceFileCount": 2,
+      "contextFileCount": 4
+    }
+  ],
+  "generatedFiles": {
+    "效果组件/产品描线与词语交互/源码/项目源码/组件/引导文字状态.ts": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+    "效果组件/产品描线与词语交互/源码/项目源码/组件/人物与作品/实习海报交互单元.vue": "2f3c181c23c6e7beb21332b9ffcbfbc87b7cbaeca8222753db0e6f67200f8544",
+    "效果组件/产品描线与词语交互/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/产品描线与词语交互/源码/项目源码/数据/实习海报动效数据.ts": "37eaf14fb8fc4d2175c78567bf823b773dd85f3221313eab5589273e0f70b204",
+    "效果组件/产品描线与词语交互/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/产品描线与词语交互/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/产品描线与词语交互/集成示例/项目源码/组件/人物与作品/实习海报画廊.vue": "50380d9d28f073a99422b86ae643059ab759185cad7524553eee4f1d2938e247",
+    "效果组件/产品描线与词语交互/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/产品描线与词语交互/效果介绍与解析.json": "79983cfa673640b9024d25e5e5fb4cdbac20ffe5864d81367838a1c757597893",
+    "效果组件/产品描线与词语交互/使用说明.md": "74dca2b6d509d43d6c64ba8558c987f2cc0c543dfe2eb217cf29af427a9f4276",
+    "效果组件/人物照片收框与工具弹出/源码/项目源码/组件/人物与作品/人物照片介绍.vue": "12d6049f2e91f1fa3192907eec0307cd20149ee24b0b4003cdc841f8eb6fca5b",
+    "效果组件/人物照片收框与工具弹出/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/人物照片收框与工具弹出/源码/项目源码/数据/智能工具资料.ts": "8a98022acb0d9e716c0d393684f0b731cd987301d970068ad15f9fae76690996",
+    "效果组件/人物照片收框与工具弹出/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/人物照片收框与工具弹出/源码/项目源码/数据/简历强调内容.ts": "80c36d69143d5cfeaec45660e47f0d3b4871d1b861942d5ebe8ca50c738c1c65",
+    "效果组件/人物照片收框与工具弹出/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/人物照片收框与工具弹出/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/人物照片收框与工具弹出/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/人物照片收框与工具弹出/集成示例/项目源码/页面/人物介绍页.vue": "85bbda99d9f976be7a97dd313b5a5393c2fdc32c14089a8b28f8996762752326",
+    "效果组件/人物照片收框与工具弹出/效果介绍与解析.json": "e1bec775fa50543e16fda7d3909efbe6ca8a13a3e653a9320c2b151e93e2707e",
+    "效果组件/人物照片收框与工具弹出/使用说明.md": "175ea400b6d513ca176cf5bedf5e247b69cefb2b5cb6ffeecd899bdfd0d3471c",
+    "效果组件/人物首屏与地球循环/源码/项目源码/组件/人物与作品/人物首屏.vue": "4370c6d9b9d2426a20f51e6ec9eb47a95e7b3dc8ccefd475b69bc1a62331224a",
+    "效果组件/人物首屏与地球循环/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/人物首屏与地球循环/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/人物首屏与地球循环/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/人物首屏与地球循环/集成示例/项目源码/页面/人物介绍页.vue": "85bbda99d9f976be7a97dd313b5a5393c2fdc32c14089a8b28f8996762752326",
+    "效果组件/人物首屏与地球循环/效果介绍与解析.json": "1ca0aa8948f2ff4d7c2d5f08997f213515dcc09cac6142a82965874273258c98",
+    "效果组件/人物首屏与地球循环/使用说明.md": "2274e9978763dd586de92f175530c0fc6ace0864daadc3db801dff669bf6c41f",
+    "效果组件/作品子页大标题揭示/源码/项目源码/素材/调色帧/调色第7帧.jpg": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/引导文字状态.ts": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/引导文字揭示.vue": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/作品续读导航.vue": "3dc02b058d955de9b1b8855ff30821d4c3d10cd8ebb6f234f3c4e8313e6b6e94",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/作品章节容器.vue": "e45810410e6d0c9f6fc8f36f37a307a1145f4c812329ed7d46d7459be26c7db4",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/摄影编辑对照.vue": "454db24d73009cd63c1e6553d93e9a22788fceade51dfa80e4ea8620fd5d238e",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/实习海报碎片动效.vue": "344e2873c874e6beb0d5933d5f12dfa6b965776618b5428236f0840ea40990c4",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/实习海报空间构图.vue": "1ad6559e8fe11557079da3fa94bcc275dfe8b1f6b3f1affa88d93ad76accf2a5",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/实习海报动效卡.vue": "c1575dc237ce1b824a29dbe8f83cc8afe7d8b61dd191bc14170ecce70b239bf5",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/实习海报交互单元.vue": "2f3c181c23c6e7beb21332b9ffcbfbc87b7cbaeca8222753db0e6f67200f8544",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/实习海报画廊.vue": "50380d9d28f073a99422b86ae643059ab759185cad7524553eee4f1d2938e247",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/实习海报叠层.vue": "29f8a7f3209f7c297a983efeb7cc4a27e0cf5511e3ae9ff937406a508cfa4b83",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/摄影双列章节.vue": "fb108f7b5a243a50dc65d807a6c71e7410d17703df904dd3fa4afbd8c23f3b0c",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/海报色彩章节.vue": "583df3323b0a444126f7c8640b8357a86cefa7d55ba7f171ab9a938088409f55",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/海报色带.vue": "bb6545ea5705a10967ca29e2850713150e39f1b7a28944f728bcc63803856b45",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/完整作品查看器.vue": "515cfc811f8a3c9724620898c72719666c902599f8a9f53734ac719bdfb278b1",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/实习海报碎片控制.ts": "9f13cee9b4b8757f67ff1f91a6d9c4ade1356fbd5b6915b64e01cdde0d98a6b2",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组件/人物与作品/实习海报叠层控制.ts": "93368c7fd1106da9ffbed73f50baf9f993aa1a60792d1096fe9c299c905362a7",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组合函数/编辑版面滚动控制.ts": "8d958dda15929f170c5675db9863b59a01dd965efc90971dea5ae593648517a1",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组合函数/数据标记揭示控制.ts": "1d761144ace56445d1a5d893053c493f809c3c71c4f5e70060fc2b32d5b166f8",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组合函数/标题字号拟合.ts": "edad878356b7b675d22cbc66c77540990f708b5185b179bba965ee4212d63d9d",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组合函数/页面幕布控制.ts": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组合函数/摄影拖拽控制.ts": "8acd9e67a5fc2cce4086137e73e15a3060ddbf31d6c255b992c3efa2c1a51105",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组合函数/子页语言状态.ts": "2efc21b0891fd7c28a7b1cda9371e0ca5b76393a2c01d86c1dd4ecbadd749635",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组合函数/应用转场状态.ts": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+    "效果组件/作品子页大标题揭示/源码/项目源码/组合函数/作品查看器控制.ts": "ec8169f80998eeae00ad229d45c4d797ddfccabc1a496f0718aa4d5a6c30fa1c",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/基础作品页资料.ts": "010dd235ea74b94d36e27db2cf516d27a724bd95348fd646fcec7eb938bf2f2f",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/实习海报素材.json": "ed33e6ca71df39aac6af96685253dee8825fbad05f16679da20536a894f8c032",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/实习海报动效计划.json": "dbe3166a8fe3740d78c1000597695a13cf4ca772de05a00481cba48516846a23",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/实习海报动效数据.ts": "37eaf14fb8fc4d2175c78567bf823b773dd85f3221313eab5589273e0f70b204",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/实习海报资料.ts": "d19b676e88bb14eb8bc47ddb71c631aa341c0305a176e1e56835676b774ba9ca",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/摄影页资料.ts": "77e68863647cc5f7e377cbdf51fc863ba30f4ccedd84bbe5ce892976103b8476",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/海报页资料.ts": "1e45cfb7032a2e57f51aeb42f187c69b25552b8a4e2615d57758e6a74f72898d",
+    "效果组件/作品子页大标题揭示/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/作品子页大标题揭示/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/作品子页大标题揭示/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/作品子页大标题揭示/源码/项目源码/工具/覆盖层触摸保护.ts": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+    "效果组件/作品子页大标题揭示/源码/项目源码/工具/摄影叙事计算.ts": "839f1df4f236004ab157959522aa6edeeaef59ea55279a56d1aa73c2cda595fe",
+    "效果组件/作品子页大标题揭示/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/作品子页大标题揭示/源码/项目源码/工具/视口入场控制.ts": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+    "效果组件/作品子页大标题揭示/源码/项目源码/页面/基础作品页.vue": "1d7a34970e009656251e655e6a2e8ce5882713bb79bfa7ff4d7e91e6014da695",
+    "效果组件/作品子页大标题揭示/源码/项目源码/页面/摄影作品页.vue": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+    "效果组件/作品子页大标题揭示/源码/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/作品子页大标题揭示/集成示例/项目源码/应用根组件.vue": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+    "效果组件/作品子页大标题揭示/效果介绍与解析.json": "62a4fb35b31660a91e0766a092c3ccf7dcc3b0cfa62278c169f2fa996d9b5760",
+    "效果组件/作品子页大标题揭示/使用说明.md": "90031d13b445e4fa6f313e4a328502d79fe757a0e63e331aee61ba7f81702960",
+    "效果组件/作品索引扇牌展开/源码/项目源码/组合函数/页面幕布控制.ts": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+    "效果组件/作品索引扇牌展开/源码/项目源码/组合函数/应用转场状态.ts": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+    "效果组件/作品索引扇牌展开/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/作品索引扇牌展开/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/作品索引扇牌展开/源码/项目源码/页面/卡片列表页.vue": "18998a32b85f12d406b6f34095a900cb4bf65f73d90780cf9069941e2155ba02",
+    "效果组件/作品索引扇牌展开/集成示例/项目源码/应用根组件.vue": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+    "效果组件/作品索引扇牌展开/集成示例/项目源码/路由/应用路由.ts": "7f598f3f4808f044baa622f90274f0d7e145db5bcc3ec39fa4a63c1c6c60f05e",
+    "效果组件/作品索引扇牌展开/效果介绍与解析.json": "45d83653ee1cf73869ba6ba244c1eb6e83fc40d163f952f13c268dac962d3806",
+    "效果组件/作品索引扇牌展开/使用说明.md": "e3b7894b54e976e8448d005d4c661e445f2ab7742e20814bc3c839ed5b61a2a5",
+    "效果组件/全站弧形路由幕布/源码/项目源码/组件/页面幕布.vue": "d52238259d25ec4a1284616cc81fd4e28830952a63a8584dbf914376d6fc5fcb",
+    "效果组件/全站弧形路由幕布/源码/项目源码/组合函数/页面幕布控制.ts": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+    "效果组件/全站弧形路由幕布/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/全站弧形路由幕布/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/全站弧形路由幕布/源码/项目源码/工具/覆盖层触摸保护.ts": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+    "效果组件/全站弧形路由幕布/集成示例/项目源码/应用根组件.vue": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+    "效果组件/全站弧形路由幕布/集成示例/项目源码/组合函数/应用转场状态.ts": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+    "效果组件/全站弧形路由幕布/集成示例/项目源码/路由/应用路由.ts": "7f598f3f4808f044baa622f90274f0d7e145db5bcc3ec39fa4a63c1c6c60f05e",
+    "效果组件/全站弧形路由幕布/集成示例/项目源码/应用入口.ts": "f711f248a132dd3b55f76a2ae43f906c4b345dae76520da2e1790633e8e6e484",
+    "效果组件/全站弧形路由幕布/集成示例/项目源码/组合函数/路由幕布导航.ts": "27d1fefba57d0a2d212cfb04510e0bca01529765b982ce5bdbbf7b3620165d96",
+    "效果组件/全站弧形路由幕布/集成示例/项目源码/工具/导航所有权.ts": "40a0e4e7406967c1bf2acfdc44408b477c3e60e11dfaa20d0aa11d040adfb63f",
+    "效果组件/全站弧形路由幕布/效果介绍与解析.json": "8bfc1bc1dd3a160dece8a42411ef8a6206ba93ca6cea43f3656fbc5f86d09dc3",
+    "效果组件/全站弧形路由幕布/使用说明.md": "f5d3e70c8a8a021205c610ac3cf36b8c46d84c2915979a18236ae27c5413c62b",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/关于我卡动画.ts": "70b1b47c419c034e6cbb6d28dd79993793705a2d3cf688bd30e24edc199d0718",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/卡片动画基础.ts": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/调色卡动画.ts": "763629d958a17b1d6cfa8de0f2e3ba047778e747f061fc5cff9c2a827b132324",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/剪辑卡动画.ts": "d77847030de999501877aebb8f698f4a8a3bc021ab048a1693356e87aa9df994",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/卡片动画注册表.ts": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/新闻卡动画.ts": "ffaf4abf23a66a131389e334f21f76cf6ac46016681769a1a63f71a81433c64b",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/摄影卡动画.ts": "478223c2996478337d062ef345a3dabc692691b8c1adf95fc291329d612f0be1",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/海报卡动画.ts": "5b59d074ebef0e2d0d1a044b2c746dde682c0df3dd3765125117383bd587afc9",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/卡片动画/卡片动画类型.ts": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/卡片视觉.vue": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/人物与作品/人物经历.vue": "acd4d0a54dde3c5f76f259d0f7edb7ca6e9af3e8d6fab22123ccb09dca7c38b7",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/人物与作品/个人标志扫描.vue": "ea2546bb4743e4f707d8a0e3fdd253e5ab72ed08d582fad14e049223419a172b",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/人物与作品/人物经历样式.css": "65465badc19c441516ea68615ffdd6b8402e081182fd7c94616e150ada9a2faa",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/人物与作品/人物经历动画.ts": "49128b6f718d1dfbc2bac98e4ba27490e92c920f61381aee4262f041b007c300",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/卡面/调色卡面.vue": "f5b8425f010748c28f01c7487e1c2069683d3f0d2fb7ee1290c3f85a5074f55e",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/卡面/剪辑卡面.vue": "9f239ae04c036b1219bcb50fe84b64541124633bc8da8f9d5c4afe733d414016",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/卡面/新闻卡面.vue": "571dafae0aeba0a0ef208fb5ed9d9a8382aa55ff67622e957464bad8964cb6de",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/卡面/摄影卡面.vue": "3ff57d55d8e14fd04a70334e965323bdc8f8af05c0e774602da39c64c482d11c",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组件/卡面/海报卡面.vue": "baff294398f4f829d54da083f0d5cda7bf68a6b78b1623834a3374d02243847e",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组合函数/动作光标控制.ts": "6bc14283f9dad999dd62a3feee626a39653780916c9bc089a44a503db6fce80e",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组合函数/首页引导状态.ts": "5d29f7b04a9d3dec0112ea6c9cff037e0924f1033178b331b0ac30bfc7872b8d",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组合函数/页面幕布控制.ts": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/组合函数/应用转场状态.ts": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/体验状态/画廊姿态渲染器.ts": "715847ba6b3e57a336c6d97088a13a504a8050251855256b34952fc4377130f3",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/体验状态/体验状态.ts": "9b60ac8b0458db5fd8ddce9a5d6f03d691efc8e96b03d9c8336ac032c69019cc",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/体验状态/转场/体验转场控制.ts": "e84cc04b52ed8c892432c3c58109990383672a66536e51feebbd7e77bbbd07f6",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/六卡空间画廊聚焦/源码/项目源码/工具/画廊动画控制.ts": "70a430bcc7de15635880aa899b260b3e541c535ca9029f6549f15cdc8a5978cf",
+    "效果组件/六卡空间画廊聚焦/集成示例/项目源码/页面/六卡画廊页.vue": "24bc0876ee1effdb00da8260cddcbb36d2c7fb52f698cee5473a580ec1f43fe7",
+    "效果组件/六卡空间画廊聚焦/集成示例/项目源码/应用根组件.vue": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+    "效果组件/六卡空间画廊聚焦/效果介绍与解析.json": "2584295595d4b00f7ee116aae7bc070284ed887b762921bc37c538181ff4716f",
+    "效果组件/六卡空间画廊聚焦/使用说明.md": "8204bd018444167849b58baf4147cbdc1d1c1730a9a19345ee6c5512a25a62d1",
+    "效果组件/共享滚轮平滑控制/源码/项目源码/组合函数/平滑滚动控制.ts": "1243deebb1c283cc722dd90c8c3ecaaf1b66d921833c354e34e33be868a6e6c3",
+    "效果组件/共享滚轮平滑控制/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/共享滚轮平滑控制/源码/项目源码/工具/滚轮事件工具.ts": "264a6775b28195d15fb913b677010a432de3c7a1a795e22cdd7805dc67212a3a",
+    "效果组件/共享滚轮平滑控制/集成示例/项目源码/应用根组件.vue": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+    "效果组件/共享滚轮平滑控制/集成示例/项目源码/页面/调色作品页.vue": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+    "效果组件/共享滚轮平滑控制/效果介绍与解析.json": "67936402cce8773ef9fbb360a3707691775c5a2da4eb3c038ddc55e4a0aaa76e",
+    "效果组件/共享滚轮平滑控制/使用说明.md": "bd5968c7f7442493f9d50fb0d3b27f8b8d78ce7b216d270d202060f772dc90a7",
+    "效果组件/关于我卡扫描遮罩/源码/项目源码/卡片动画/关于我卡动画.ts": "70b1b47c419c034e6cbb6d28dd79993793705a2d3cf688bd30e24edc199d0718",
+    "效果组件/关于我卡扫描遮罩/源码/项目源码/卡片动画/卡片动画基础.ts": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+    "效果组件/关于我卡扫描遮罩/源码/项目源码/卡片动画/卡片动画类型.ts": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+    "效果组件/关于我卡扫描遮罩/源码/项目源码/组件/人物与作品/人物经历.vue": "acd4d0a54dde3c5f76f259d0f7edb7ca6e9af3e8d6fab22123ccb09dca7c38b7",
+    "效果组件/关于我卡扫描遮罩/源码/项目源码/组件/人物与作品/个人标志扫描.vue": "ea2546bb4743e4f707d8a0e3fdd253e5ab72ed08d582fad14e049223419a172b",
+    "效果组件/关于我卡扫描遮罩/源码/项目源码/组件/人物与作品/人物经历样式.css": "65465badc19c441516ea68615ffdd6b8402e081182fd7c94616e150ada9a2faa",
+    "效果组件/关于我卡扫描遮罩/源码/项目源码/组件/人物与作品/人物经历动画.ts": "49128b6f718d1dfbc2bac98e4ba27490e92c920f61381aee4262f041b007c300",
+    "效果组件/关于我卡扫描遮罩/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/关于我卡扫描遮罩/集成示例/项目源码/组件/卡片视觉.vue": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+    "效果组件/关于我卡扫描遮罩/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/关于我卡扫描遮罩/集成示例/项目源码/卡片动画/卡片动画注册表.ts": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+    "效果组件/关于我卡扫描遮罩/集成示例/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/关于我卡扫描遮罩/效果介绍与解析.json": "dc6d5bb431fa54d123df8d57e580f6ce82829640ff1fac3089ad841aae7bb910",
+    "效果组件/关于我卡扫描遮罩/使用说明.md": "944f7db850d526e3ad3650375940799668c27b6665181af485f4c1804f01a372",
+    "效果组件/剪辑卡三层视差/源码/项目源码/卡片动画/卡片动画基础.ts": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+    "效果组件/剪辑卡三层视差/源码/项目源码/卡片动画/剪辑卡动画.ts": "d77847030de999501877aebb8f698f4a8a3bc021ab048a1693356e87aa9df994",
+    "效果组件/剪辑卡三层视差/源码/项目源码/卡片动画/卡片动画类型.ts": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+    "效果组件/剪辑卡三层视差/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/剪辑卡三层视差/集成示例/项目源码/组件/卡片视觉.vue": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+    "效果组件/剪辑卡三层视差/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/剪辑卡三层视差/集成示例/项目源码/卡片动画/卡片动画注册表.ts": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+    "效果组件/剪辑卡三层视差/集成示例/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/剪辑卡三层视差/效果介绍与解析.json": "493b65870e6f4093540c2ee2b4486f485d58edd389b0f1e93b2c43328ba38782",
+    "效果组件/剪辑卡三层视差/使用说明.md": "1aeb6f001e43f7de14c59a37fb2bc13f097884935117056274e590316da711eb",
+    "效果组件/动效布局刷新调度/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/动效布局刷新调度/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/动效布局刷新调度/源码/项目源码/工具/视口入场控制.ts": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+    "效果组件/动效布局刷新调度/集成示例/项目源码/组件/引导文字揭示.vue": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+    "效果组件/动效布局刷新调度/效果介绍与解析.json": "6a4239ffa915b9cea527a6bc009a7c11e15eea42307c153c1e8d3b4cec641e14",
+    "效果组件/动效布局刷新调度/使用说明.md": "fadb0440bd9641a792775c452da15f7ba307073ad56486cfa289e5e1cee60f43",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/关于我卡动画.ts": "70b1b47c419c034e6cbb6d28dd79993793705a2d3cf688bd30e24edc199d0718",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/卡片动画基础.ts": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/调色卡动画.ts": "763629d958a17b1d6cfa8de0f2e3ba047778e747f061fc5cff9c2a827b132324",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/剪辑卡动画.ts": "d77847030de999501877aebb8f698f4a8a3bc021ab048a1693356e87aa9df994",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/卡片动画注册表.ts": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/新闻卡动画.ts": "ffaf4abf23a66a131389e334f21f76cf6ac46016681769a1a63f71a81433c64b",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/摄影卡动画.ts": "478223c2996478337d062ef345a3dabc692691b8c1adf95fc291329d612f0be1",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/海报卡动画.ts": "5b59d074ebef0e2d0d1a044b2c746dde682c0df3dd3765125117383bd587afc9",
+    "效果组件/卡片动画生命周期/源码/项目源码/卡片动画/卡片动画类型.ts": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/卡片视觉.vue": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/人物与作品/人物经历.vue": "acd4d0a54dde3c5f76f259d0f7edb7ca6e9af3e8d6fab22123ccb09dca7c38b7",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/人物与作品/个人标志扫描.vue": "ea2546bb4743e4f707d8a0e3fdd253e5ab72ed08d582fad14e049223419a172b",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/人物与作品/人物经历样式.css": "65465badc19c441516ea68615ffdd6b8402e081182fd7c94616e150ada9a2faa",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/人物与作品/人物经历动画.ts": "49128b6f718d1dfbc2bac98e4ba27490e92c920f61381aee4262f041b007c300",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/卡面/调色卡面.vue": "f5b8425f010748c28f01c7487e1c2069683d3f0d2fb7ee1290c3f85a5074f55e",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/卡面/剪辑卡面.vue": "9f239ae04c036b1219bcb50fe84b64541124633bc8da8f9d5c4afe733d414016",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/卡面/新闻卡面.vue": "571dafae0aeba0a0ef208fb5ed9d9a8382aa55ff67622e957464bad8964cb6de",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/卡面/摄影卡面.vue": "3ff57d55d8e14fd04a70334e965323bdc8f8af05c0e774602da39c64c482d11c",
+    "效果组件/卡片动画生命周期/源码/项目源码/组件/卡面/海报卡面.vue": "baff294398f4f829d54da083f0d5cda7bf68a6b78b1623834a3374d02243847e",
+    "效果组件/卡片动画生命周期/源码/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/卡片动画生命周期/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/卡片动画生命周期/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/卡片动画生命周期/效果介绍与解析.json": "120a2191f78632b95c965df96b74c5adbfa55b457ff0d571aecf7cd645f6c002",
+    "效果组件/卡片动画生命周期/使用说明.md": "89bda80ac1bad7eb6aa5aebaa32e6c782eaf75d0195f00a30b161dc6e870ccd8",
+    "效果组件/历史指针矢量绘线/源码/项目源码/组合函数/指针矢量轨迹.ts": "be4167ca0742b676074c25db7b305afdb24898bf361c0a92da82bc51198b93ce",
+    "效果组件/历史指针矢量绘线/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/历史指针矢量绘线/效果介绍与解析.json": "fff46ea44f59fb39e684d7906a3a58ba238bab835ae5ae88a598ba50557de4ac",
+    "效果组件/历史指针矢量绘线/使用说明.md": "8163be2adcedd4256eb53286bd5d416b8deab71d3c2f6b153f6e7891f1b91325",
+    "效果组件/原片到编辑版面擦除/源码/项目源码/组件/人物与作品/摄影编辑对照.vue": "454db24d73009cd63c1e6553d93e9a22788fceade51dfa80e4ea8620fd5d238e",
+    "效果组件/原片到编辑版面擦除/源码/项目源码/组合函数/编辑版面滚动控制.ts": "8d958dda15929f170c5675db9863b59a01dd965efc90971dea5ae593648517a1",
+    "效果组件/原片到编辑版面擦除/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/原片到编辑版面擦除/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/原片到编辑版面擦除/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/原片到编辑版面擦除/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/原片到编辑版面擦除/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/原片到编辑版面擦除/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/原片到编辑版面擦除/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/原片到编辑版面擦除/集成示例/项目源码/组合函数/数据标记揭示控制.ts": "1d761144ace56445d1a5d893053c493f809c3c71c4f5e70060fc2b32d5b166f8",
+    "效果组件/原片到编辑版面擦除/效果介绍与解析.json": "bd3dd759ca0b2abe1a8feed677c839d247083d312ed1bc4bc85e466b42652b7e",
+    "效果组件/原片到编辑版面擦除/使用说明.md": "1b31ad817ea6ee459614b8027848a005c5fa4e5ec3aeccc4cec6669815ea0aaf",
+    "效果组件/大标题字号拟合/源码/项目源码/组合函数/标题字号拟合.ts": "edad878356b7b675d22cbc66c77540990f708b5185b179bba965ee4212d63d9d",
+    "效果组件/大标题字号拟合/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/大标题字号拟合/集成示例/项目源码/页面/摄影作品页.vue": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+    "效果组件/大标题字号拟合/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/大标题字号拟合/效果介绍与解析.json": "9ee4d4a3931681b19c513ebad7529af7daa7e741b1b26a4c30d7422f6afb9a03",
+    "效果组件/大标题字号拟合/使用说明.md": "fccb6c67973fff39639cd54761ea56fb2b4ba330ce3a6740e6f2f5bd11c84389",
+    "效果组件/子页作品索引覆盖菜单/源码/项目源码/组件/子页作品索引.vue": "0eabbe418d42f374440aca5496b7fe2f16ca8b5720b39d24c32a8e08d0c98b37",
+    "效果组件/子页作品索引覆盖菜单/源码/项目源码/组合函数/页面幕布控制.ts": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+    "效果组件/子页作品索引覆盖菜单/源码/项目源码/组合函数/子页语言状态.ts": "2efc21b0891fd7c28a7b1cda9371e0ca5b76393a2c01d86c1dd4ecbadd749635",
+    "效果组件/子页作品索引覆盖菜单/源码/项目源码/组合函数/应用转场状态.ts": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+    "效果组件/子页作品索引覆盖菜单/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/子页作品索引覆盖菜单/源码/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/子页作品索引覆盖菜单/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/子页作品索引覆盖菜单/源码/项目源码/工具/覆盖层触摸保护.ts": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+    "效果组件/子页作品索引覆盖菜单/集成示例/项目源码/应用根组件.vue": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+    "效果组件/子页作品索引覆盖菜单/效果介绍与解析.json": "3bcc30bb522efd6a87c67c31aee928a0e04d84dce7f7fe57f33eb4c86003baa0",
+    "效果组件/子页作品索引覆盖菜单/使用说明.md": "3c2f331d119d134cbb2a192b262049b2f149a0e6f913ba1a54158d6de577c63e",
+    "效果组件/完整作品查看器遮罩/源码/项目源码/组件/人物与作品/完整作品查看器.vue": "515cfc811f8a3c9724620898c72719666c902599f8a9f53734ac719bdfb278b1",
+    "效果组件/完整作品查看器遮罩/源码/项目源码/组合函数/作品查看器控制.ts": "ec8169f80998eeae00ad229d45c4d797ddfccabc1a496f0718aa4d5a6c30fa1c",
+    "效果组件/完整作品查看器遮罩/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/完整作品查看器遮罩/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/完整作品查看器遮罩/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/完整作品查看器遮罩/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/完整作品查看器遮罩/源码/项目源码/工具/覆盖层触摸保护.ts": "f125cfd08f646dfe84ac0320414f37d3716d2b01bafee2c9d4bc433a15ccbc85",
+    "效果组件/完整作品查看器遮罩/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/完整作品查看器遮罩/集成示例/项目源码/页面/人物介绍页.vue": "85bbda99d9f976be7a97dd313b5a5393c2fdc32c14089a8b28f8996762752326",
+    "效果组件/完整作品查看器遮罩/集成示例/项目源码/页面/摄影作品页.vue": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+    "效果组件/完整作品查看器遮罩/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/完整作品查看器遮罩/效果介绍与解析.json": "9b14a14f79ee07620263733ed77fdc0f91f8b43e8566120f61de47d9b704b38a",
+    "效果组件/完整作品查看器遮罩/使用说明.md": "3df7d7530153790df0da380d12b9109dedf25fc68cba9670905b8856fdfb2419",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/引导文字状态.ts": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/引导文字揭示.vue": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/人物与作品/实习海报碎片动效.vue": "344e2873c874e6beb0d5933d5f12dfa6b965776618b5428236f0840ea40990c4",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/人物与作品/实习海报空间构图.vue": "1ad6559e8fe11557079da3fa94bcc275dfe8b1f6b3f1affa88d93ad76accf2a5",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/人物与作品/实习海报动效卡.vue": "c1575dc237ce1b824a29dbe8f83cc8afe7d8b61dd191bc14170ecce70b239bf5",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/人物与作品/实习海报交互单元.vue": "2f3c181c23c6e7beb21332b9ffcbfbc87b7cbaeca8222753db0e6f67200f8544",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/人物与作品/实习海报画廊.vue": "50380d9d28f073a99422b86ae643059ab759185cad7524553eee4f1d2938e247",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/组件/人物与作品/实习海报碎片控制.ts": "9f13cee9b4b8757f67ff1f91a6d9c4ade1356fbd5b6915b64e01cdde0d98a6b2",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/数据/实习海报素材.json": "ed33e6ca71df39aac6af96685253dee8825fbad05f16679da20536a894f8c032",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/数据/实习海报动效计划.json": "dbe3166a8fe3740d78c1000597695a13cf4ca772de05a00481cba48516846a23",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/数据/实习海报动效数据.ts": "37eaf14fb8fc4d2175c78567bf823b773dd85f3221313eab5589273e0f70b204",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/数据/实习海报资料.ts": "d19b676e88bb14eb8bc47ddb71c631aa341c0305a176e1e56835676b774ba9ca",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/实习海报章节标题遮罩/源码/项目源码/工具/视口入场控制.ts": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+    "效果组件/实习海报章节标题遮罩/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/实习海报章节标题遮罩/效果介绍与解析.json": "939be09994a11524711acf23c16ce30aaaa41f7cbc0706afee016ba165787910",
+    "效果组件/实习海报章节标题遮罩/使用说明.md": "87acff26687b13ca46af45f40c92e6d25cca87b7170c16baac13099b140583da",
+    "效果组件/实习海报透视叠层/源码/项目源码/组件/人物与作品/实习海报叠层.vue": "29f8a7f3209f7c297a983efeb7cc4a27e0cf5511e3ae9ff937406a508cfa4b83",
+    "效果组件/实习海报透视叠层/源码/项目源码/组件/人物与作品/实习海报叠层控制.ts": "93368c7fd1106da9ffbed73f50baf9f993aa1a60792d1096fe9c299c905362a7",
+    "效果组件/实习海报透视叠层/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/实习海报透视叠层/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/实习海报透视叠层/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/实习海报透视叠层/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/实习海报透视叠层/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/实习海报透视叠层/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/实习海报透视叠层/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/实习海报透视叠层/集成示例/项目源码/数据/实习海报资料.ts": "d19b676e88bb14eb8bc47ddb71c631aa341c0305a176e1e56835676b774ba9ca",
+    "效果组件/实习海报透视叠层/效果介绍与解析.json": "8fe8cf4d36ae672ee6916eb36c96a42786f8a4b322872221d70430ea5b23afa6",
+    "效果组件/实习海报透视叠层/使用说明.md": "0201c963d100f5dfd8fcd7fabf1a4b876bea15fde49cea99981e62ba05a1c4ec",
+    "效果组件/局部动作文字光标/源码/项目源码/组件/自定义光标.vue": "a75991e7b624aa96e485e8f3b920f5a5c684367e577e76a10dab9363eb008236",
+    "效果组件/局部动作文字光标/源码/项目源码/组合函数/动作光标控制.ts": "6bc14283f9dad999dd62a3feee626a39653780916c9bc089a44a503db6fce80e",
+    "效果组件/局部动作文字光标/源码/项目源码/组合函数/页面幕布控制.ts": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+    "效果组件/局部动作文字光标/源码/项目源码/组合函数/子页语言状态.ts": "2efc21b0891fd7c28a7b1cda9371e0ca5b76393a2c01d86c1dd4ecbadd749635",
+    "效果组件/局部动作文字光标/源码/项目源码/组合函数/作品查看器控制.ts": "ec8169f80998eeae00ad229d45c4d797ddfccabc1a496f0718aa4d5a6c30fa1c",
+    "效果组件/局部动作文字光标/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/局部动作文字光标/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/局部动作文字光标/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/局部动作文字光标/集成示例/项目源码/应用根组件.vue": "c8dc530031a8066041ed0250d06e48c46d345aec7e21b8f212ea7613af224084",
+    "效果组件/局部动作文字光标/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/局部动作文字光标/效果介绍与解析.json": "7f64c882b6b16db1fdb01274e5392e95880a2cd909f2c92f676c3e722ed2c4c6",
+    "效果组件/局部动作文字光标/使用说明.md": "906dd30ed4743fe3910506146d0d61fe34d369ab4ae486c3e0bd1fe4f8d66a6e",
+    "效果组件/循环视频接缝淡化/源码/项目源码/组合函数/视频接缝淡化.ts": "3a47dd107b858ee26b58e4550a10bb80621cd3205c6aca47303663a9876547d1",
+    "效果组件/循环视频接缝淡化/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/循环视频接缝淡化/集成示例/项目源码/页面/调色作品页.vue": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+    "效果组件/循环视频接缝淡化/效果介绍与解析.json": "1b9286c12878bef67618d4ffa9eff21c5115a2f68a50a6e62fac4c3517714578",
+    "效果组件/循环视频接缝淡化/使用说明.md": "6ce566e3dadc2ed1ace5e6a76c9c22fd5a397c6da85d46490a3a044a349a448f",
+    "效果组件/指针轨迹视频遮罩/源码/项目源码/组件/调色/调色波形.vue": "4f8d16156c6b2c2e8157d3664925b738799fde2c27a6fae51cf8da1af477b580",
+    "效果组件/指针轨迹视频遮罩/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/指针轨迹视频遮罩/集成示例/项目源码/页面/调色作品页.vue": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+    "效果组件/指针轨迹视频遮罩/效果介绍与解析.json": "712a9326d8296e4c15c3acdf53016d5081e41a8b9aca4bcc613c70442c28e681",
+    "效果组件/指针轨迹视频遮罩/使用说明.md": "a1e1687d72b7b4b8785fb9d106d342d95f00d26d70a2410793be563794d7bc8d",
+    "效果组件/摄影卡相纸显影/源码/项目源码/卡片动画/卡片动画基础.ts": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+    "效果组件/摄影卡相纸显影/源码/项目源码/卡片动画/摄影卡动画.ts": "478223c2996478337d062ef345a3dabc692691b8c1adf95fc291329d612f0be1",
+    "效果组件/摄影卡相纸显影/源码/项目源码/卡片动画/卡片动画类型.ts": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+    "效果组件/摄影卡相纸显影/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/摄影卡相纸显影/集成示例/项目源码/组件/卡片视觉.vue": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+    "效果组件/摄影卡相纸显影/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/摄影卡相纸显影/集成示例/项目源码/卡片动画/卡片动画注册表.ts": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+    "效果组件/摄影卡相纸显影/集成示例/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/摄影卡相纸显影/效果介绍与解析.json": "9dea1d6589473e9cfd9de1b5bee46af18c568569214bfc086dced35a46d68fbc",
+    "效果组件/摄影卡相纸显影/使用说明.md": "e0e036b80f49865d396b2765f4f97690e80d1d3e86c1c9669490900043b14cd8",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/组件/人物与作品/摄影双列章节.vue": "fb108f7b5a243a50dc65d807a6c71e7410d17703df904dd3fa4afbd8c23f3b0c",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/组合函数/摄影拖拽控制.ts": "8acd9e67a5fc2cce4086137e73e15a3060ddbf31d6c255b992c3efa2c1a51105",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/数据/摄影页资料.ts": "77e68863647cc5f7e377cbdf51fc863ba30f4ccedd84bbe5ce892976103b8476",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/工具/摄影叙事计算.ts": "839f1df4f236004ab157959522aa6edeeaef59ea55279a56d1aa73c2cda595fe",
+    "效果组件/摄影双列章节遮罩/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/摄影双列章节遮罩/集成示例/项目源码/页面/摄影作品页.vue": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+    "效果组件/摄影双列章节遮罩/效果介绍与解析.json": "f452d2ffcafa9201241c6de5b01cd18b19701f57a29ddf69a722ceeecb89b0a4",
+    "效果组件/摄影双列章节遮罩/使用说明.md": "3665ba2de8d69e687fb1f3f645791428c67388bf1a0a93a5ce22a5aed7b45586",
+    "效果组件/摄影取景框与翻图/源码/项目源码/组件/人物与作品/摄影取景舞台.vue": "fb02c27cea291543dc9efb5c4625252eecfd69932205ff56a6f2be07db9e1afc",
+    "效果组件/摄影取景框与翻图/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/摄影取景框与翻图/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/摄影取景框与翻图/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/摄影取景框与翻图/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/摄影取景框与翻图/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/摄影取景框与翻图/集成示例/项目源码/组件/人物与作品/工作之外.vue": "5bd9cf77a2dfe5e7146d0f969a990c5b269f5267a2c0eddff09c32254969e20b",
+    "效果组件/摄影取景框与翻图/集成示例/项目源码/页面/人物介绍页.vue": "85bbda99d9f976be7a97dd313b5a5393c2fdc32c14089a8b28f8996762752326",
+    "效果组件/摄影取景框与翻图/效果介绍与解析.json": "387ce67a7d6e1a7a693d05af1c1f20af7a1506ee6bfeb1775ec1a637522091c1",
+    "效果组件/摄影取景框与翻图/使用说明.md": "91893d138a3a200afcf231d570ce63f2d6726b5bc64126a2e6cbcfc37daca543",
+    "效果组件/数据标记滚动揭示/源码/项目源码/组合函数/编辑版面滚动控制.ts": "8d958dda15929f170c5675db9863b59a01dd965efc90971dea5ae593648517a1",
+    "效果组件/数据标记滚动揭示/源码/项目源码/组合函数/数据标记揭示控制.ts": "1d761144ace56445d1a5d893053c493f809c3c71c4f5e70060fc2b32d5b166f8",
+    "效果组件/数据标记滚动揭示/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/数据标记滚动揭示/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/数据标记滚动揭示/源码/项目源码/工具/视口入场控制.ts": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+    "效果组件/数据标记滚动揭示/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/数据标记滚动揭示/集成示例/项目源码/页面/摄影作品页.vue": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+    "效果组件/数据标记滚动揭示/集成示例/项目源码/组件/人物与作品/作品章节容器.vue": "e45810410e6d0c9f6fc8f36f37a307a1145f4c812329ed7d46d7459be26c7db4",
+    "效果组件/数据标记滚动揭示/效果介绍与解析.json": "cfaeff438104a3420cb4da266d3a821961c7be7ef6c989ab408806269ce8732b",
+    "效果组件/数据标记滚动揭示/使用说明.md": "9da9fefde5e0ed41fec6121d1ff307f29f97cc27d3af0d548de04a0c00b34979",
+    "效果组件/新闻卡擦开与循环/源码/项目源码/卡片动画/卡片动画基础.ts": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+    "效果组件/新闻卡擦开与循环/源码/项目源码/卡片动画/新闻卡动画.ts": "ffaf4abf23a66a131389e334f21f76cf6ac46016681769a1a63f71a81433c64b",
+    "效果组件/新闻卡擦开与循环/源码/项目源码/卡片动画/卡片动画类型.ts": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+    "效果组件/新闻卡擦开与循环/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/新闻卡擦开与循环/集成示例/项目源码/组件/卡片视觉.vue": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+    "效果组件/新闻卡擦开与循环/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/新闻卡擦开与循环/集成示例/项目源码/卡片动画/卡片动画注册表.ts": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+    "效果组件/新闻卡擦开与循环/集成示例/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/新闻卡擦开与循环/效果介绍与解析.json": "b0eb9449c189f1395e66d91f1f055f8c5b9fc9cf27e28564365c4e1124aaedb5",
+    "效果组件/新闻卡擦开与循环/使用说明.md": "06f2c71be39931ccb10d0e993c609b12496ac649cb6b630cd9934ca6e21ed780",
+    "效果组件/旧百分比加载幕/源码/项目源码/组件/旧页面加载幕.vue": "1346bd41dddf9758d1334b4170730fe4bfd2585b03e428708ce35d1886bab5af",
+    "效果组件/旧百分比加载幕/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/旧百分比加载幕/效果介绍与解析.json": "0eac06a0b0d0b24d90bd947fb74732bc94d76bb0c4a71a40ecf16dab2901b13d",
+    "效果组件/旧百分比加载幕/使用说明.md": "54a3ad44690ee8050a9d7773396329acd10b88538c256055d030d16bd83a9796",
+    "效果组件/海报卡分层显影/源码/项目源码/卡片动画/卡片动画基础.ts": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+    "效果组件/海报卡分层显影/源码/项目源码/卡片动画/海报卡动画.ts": "5b59d074ebef0e2d0d1a044b2c746dde682c0df3dd3765125117383bd587afc9",
+    "效果组件/海报卡分层显影/源码/项目源码/卡片动画/卡片动画类型.ts": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+    "效果组件/海报卡分层显影/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/海报卡分层显影/集成示例/项目源码/组件/卡片视觉.vue": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+    "效果组件/海报卡分层显影/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/海报卡分层显影/集成示例/项目源码/卡片动画/卡片动画注册表.ts": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+    "效果组件/海报卡分层显影/集成示例/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/海报卡分层显影/效果介绍与解析.json": "9e4e36fcef1e5d96b794357dcd538f5a532630dcbb8aaffa3f2fb5e4c2dd8cd6",
+    "效果组件/海报卡分层显影/使用说明.md": "ff732cc52a15a72c486f757a744f13aefe1324df03bfd7e556a71b7ad901cf85",
+    "效果组件/海报局部碎片揭示/源码/项目源码/组件/引导文字状态.ts": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+    "效果组件/海报局部碎片揭示/源码/项目源码/组件/人物与作品/实习海报碎片动效.vue": "344e2873c874e6beb0d5933d5f12dfa6b965776618b5428236f0840ea40990c4",
+    "效果组件/海报局部碎片揭示/源码/项目源码/组件/人物与作品/实习海报动效卡.vue": "c1575dc237ce1b824a29dbe8f83cc8afe7d8b61dd191bc14170ecce70b239bf5",
+    "效果组件/海报局部碎片揭示/源码/项目源码/组件/人物与作品/实习海报碎片控制.ts": "9f13cee9b4b8757f67ff1f91a6d9c4ade1356fbd5b6915b64e01cdde0d98a6b2",
+    "效果组件/海报局部碎片揭示/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/海报局部碎片揭示/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/海报局部碎片揭示/源码/项目源码/数据/实习海报动效数据.ts": "37eaf14fb8fc4d2175c78567bf823b773dd85f3221313eab5589273e0f70b204",
+    "效果组件/海报局部碎片揭示/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/海报局部碎片揭示/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/海报局部碎片揭示/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/海报局部碎片揭示/源码/项目源码/工具/视口入场控制.ts": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+    "效果组件/海报局部碎片揭示/集成示例/项目源码/组件/人物与作品/实习海报画廊.vue": "50380d9d28f073a99422b86ae643059ab759185cad7524553eee4f1d2938e247",
+    "效果组件/海报局部碎片揭示/集成示例/项目源码/组件/人物与作品/实习海报空间构图.vue": "1ad6559e8fe11557079da3fa94bcc275dfe8b1f6b3f1affa88d93ad76accf2a5",
+    "效果组件/海报局部碎片揭示/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/海报局部碎片揭示/效果介绍与解析.json": "4ff080bbc65ab01ffb82a049c045efd7a62648e34b00e9459443fb38f56e9092",
+    "效果组件/海报局部碎片揭示/使用说明.md": "a72ffffd41a19b5949218c297a35db09e541d46307c4b0750aed41b5387fb87e",
+    "效果组件/海报空间叠层与离场/源码/项目源码/组件/引导文字状态.ts": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+    "效果组件/海报空间叠层与离场/源码/项目源码/组件/引导文字揭示.vue": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+    "效果组件/海报空间叠层与离场/源码/项目源码/组件/人物与作品/实习海报碎片动效.vue": "344e2873c874e6beb0d5933d5f12dfa6b965776618b5428236f0840ea40990c4",
+    "效果组件/海报空间叠层与离场/源码/项目源码/组件/人物与作品/实习海报空间构图.vue": "1ad6559e8fe11557079da3fa94bcc275dfe8b1f6b3f1affa88d93ad76accf2a5",
+    "效果组件/海报空间叠层与离场/源码/项目源码/组件/人物与作品/实习海报碎片控制.ts": "9f13cee9b4b8757f67ff1f91a6d9c4ade1356fbd5b6915b64e01cdde0d98a6b2",
+    "效果组件/海报空间叠层与离场/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/海报空间叠层与离场/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/海报空间叠层与离场/源码/项目源码/数据/实习海报动效数据.ts": "37eaf14fb8fc4d2175c78567bf823b773dd85f3221313eab5589273e0f70b204",
+    "效果组件/海报空间叠层与离场/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/海报空间叠层与离场/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/海报空间叠层与离场/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/海报空间叠层与离场/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/海报空间叠层与离场/源码/项目源码/工具/视口入场控制.ts": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+    "效果组件/海报空间叠层与离场/集成示例/项目源码/组件/人物与作品/实习海报画廊.vue": "50380d9d28f073a99422b86ae643059ab759185cad7524553eee4f1d2938e247",
+    "效果组件/海报空间叠层与离场/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/海报空间叠层与离场/效果介绍与解析.json": "de9065d45bd2d6e73f7a994a3e3b81efedf60a931f406a992ea65df3f6afd840",
+    "效果组件/海报空间叠层与离场/使用说明.md": "9695f27cd274bde02e0dafbae3f27d3d5744430d290e2241a4a1c9b2fa1c6666",
+    "效果组件/海报色带展开裁切/源码/项目源码/组件/人物与作品/海报色带.vue": "bb6545ea5705a10967ca29e2850713150e39f1b7a28944f728bcc63803856b45",
+    "效果组件/海报色带展开裁切/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/海报色带展开裁切/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/海报色带展开裁切/源码/项目源码/数据/海报页资料.ts": "1e45cfb7032a2e57f51aeb42f187c69b25552b8a4e2615d57758e6a74f72898d",
+    "效果组件/海报色带展开裁切/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/海报色带展开裁切/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/海报色带展开裁切/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/海报色带展开裁切/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/海报色带展开裁切/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/海报色带展开裁切/效果介绍与解析.json": "34fad203ace7c360a1abdfedfffb2a9071a0e661e546420c974c1c199b79fda8",
+    "效果组件/海报色带展开裁切/使用说明.md": "351af84823cf72f3dd71314b079c9800ec9b773109ee5de1011e7edce64b0834",
+    "效果组件/海报色彩章节擦入/源码/项目源码/组件/人物与作品/海报色彩章节.vue": "583df3323b0a444126f7c8640b8357a86cefa7d55ba7f171ab9a938088409f55",
+    "效果组件/海报色彩章节擦入/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/海报色彩章节擦入/源码/项目源码/数据/图片实际尺寸.json": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+    "效果组件/海报色彩章节擦入/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/海报色彩章节擦入/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/海报色彩章节擦入/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/海报色彩章节擦入/源码/项目源码/工具/响应式图片.ts": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+    "效果组件/海报色彩章节擦入/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/海报色彩章节擦入/集成示例/项目源码/数据/海报页资料.ts": "1e45cfb7032a2e57f51aeb42f187c69b25552b8a4e2615d57758e6a74f72898d",
+    "效果组件/海报色彩章节擦入/效果介绍与解析.json": "662b57c9f480c2a3283c1e3cf605c10e49f1e376526b69930e3862dd5d5983bf",
+    "效果组件/海报色彩章节擦入/使用说明.md": "0a8338c42f34a116eebba3925034ae313ec60070142283531085ada6e2a7c9d5",
+    "效果组件/真实视觉行文字揭示/源码/项目源码/组件/引导文字状态.ts": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+    "效果组件/真实视觉行文字揭示/源码/项目源码/组件/引导文字揭示.vue": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+    "效果组件/真实视觉行文字揭示/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/真实视觉行文字揭示/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/真实视觉行文字揭示/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/真实视觉行文字揭示/源码/项目源码/工具/视口入场控制.ts": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+    "效果组件/真实视觉行文字揭示/集成示例/项目源码/页面/人物介绍页.vue": "85bbda99d9f976be7a97dd313b5a5393c2fdc32c14089a8b28f8996762752326",
+    "效果组件/真实视觉行文字揭示/集成示例/项目源码/页面/海报作品页.vue": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+    "效果组件/真实视觉行文字揭示/集成示例/项目源码/页面/摄影作品页.vue": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
+    "效果组件/真实视觉行文字揭示/集成示例/项目源码/页面/调色作品页.vue": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+    "效果组件/真实视觉行文字揭示/集成示例/项目源码/页面/基础作品页.vue": "1d7a34970e009656251e655e6a2e8ce5882713bb79bfa7ff4d7e91e6014da695",
+    "效果组件/真实视觉行文字揭示/集成示例/项目源码/组件/人物与作品/作品章节容器.vue": "e45810410e6d0c9f6fc8f36f37a307a1145f4c812329ed7d46d7459be26c7db4",
+    "效果组件/真实视觉行文字揭示/效果介绍与解析.json": "08f1ac475b139e789ce0c86c3e5940b6e8f129c231d24d3d0af660f321f910ea",
+    "效果组件/真实视觉行文字揭示/使用说明.md": "121eb7f522e17941aee0ea174e99cfd73e652f73b4ecef1d933956a99d411a23",
+    "效果组件/结尾弧形与磁吸联系球/源码/项目源码/组件/人物与作品/结尾联系球.vue": "f06ae1b982dd3ce01929b06624580a5dee64a71a9798950facbefbf609641cd0",
+    "效果组件/结尾弧形与磁吸联系球/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/结尾弧形与磁吸联系球/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/结尾弧形与磁吸联系球/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/结尾弧形与磁吸联系球/集成示例/项目源码/页面/人物介绍页.vue": "85bbda99d9f976be7a97dd313b5a5393c2fdc32c14089a8b28f8996762752326",
+    "效果组件/结尾弧形与磁吸联系球/效果介绍与解析.json": "1aa019bbcb1445b30bf09aa80a650b4ef2f4aa48e58480bd629334e032e4031c",
+    "效果组件/结尾弧形与磁吸联系球/使用说明.md": "e7ea5a6eb4603659f8dcc2b56fd9e9325da0e2b6389a7267873f5b8aa6c63637",
+    "效果组件/调色卡五层视差/源码/项目源码/卡片动画/卡片动画基础.ts": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+    "效果组件/调色卡五层视差/源码/项目源码/卡片动画/调色卡动画.ts": "763629d958a17b1d6cfa8de0f2e3ba047778e747f061fc5cff9c2a827b132324",
+    "效果组件/调色卡五层视差/源码/项目源码/卡片动画/卡片动画类型.ts": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+    "效果组件/调色卡五层视差/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/调色卡五层视差/集成示例/项目源码/组件/卡片视觉.vue": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+    "效果组件/调色卡五层视差/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/调色卡五层视差/集成示例/项目源码/卡片动画/卡片动画注册表.ts": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+    "效果组件/调色卡五层视差/集成示例/项目源码/数据/作品章节资料.ts": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+    "效果组件/调色卡五层视差/效果介绍与解析.json": "836e306d134086eec3e65b76ae26a1adf7081b53a4e1888de977205814952115",
+    "效果组件/调色卡五层视差/使用说明.md": "51483916ef52f64889f5ee411226c258de1fb5943d184a3f9e8653be0a3734c7",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/素材/调色帧/调色第7帧.jpg": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组件/引导文字状态.ts": "abd89f1c8b9259508a17bfa02891b666646fbcd0089ba38e19e39bfa0e78e569",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组件/引导文字揭示.vue": "7d102b9bd7ddea4f9c16f28c00230d63efdfdfaf601593d83281b66752fe2dfa",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组件/作品续读导航.vue": "3dc02b058d955de9b1b8855ff30821d4c3d10cd8ebb6f234f3c4e8313e6b6e94",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组件/调色/调色波形.vue": "4f8d16156c6b2c2e8157d3664925b738799fde2c27a6fae51cf8da1af477b580",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组合函数/视频接缝淡化.ts": "3a47dd107b858ee26b58e4550a10bb80621cd3205c6aca47303663a9876547d1",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组合函数/页面幕布控制.ts": "d06c2f3f3e20dab8560e47a9827ebe98d84c9a842b7ea57c775419aac908e422",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组合函数/平滑滚动控制.ts": "1243deebb1c283cc722dd90c8c3ecaaf1b66d921833c354e34e33be868a6e6c3",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组合函数/子页语言状态.ts": "2efc21b0891fd7c28a7b1cda9371e0ca5b76393a2c01d86c1dd4ecbadd749635",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/组合函数/应用转场状态.ts": "f32a8ef8548dc3e79690e0e68f3d763844eed96f876ac2aa00499376cab70247",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/数据/人物资料.ts": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/数据/调色页资料.ts": "1dc468203dee430c60a2da1b4fd7302e6d88fb96f349ce2584fe6038e02bdac0",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/数据/视觉作品资料.ts": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/工具/动效布局调度.ts": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/工具/视口入场控制.ts": "7bfd912b4ad4a3c9435bed06d2c88a6e806f17aaf1a2b4d5f26740e952bba6d5",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/工具/滚轮事件工具.ts": "264a6775b28195d15fb913b677010a432de3c7a1a795e22cdd7805dc67212a3a",
+    "效果组件/调色首屏滚动闸门/源码/项目源码/页面/调色作品页.vue": "0c53f534985accc165842d96ee04de0abae689776153e55d82d1c411595093e3",
+    "效果组件/调色首屏滚动闸门/效果介绍与解析.json": "a0a63a6c12e34e08114949994f71e8b6a5a9e5854df47da9fec23c07ae1f3498",
+    "效果组件/调色首屏滚动闸门/使用说明.md": "11645a6c58cec9437f11db34feb92e9d99b3ff46308784022c3a1924864cf654",
+    "效果组件/黄色开场双幕撕裂/源码/项目源码/组件/开场预加载幕.vue": "214142eddda59e63eb69b605d075af05e1ee5b5e33c36f4d318fac1d51d61efa",
+    "效果组件/黄色开场双幕撕裂/源码/项目源码/全局样式.css": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+    "效果组件/黄色开场双幕撕裂/集成示例/项目源码/页面/六卡画廊页.vue": "24bc0876ee1effdb00da8260cddcbb36d2c7fb52f698cee5473a580ec1f43fe7",
+    "效果组件/黄色开场双幕撕裂/集成示例/项目源码/组件/六卡空间首页.vue": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+    "效果组件/黄色开场双幕撕裂/集成示例/项目源码/应用入口.ts": "f711f248a132dd3b55f76a2ae43f906c4b345dae76520da2e1790633e8e6e484",
+    "效果组件/黄色开场双幕撕裂/集成示例/开场页面.html": "6b231c39d279d31bd94a295974bf283cf627a5ff4ac40a6760b8bc879a0c6efe",
+    "效果组件/黄色开场双幕撕裂/效果介绍与解析.json": "5b1d5222eb16be0c97db1470b9214934ee7287577cbfa0b1aeabf71bdd8b2f3b",
+    "效果组件/黄色开场双幕撕裂/使用说明.md": "0d5ffa65ad054575320c61520d4470819b7f0115d456cf0407f2849c7821b3c6"
+  }
+}

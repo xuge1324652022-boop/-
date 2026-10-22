@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "profile-scroll-scene",
+  "title": { "zh": "人物照片收框与工具弹出场景", "en": "Profile frame morph and tool reveal" },
+  "category": "scroll",
+  "status": "active",
+  "summary": "同一张4:3人物原图从视口中央的自然比例取景框，随滚动迁移到身份介绍右侧的终点框。框使用clip-path、原图使用transform，两者读取同一测量结果；工具按钮在行程后段才开放交互，第一次可见时弹出一次。",
+  "entryFiles": ["src/components/about/ProfileIntro.vue"],
+  "integrationFiles": ["src/views/AboutView.vue", "src/data/aiTools.ts", "src/data/aboutProfile.ts", "src/data/resumeEmphasis.ts"],
+  "sourceSections": [
+    { "file": "src/components/about/ProfileIntro.vue", "symbols": ["initializeProfile", "measure", "startingBox", "clipBox", "timeline"], "purpose": "测量终点与舞台，按1448×1086源图比例计算起始框，并建立可逆滚动场景。" },
+    { "file": "src/components/about/ProfileIntro.vue", "symbols": ["sync", "pop", "interactive", "identityReady", "played", "updateState"], "purpose": "控制文字和工具的交互门禁，首次达到阈值且场景可见时才弹出工具。" },
+    { "file": "src/components/about/ProfileIntro.vue", "symbols": ["selectTool", "hoverTool", "toolPosition"], "purpose": "将六个工具按固定锚点布置，并将选择通过v-model事件同步到页面。" }
+  ],
+  "mechanism": {
+    "trigger": "sequence 的 top top 到 bottom bottom 使用 ScrollTrigger scrub:true；CSS sticky 舞台占1个svh视口，sequence高2.25个svh视口。active仅管理可交互状态，空间进度读取文档滚动。",
+    "stages": [
+      { "name": "portrait-migrate", "description": "起始框宽为 min(舞台宽-40,1080,舞台高×0.82×4/3)，居中；终点为target测量矩形。", "properties": ["frame.clipPath", "portrait.x", "portrait.y", "portrait.scale"], "timing": "相对时标0–1，power3.inOut；整体由滚动距离映射，不是1秒自动播放。" },
+      { "name": "identity", "description": "身份内容淡入上移，与收框后半段重叠。", "properties": ["identityContent.autoAlpha:0→1", "identityContent.y:18→0"], "timing": "相对时标0.6开始，持续0.55，power3.out。" },
+      { "name": "target-and-hold", "description": "目标框显露，并留出静止阅读行程。", "properties": ["destination.autoAlpha:0→1"], "timing": "相对时标1开始持续0.15；1.4处添加0.4空段，时间线总长1.8。" },
+      { "name": "tool-pop", "description": "滚动总进度达到0.66且active为真后，工具第一次真实可见时弹出；之后倒滚不重播。", "properties": ["tool.autoAlpha:0→1", "tool.scale:0.3→1", "tool.y:42→0", "tool.rotation:-6→0"], "timing": "独立自然播放0.7秒，每项错峰0.065秒，back.out(1.35)。" }
+    ],
+    "state": ["interactive", "identityReady", "played", "activeTool", "bounds", "media", "dead"],
+    "propertyOwnership": ["canvas只写clipPath，portrait只写原图x/y/scale；target为测量终点，避免分别测量导致边界错位。", "工具.pop节点承接GSAP弹出，工具.button CSS承接hover/focus变换，槽位transform承接固定锚点。"],
+    "interruption": ["matchMedia切至减少动态、560px以下横屏、或指定小竖屏条件时，撤销空间场景，按自然文档流展示。", "active关闭会同步禁用工具，但played保留，恢复门禁后不重复弹出。", "ResizeObserver以rAF合并局部trigger.refresh，onRefreshInit重新计算同一组bounds。"]
+  },
+  "integration": {
+    "steps": ["在AboutView式页面中传lang、active与activeTool，监听update:activeTool或使用v-model:active-tool。", "保留源图4:3尺寸和CSS层次；更换原图时同步修改sourceWidth/sourceHeight及相关布局比例。", "保留motionLayout准备队列及主题CSS变量，确保字体落位后共享刷新。"],
+    "inputs": ["lang:Lang", "active:boolean", "activeTool:string", "AI_TOOLS六个工具数据", "FACTS/IDENTITY/RESUME_SKILLS/ROLE_LINE/TAGLINE"],
+    "outputs": ["update:activeTool(id:string)", "已到位后启用的工具按钮和探索链接"],
+    "dependencies": ["vue", "gsap", "gsap/ScrollTrigger", "src/utils/motionLayout.ts", "src/data/aiTools.ts", "src/data/aboutProfile.ts", "src/data/resumeEmphasis.ts", "ResizeObserver", "document.fonts.ready"],
+    "assets": ["public/about/portrait-{400,900,1448}.webp（保持4:3，按真实宽度选择）", "AI_TOOLS[].src引用的工具图标"]
+  },
+  "accessibility": {
+    "reducedMotion": "减少动态及容纳不下照片/文字的短视口使用完整自然流；按钮是否可用仍取决于active。",
+    "touch": "无拖动接管；760px以下竖屏有单独照片/文字布局。hoverTool仅响应mouse。",
+    "keyboard": "target在interactive=false时inert且aria-hidden；按钮disabled与交互门禁一致，focus触发工具选择，aria-pressed表达当前项。"
+  },
+  "lifecycle": {
+    "setup": ["onMounted等待nextTick，将initializeProfile交给prepareMotionLayout；matchMedia按根元素scope创建时间线和ScrollTrigger。", "字体ready后申请共享布局刷新，active变化通过updateState更新。"],
+    "cleanup": ["媒体分支退出时断开ResizeObserver、取消其rAF，清空updateState并关闭交互状态；GSAP媒体context撤销动画和触发器。", "onBeforeUnmount标记dead，取消准备与刷新任务并media.revert。"],
+    "knownLimitations": ["源图尺寸与六个工具的锚点数组写在组件中；不是任意图片数量/比例的通用构图器。", "需要完整sticky滚动区与CSS层次，单独复制时间线无法复现测量与交互门禁。"]
+  },
+  "agentNotes": ["0.66是ScrollTrigger总进度阈值，不是时间线的0.66时标。", "空间收框可逆，工具弹出只播一次；修改时必须保留两者不同的记忆语义。"],
+  "relatedEffects": ["text-line-reveal", "poster-depth"],
+  "verification": { "commands": ["npm run typecheck", "node scripts/verify-about-mobile-runtime.mjs", "npm run build"], "manualChecks": ["逐步滚动确认取景框和同一张原图边界一致，无拉伸。", "工具在总进度0.66以前不能点击；第一次可见后弹出，倒滚再进入不重播。", "检查短横屏、紧凑竖屏和减少动态偏好下文字、探索链接和照片完整可见。"] },
+  "tags": ["vue", "gsap", "ScrollTrigger", "clip-path", "sticky", "portrait", "one-shot"]
+}

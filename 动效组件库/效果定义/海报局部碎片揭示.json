@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "poster-artwork-reveal",
+  "title": { "zh": "海报局部碎片遮罩揭示", "en": "Masked poster fragment reveal" },
+  "category": "mask",
+  "status": "active",
+  "summary": "用归一化矩形选出海报标题与图形区域，短暂在完整底图上挖出对应区域，再由复用同一张图片的裁片完成运动。MotionCard负责普通文档流自动触发与手动重播，AnimatedArtwork接受父空间场景的revealed/completed信号；两者共享同一片段时间线，完成后恢复完整原图消除拼接细缝。",
+  "entryFiles": ["src/components/about/InternshipAnimatedArtwork.vue", "src/components/about/InternshipMotionCard.vue", "src/components/about/internshipArtworkMotion.ts", "src/data/internshipPosterMotion.ts"],
+  "integrationFiles": ["src/components/about/InternshipPosterGallery.vue", "src/components/about/InternshipDepthComposition.vue", "src/views/PosterView.vue", "src/utils/viewportEntrance.ts"],
+  "sourceSections": [
+    { "file": "src/data/internshipPosterMotion.ts", "symbols": ["PosterRect", "PosterFragment", "internshipFragments", "cropStyle", "fragmentStyle", "laserHeadlines"], "purpose": "以原始页号选取矩形，成对计算裁片外框百分比和内部整图逆向定位，保持原始文字与图片比例。" },
+    { "file": "src/components/about/internshipArtworkMotion.ts", "symbols": ["createInternshipArtworkMotion", "ordered", "sequence"], "purpose": "标题优先、图形随后，建立由调用者负责播放和撤销的暂停局部时间线。" },
+    { "file": "src/components/about/InternshipMotionCard.vue", "symbols": ["warmArtwork", "playArtwork", "completeArtwork", "replay", "arm", "playbackVersion", "maskId"], "purpose": "普通卡片近屏预解码、页面门禁后自动揭示一次，允许显式重播并排除陈旧异步回调。" },
+    { "file": "src/components/about/InternshipAnimatedArtwork.vue", "symbols": ["completeArtwork", "played", "enhanced", "playbackVersion", "parts", "maskId", "sequence"], "purpose": "嵌入空间纸面，仅在父级首见信号后揭示；父级落位completed立刻完整收尾，倒滚不重播。" }
+  ],
+  "mechanism": {
+    "trigger": "MotionCard通过createViewportEntrance默认top 95%进入、bottom top收尾，并受referenceIntroductionGate控制；AnimatedArtwork由父级revealed/completed props控制。两者只有允许动态且存在裁片时才建立局部时间线。",
+    "stages": [
+      { "name": "keep-original-and-warm", "description": "未播放时完整底图始终显示，近屏或父级请求后把真实图设eager并等待decode，避免先挖孔留下空白。", "properties": ["image.loading", "imageReady", "played", "playbackVersion"], "timing": "MotionCard近屏预热rootMargin500px；等待decode结束且异步版本仍有效后继续。" },
+      { "name": "enable-mask", "description": "裁片复位到暂停时间线起点后启用enhanced；唯一SVG luminance mask在底图挖出片段区域，下一次DOM更新后开演。", "properties": ["base.maskImage", "enhanced", "fragment visibility"], "timing": "pending.pause(0)→enhanced=true→nextTick→play/restart。" },
+      { "name": "fragment-reveal", "description": "标题从裁片高度103%的下方上移；图形块从下方12%、scale0.985和透明状态回到终态，标题排序优先。", "properties": ["fragment.yPercent:103或12→0", "fragment.scale:1或0.985→1", "fragment.opacity:1或0→1"], "timing": "每片0.95秒、power2.out，起点为排序后index×0.085秒；总长随裁片数变化。" },
+      { "name": "restore-whole", "description": "自然完成、收尾守卫或父级completed都关闭enhanced，回到未遮罩的完整原图。", "properties": ["enhanced:false", "sequence.progress:1"], "timing": "自然onComplete或completeArtwork立即完成；只保留完整原图而非长期叠片。" }
+    ],
+    "state": ["played", "enhanced", "canReplay（MotionCard）", "pageGate（MotionCard）", "entryTrigger（MotionCard）", "imageReady（MotionCard）", "playbackVersion", "sequence", "maskId", "dead"],
+    "propertyOwnership": ["局部时间线只拥有fragment的transform/opacity，不控制父纸面空间位置。", "MotionCard外框主要承担文档流布局与查看入口，自动入场触发并不等于整张卡片外框移动；碎片运动只发生在卡片内部。", "AnimatedArtwork外部wrapper/perspective/sheet的滚动与hover由poster-depth管理，内部不再写外框transform。", "SVG mask与裁片使用同一rect坐标，cropStyle和fragmentStyle必须成对保留。"],
+    "interruption": ["playbackVersion使旧decode/nextTick在重播、减少动态、完成或卸载之后失效，且同时验证sequence实例所有权。", "AnimatedArtwork的revealed/completed首次状态及减少动态都视为已看过；回滚、换语言或恢复动态不会再次挖走文字。", "MotionCard手动replay先kill自动entryTrigger，防止收尾守卫立即截断用户重播。", "页面gate关闭时仅撤下尚未消耗的自动触发；已播记忆独立于媒体查询实例保留。"]
+  },
+  "integration": {
+    "steps": ["普通海报使用InternshipMotionCard(item,lang,page,total)，监听open接入页面查看器；可通过注入referenceIntroductionGate等待页面揭幕。", "空间纸面使用InternshipAnimatedArtwork(item,lang,revealed,completed)，由父级传入首次可见与落位完成信号。", "复制共享internshipArtworkMotion与internshipPosterMotion矩形配置；不同作品须按完整原图重新标定归一化片段。", "保留唯一maskId、完整底图与每片内部复用整图的结构；不要把图片拉伸成片段尺寸。", "不要把父纸张的滚动入场和内部碎片时间线合并成同一个可逆进度，首次阅读记忆由调用组件负责。"],
+    "inputs": ["MotionCard: item:VisualAsset, lang:Lang, page:number, total:number", "AnimatedArtwork: item:VisualAsset, lang:Lang, revealed:boolean, completed?:boolean", "internshipFragments根据item.id前缀和原始末两位页号取矩形", "createInternshipArtworkMotion(fragments,onComplete)"],
+    "outputs": ["MotionCard: open(item:VisualAsset,trigger:HTMLElement)", "createInternshipArtworkMotion返回暂停的GSAP Timeline", "AnimatedArtwork无组件事件，只响应父级状态"],
+    "dependencies": ["vue（含useId）", "gsap", "gsap/ScrollTrigger（MotionCard）", "src/components/ReferenceIntroduction.ts", "src/utils/viewportEntrance.ts", "src/data/aboutProfile.ts", "src/data/visualPortfolio.ts", "SVG mask", "HTMLImageElement.decode", "IntersectionObserver（MotionCard）"],
+    "assets": ["item.src原始展示图由底图与所有裁片共用；图片尺寸来自item.width/height。", "现有矩形表面向demo-guidance、demo-measure和demo-garden海报，V10L按原始页号索引。"]
+  },
+  "accessibility": {
+    "reducedMotion": "保留完整底图，隐藏裁片与重播入口；该完整展示视为已读，恢复动态后不自动挖走文字。",
+    "touch": "MotionCard完整作品查看按钮和重播使用原生点击；hover:none时查看箭头始终可见，不依赖鼠标悬停。",
+    "keyboard": "MotionCard查看和重播为带aria-label的原生按钮；裁片aria-hidden且内部img alt为空，完整底图保留作品alt。AnimatedArtwork本身pointer-events:none，由父纸面按钮承担交互。"
+  },
+  "lifecycle": {
+    "setup": ["两个组件均在onMounted/nextTick之后建立scoped matchMedia。", "MotionCard登记500px预热IntersectionObserver，在媒体context内创建时间线与可取消自动entryTrigger；AnimatedArtwork用watch等待父级首见。"],
+    "cleanup": ["媒体条件退出增加playbackVersion，关闭enhanced并清空sequence；MotionCard还kill entryTrigger、清空arm与canReplay。", "卸载标记dead、增加异步版本并media.revert；MotionCard额外断开预热观察器。", "单独使用createInternshipArtworkMotion时必须由调用者kill/revert或在GSAP context中创建；工具函数不注册全局监听。"],
+    "knownLimitations": ["矩形位置依赖当前具体图稿；替换图片或重新排序页号时必须同步配置，无法自动识别标题区域。", "AnimatedArtwork在初始revealed/completed为真时直接保留完整图，不会挂载后自动补播。", "internshipFragments对非guidance/v10l前缀走现有草坪分支，不是任意作品ID的智能识别器。"]
+  },
+  "agentNotes": ["主线是遮罩挖孔与复用整图裁片的配对，不是重新渲染或拉伸海报文字。", "MotionTile为独立CSS/SVG效果，见poster-motion-tile，不属于共享碎片时间线。", "若需要修改时间，优先在createInternshipArtworkMotion调整0.95/0.085，保持两种宿主一致。"],
+  "relatedEffects": ["poster-depth", "poster-stack", "poster-motion-tile", "text-line-reveal"],
+  "verification": { "commands": ["npm run typecheck", "node scripts/verify-mobile-artwork.mjs", "npm run build"], "manualChecks": ["底图未解码前保持完整画面；揭示期间只运动目标标题/图形，完成后无拼接缝。", "手动重播可完整播放；快速连按、切偏好或离开页面后旧异步回调不再重启。", "空间场景快速滚至completed时内部立即完整，倒滚再进不重复抽走标题。", "多个卡片同屏时maskId互不串扰，键盘和触屏均可打开完整原图。"] },
+  "tags": ["vue", "gsap", "timeline", "svg-mask", "image-fragments", "decode", "one-shot", "replay"]
+}

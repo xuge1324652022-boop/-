@@ -1,0 +1,311 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "poster-color-chapters",
+  "title": {
+    "zh": "海报色彩章节双向擦入",
+    "en": "Poster colour chapter wipes"
+  },
+  "category": "mask",
+  "status": "active",
+  "summary": "按稳定素材 id 将海报划为四个色彩章节，以原生 sticky 舞台和滚动进度叠层擦入：换组由下向上揭示，同组由右向左揭示。GSAP CustomEase 只映射进度，遮罩由 RAF 单一写入者控制，并只保留底图和正在揭开的顶图可见。减少动态或短视口时逐张普通流展示。",
+  "entryFiles": [
+    "src/components/about/PosterColourChapters.vue"
+  ],
+  "integrationFiles": [
+    "src/views/PosterView.vue",
+    "src/data/posterPage.ts",
+    "src/data/visualPortfolio.ts",
+    "src/data/aboutProfile.ts",
+    "src/utils/motionLayout.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/PosterColourChapters.vue",
+      "symbols": [
+        "groups",
+        "frames",
+        "groupChanges"
+      ],
+      "purpose": "稳定 id 归组并保留原 items 索引，确保分组后仍打开正确大图。"
+    },
+    {
+      "file": "src/components/about/PosterColourChapters.vue",
+      "symbols": [
+        "revealEase",
+        "render",
+        "scroll"
+      ],
+      "purpose": "滚动阻尼、分段进度与方向判断，以及 clipPath/visibility 的唯一写入。"
+    },
+    {
+      "file": "src/components/about/PosterColourChapters.vue",
+      "symbols": [
+        "measure",
+        "move",
+        "preference",
+        "visibility"
+      ],
+      "purpose": "sticky 行程、按钮滚动定位与静态布局回退。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "舞台位于视口前后 120px 内且页面可见时，原生滚动驱动按需 RAF；前后按钮通过 scrollTo 到目标阅读段。",
+    "stages": [
+      {
+        "name": "编排与测量",
+        "description": "将已知 id 按火光/旷野/冷调/橄榄归组，每帧保留原列表 index；step=max(840,stageHeight*1.75)，root 高为舞台高加 frames.length*step。",
+        "properties": [
+          "frames",
+          "origin",
+          "step",
+          "root.height"
+        ],
+        "timing": "排队测量，语言、frames、尺寸与全局 refresh 后重算。"
+      },
+      {
+        "name": "追赶与揭示",
+        "description": "有效 scrollY 被限制在本章节范围，displayedScroll 指数追赶；每件作品前半程完整停留，后半程揭下一件。CustomEase(.42,0,.3,1) 映射 p，换组写 inset(top)，同组写 inset(right)。",
+        "properties": [
+          "displayedScroll",
+          "panel.clipPath",
+          "active"
+        ],
+        "timing": "SMOOTH_TAU=120ms；dt 最多64ms；REVEAL_WINDOW=0.5 个步长，不是固定秒数补间。"
+      },
+      {
+        "name": "可见层与回退",
+        "description": "完成揭示的最新层为 base，正在展开的为 top，最多两层 visible；倒滚仍按相同 p 恢复旧层。p>=0.5 的最新项决定 active 与可聚焦按钮。",
+        "properties": [
+          "panel.visibility",
+          "lastReveal",
+          "lastVisibility",
+          "active"
+        ],
+        "timing": "仅数值或可见性变化时写样式；误差<0.2px 后吸附停止 RAF。"
+      }
+    ],
+    "state": [
+      "frames / active / groupChanges",
+      "panels / lastReveal / lastVisibility",
+      "origin / step / displayedScroll / lastFrame / raf",
+      "reduced / compact / staticLayout / nearViewport"
+    ],
+    "propertyOwnership": [
+      "render 独占活动模式的 panel.clipPath 和 visibility；没有额外 CSS transition 与它争进度。",
+      "CSS 负责 sticky、叠层和静态流布局；CustomEase 只返回映射值，不持有独立遮罩 tween。",
+      "frame.index 是原 items 位置，不能用色彩分组后的帧序号直接打开查看器。"
+    ],
+    "interruption": [
+      "离舞台、页面隐藏或目标跨度大于 step 时直接对齐，避免长距离追赶或后台循环。",
+      "快速反向滚动从当前 displayedScroll 连续回退，不 restart 单独的入场动画。",
+      "偏好变化取消 RAF，nextTick 后移除内联 clip-path/visibility 再测量，避免静态布局残留裁切。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "传入含已知稳定 id 的 VisualAsset 列表与 lang，更新 groups 可更换主题与素材匹配规则。",
+      "监听 open(originalIndex,trigger)，以原列表传给统一 useVisualViewer.openAt。",
+      "保留布局队列与 ScrollTrigger.refresh 监听，使前序章节高度变化后 origin 正确。",
+      "保留静态 CSS 与 prefers-reduced-motion/短视口响应逻辑；不要只截取 render 而缺少 reset 样式。"
+    ],
+    "inputs": [
+      "items: readonly VisualAsset[]",
+      "lang: zh | en",
+      "window.scrollY 与舞台尺寸",
+      "reduce 与短视口媒体查询"
+    ],
+    "outputs": [
+      "open(index,trigger)：index 对应原 items，不是 frames 顺序。"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "gsap/CustomEase",
+      "gsap/ScrollTrigger 的 refresh 事件",
+      "motionLayout 工具",
+      "aboutProfile.pick",
+      "ResizeObserver",
+      "IntersectionObserver",
+      "requestAnimationFrame"
+    ],
+    "assets": [
+      "VisualAsset.src，当前为 /portfolio/<id>-1600.webp。",
+      "四组 paper/ink/name/description 与 groups 中的 id 是源码内容配置，移植时需要替换。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "staticLayout=true：取消 sticky 长轨道，清除遮罩与隐藏样式，所有作品逐张展示。",
+    "touch": "不注册 touch 监听，保留原生滚动；可见擦入层保留触摸命中，不按 active 中点切 inert。",
+    "keyboard": "当前 active 作品按钮可 Tab 进入，前后导航是原生 button；静态模式所有作品按钮可聚焦，完整图片使用 alt。"
+  },
+  "lifecycle": {
+    "setup": [
+      "注册 CustomEase 并建立 revealEase；挂载排测量、监听尺寸、可见性、滚动、全局 refresh 与两类媒体查询。",
+      "字体 ready、语言或 frames 变化后重新排测量。"
+    ],
+    "cleanup": [
+      "卸载取消测量与刷新请求、断开观察器、取消 RAF，移除所有窗口/文档/refresh/偏好监听。"
+    ],
+    "knownLimitations": [
+      "groups 是现有九张海报的固定 id 白名单，不在列表中的素材不会自动出现；新内容需更新分组。",
+      "页脚章节总数写为 04，修改分组数量也要同步模板。",
+      "顶部注释曾写 95ms，实际执行常量为 SMOOTH_TAU=120；读取代码时以执行常量为准。",
+      "导航按钮使用浏览器 smooth scroll；减少动态模式不渲染该导航，普通作品按钮仍可用。"
+    ]
+  },
+  "agentNotes": [
+    "这不是 ScrollTrigger pin/scrub 时间轴；舞台靠 CSS sticky，ScrollTrigger 仅用于共享 refresh，CustomEase 仅参与数值映射。",
+    "只绘制 base/top 是性能和命中正确性的约束；倒滚必须恢复历史层可见性。",
+    "保护 contain 和源素材比例，颜色只作用于舞台背景与文字，不给海报加滤镜。"
+  ],
+  "relatedEffects": [
+    "poster-palette",
+    "visual-viewer-overlay",
+    "action-cursor"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-mobile-artwork.mjs"
+    ],
+    "manualChecks": [
+      "顺滚与倒滚跨同组/跨组，检查擦入方向、没有空白层或旧层永久隐藏。",
+      "点击每个重新分组后的作品，核对打开的是原列表中的正确大图。",
+      "快速跳段、短横屏、运动偏好和语言切换后检查完整图与静态流无残留裁切。"
+    ]
+  },
+  "tags": [
+    "vue",
+    "gsap-custom-ease",
+    "clip-path",
+    "sticky",
+    "raf",
+    "poster",
+    "scroll"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/人物与作品/海报色彩章节.vue"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/CustomEase",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "gsap/ScrollTrigger",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    },
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/about/PosterColourChapters.vue",
+      "path": "源码/项目源码/组件/人物与作品/海报色彩章节.vue",
+      "role": "entry",
+      "originalSha256": "c20af7b607af73d8a9b21bf78cfbed4e2313ea966cf5617adc27cf709f926d3d",
+      "originalBytes": 14166,
+      "sha256": "583df3323b0a444126f7c8640b8357a86cefa7d55ba7f171ab9a938088409f55",
+      "bytes": 14181
+    },
+    {
+      "original": "src/data/aboutProfile.ts",
+      "path": "源码/项目源码/数据/人物资料.ts",
+      "role": "dependency",
+      "originalSha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "originalBytes": 21975,
+      "sha256": "9bc993e2ef9aab5c9aa0f30e53412fb646e0691e107a01230b62cc65cb1b61e5",
+      "bytes": 21975
+    },
+    {
+      "original": "src/data/imageVariants.json",
+      "path": "源码/项目源码/数据/图片实际尺寸.json",
+      "role": "dependency",
+      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "originalBytes": 12182,
+      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
+      "bytes": 12182
+    },
+    {
+      "original": "src/data/visualPortfolio.ts",
+      "path": "源码/项目源码/数据/视觉作品资料.ts",
+      "role": "dependency",
+      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
+      "originalBytes": 22342,
+      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
+      "bytes": 22342
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/utils/motionLayout.ts",
+      "path": "源码/项目源码/工具/动效布局调度.ts",
+      "role": "dependency",
+      "originalSha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "originalBytes": 3222,
+      "sha256": "37e2fbd7d39536e97db9e19c2b82209fb4a2489ad6cfdb4f4a7825c3524bda4b",
+      "bytes": 3222
+    },
+    {
+      "original": "src/utils/responsiveImage.ts",
+      "path": "源码/项目源码/工具/响应式图片.ts",
+      "role": "dependency",
+      "originalSha256": "3f4f4a263ee92ff55c4048446ad55eaaf37a31d6c83f1905c3027f85f02b0714",
+      "originalBytes": 1118,
+      "sha256": "171997e336dea8d1282714c3473e5a5847c18f0a5731483fbf2d09d59a27bdd8",
+      "bytes": 1125
+    },
+    {
+      "original": "src/views/PosterView.vue",
+      "path": "集成示例/项目源码/页面/海报作品页.vue",
+      "role": "integration-context",
+      "originalSha256": "61cb26ac58819bcc1deb631a6ac6d60765e63670f712ff28f426ab19517137fd",
+      "originalBytes": 12143,
+      "sha256": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
+      "bytes": 12234
+    },
+    {
+      "original": "src/data/posterPage.ts",
+      "path": "集成示例/项目源码/数据/海报页资料.ts",
+      "role": "integration-context",
+      "originalSha256": "f7dc96f84c5d74ee71abab2aaa57b135743f8a7ba413bbcdbf0c72d24291325a",
+      "originalBytes": 8937,
+      "sha256": "1e45cfb7032a2e57f51aeb42f187c69b25552b8a4e2615d57758e6a74f72898d",
+      "bytes": 8940
+    }
+  ]
+}

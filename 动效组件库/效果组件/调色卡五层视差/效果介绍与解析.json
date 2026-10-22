@@ -1,0 +1,257 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "card-color",
+  "title": {
+    "zh": "调色卡五层指针视差",
+    "en": "Colour-grading card pointer parallax"
+  },
+  "category": "card",
+  "status": "active",
+  "summary": "巨型 COLOR、色条、胶片框、曲线与色轮组成静止调色构图，五层只按指针位移。卡面不携带真实调色视频、不自动转色轮、不随指针改色；真实作品位于独立 /color 页面。",
+  "entryFiles": [
+    "src/cardAnimations/color.ts"
+  ],
+  "integrationFiles": [
+    "src/components/CardVisual.vue",
+    "src/components/ThreeHome.vue",
+    "src/cardAnimations/index.ts",
+    "src/data/chapters.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/cardAnimations/color.ts",
+      "symbols": [
+        "ColorAnimation",
+        "LAYERS",
+        "mount",
+        "setActive",
+        "destroy",
+        "apply",
+        "toBase"
+      ],
+      "purpose": "定义该卡参数、指针映射与可选时间线。"
+    },
+    {
+      "file": "src/cardAnimations/base.ts",
+      "symbols": [
+        "BaseAnimation",
+        "BoundLayer"
+      ],
+      "purpose": "共享 mount/play/pause/reset/restart/destroy 与受 host 限制的查询。"
+    },
+    {
+      "file": "src/components/CardVisual.vue",
+      "symbols": [
+        "build",
+        "remount",
+        "play",
+        "pause",
+        "restart",
+        "setMedia"
+      ],
+      "purpose": "提供对应 cv-* DOM/CSS，按 index 创建动画实例并向 ThreeHome 暴露控制。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "CardVisual.mount 建立动画，ThreeHome 在聚焦时 restart；window.pointermove 在 active 时驱动视口坐标归一化。",
+    "stages": [
+      {
+        "name": "pointer-parallax",
+        "description": ".cv-color__type:50/35px/1.0s；.cv-color__strips:35/25px/1.1s；.cv-color__frames:28/20px/1.15s；.cv-color__curves:24/17px/1.25s；.cv-color__wheel:20/12px/1.35s。指针从视口坐标归一化至 [-1,1]，每层用 gsap.quickTo 写 x/y，pointerleave 或失焦回零。",
+        "properties": [
+          "layer.x",
+          "layer.y"
+        ],
+        "timing": "各层 duration 见描述，统一 power3.out；没有持续轮询指针的 RAF。"
+      }
+    ],
+    "state": [
+      "BaseAnimation 保存 host、环境 tl、可选 intro 与 introDone。",
+      "active 只约束指针响应；失焦调用 toBase，play/pause 控制时间线。",
+      "图层幅度与 quickTo 设置器存于同一对象，缺少一个 selector 只跳过该层。",
+      "nx/ny 保存最近归一化坐标，toBase 时一起归零。"
+    ],
+    "propertyOwnership": [
+      "只写 host 内部指定图层的属性；禁止写 .card-position 或 .card-plane，它们属于 galleryMotion/ThreeHome。",
+      "指针 quickTo 负责图层 x/y，静态信息保持固定构图；入场需要改位移时应使用内层节点，避免与视差争用。"
+    ],
+    "interruption": [
+      "quickTo 复用每个属性的补间，新的指针目标替换目标值。",
+      "setActive(false) 将图层缓动回 x=0/y=0。",
+      "CardVisual.build 在重建前 destroy 旧实例；remount 忽略 0x0 隐藏子树，避免无效测量。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "通过注册表 createCardAnimation(index) 创建新实例，并提供 CardVisual 中对应的 cv-* DOM/CSS。",
+      "mount(host) 后按宿主可见性调用 play/pause；聚焦章节时 restart()，active 状态调用 setActive。",
+      "通过 destroy() 撤销实例；不能仅删除宿主 DOM。",
+      "保持 CHAPTERS 与 CardVisual.index/kind 的顺序一致；本效果类不自行创建卡面 DOM。"
+    ],
+    "inputs": [
+      "mount(host:HTMLElement)",
+      "play()/pause()/reset()/restart()",
+      "setActive(active:boolean)",
+      "window pointermove 的 clientX/clientY"
+    ],
+    "outputs": [
+      "只修改宿主子树内图层样式；不发起路由导航、不派发业务事件。"
+    ],
+    "dependencies": [
+      "gsap",
+      "src/cardAnimations/base.ts",
+      "src/cardAnimations/types.ts",
+      "Vue CardVisual 宿主"
+    ],
+    "assets": [
+      "仅 CardVisual 内 CSS/SVG 的调色抽象构图；没有真实视频素材层。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "mount 时检测到减少动态偏好就不注册指针监听；没有环境循环或一次性入场。",
+    "touch": "监听全局 Pointer Events，使用 passive:true 只读取坐标，不拦截画廊拖拽；未按 pointerType 过滤，触控指针也可提供坐标。",
+    "keyboard": "卡面装饰内容 aria-hidden，键盘选择与导航由 ThreeHome 的 card-plane 提供；本动画类没有可聚焦控件。"
+  },
+  "lifecycle": {
+    "setup": [
+      "mount 先 super.mount 创建暂停的 Base 时间线，再按实际匹配到的 selector 绑定 x/y quickTo。",
+      "非减少动态模式注册 window.pointermove 与 document.pointerleave。"
+    ],
+    "cleanup": [
+      "移除 window.pointermove 与 document.pointerleave，清空 layers，再调用 BaseAnimation.destroy 杀环境与入场时间线。"
+    ],
+    "knownLimitations": [
+      "此类 destroy 没有显式逐个 kill quickTo 返回的 tween，仅移除监听并清空引用；不要据此承诺销毁后立即不存在在途 quickTo。",
+      "BaseAnimation.introDone 仅在同一实例再次 mount 时保留；当前 CardVisual.remount 会创建新实例。",
+      "减少动态偏好在 mount 注册监听时读取，类未监听偏好后续变化。",
+      "卡内六段真实调色素材交互已退役；不要根据旧注释或历史 CLIPS/REVEAL_TAU 重新推断现行机制。",
+      "Base 的 setMedia 是空实现，卡内不消费真实调色视频。"
+    ]
+  },
+  "agentNotes": [
+    "所有 ax/ay 是视口指针归一化至 [-1,1] 后乘出的卡片局部 CSS 像素；duration 单位为秒，缓动 power3.out。",
+    "BaseAnimation.restart 使用 intro.restart(false,true)，因此聚焦重播跳过 intro 自身初始 delay；introDelay 不是聚焦后额外等待时间。",
+    "verification.commands 为可运行的现有检查入口，并不等价于视觉效果已通过浏览器验收。"
+  ],
+  "relatedEffects": [
+    "gallery-focus",
+    "card-about",
+    "card-news"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "聚焦 03，移动指针检查五层相对位移，颜色、曲线形状不随指针改变。",
+      "静置确认色轮不自动旋转、没有呼吸色阶或隐藏视频启动。",
+      "进入 /color 才出现真实作品；卡面保持抽象预览。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "vue",
+    "card",
+    "quickTo",
+    "pointer",
+    "parallax"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/卡片动画/调色卡动画.ts"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "gsap",
+      "package": "gsap",
+      "requested": "^3.15.0",
+      "locked": "3.15.0"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/cardAnimations/base.ts",
+      "path": "源码/项目源码/卡片动画/卡片动画基础.ts",
+      "role": "dependency",
+      "originalSha256": "224b9d5f83d4610d948d34efe803b4013dc032fcfa759966265419a639f40057",
+      "originalBytes": 7501,
+      "sha256": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
+      "bytes": 7514
+    },
+    {
+      "original": "src/cardAnimations/color.ts",
+      "path": "源码/项目源码/卡片动画/调色卡动画.ts",
+      "role": "entry",
+      "originalSha256": "4243fae7e25d96cf85b112b7d4efa89cd05bef11f2b8e1d0cbac2c57ed42291d",
+      "originalBytes": 5877,
+      "sha256": "763629d958a17b1d6cfa8de0f2e3ba047778e747f061fc5cff9c2a827b132324",
+      "bytes": 5891
+    },
+    {
+      "original": "src/cardAnimations/types.ts",
+      "path": "源码/项目源码/卡片动画/卡片动画类型.ts",
+      "role": "dependency",
+      "originalSha256": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+      "originalBytes": 1600,
+      "sha256": "cab56cee5ac50c587a568540f568ebe77d0a03d8fa2839600d86fffcf9b5b5f2",
+      "bytes": 1600
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    },
+    {
+      "original": "src/components/CardVisual.vue",
+      "path": "集成示例/项目源码/组件/卡片视觉.vue",
+      "role": "integration-context",
+      "originalSha256": "8c7356656c704ff4a48f1469202d9f580ffaa3300adfe6e697a82ece98afcee4",
+      "originalBytes": 8038,
+      "sha256": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
+      "bytes": 8076
+    },
+    {
+      "original": "src/components/ThreeHome.vue",
+      "path": "集成示例/项目源码/组件/六卡空间首页.vue",
+      "role": "integration-context",
+      "originalSha256": "ec5e4d12a10f2e255da4bd6fb1ba5a46487cbc4830ef60410d4ad3635ac8d461",
+      "originalBytes": 55655,
+      "sha256": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
+      "bytes": 55720
+    },
+    {
+      "original": "src/cardAnimations/index.ts",
+      "path": "集成示例/项目源码/卡片动画/卡片动画注册表.ts",
+      "role": "integration-context",
+      "originalSha256": "70536b9618e6241816e960e3226771d92aa21fb0056c527b6d186f0e924c1c65",
+      "originalBytes": 2116,
+      "sha256": "18db2aec42b89274ecc2c20dedab07f6062990e08dd7a83572b859ac45d4b86e",
+      "bytes": 2218
+    },
+    {
+      "original": "src/data/chapters.ts",
+      "path": "集成示例/项目源码/数据/作品章节资料.ts",
+      "role": "integration-context",
+      "originalSha256": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+      "originalBytes": 1417,
+      "sha256": "c1dfb941f54a2002c10bfb4d4b0f7d5f0edd3d99c704ebfa755fec55d0a8c4b8",
+      "bytes": 1417
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "motion-layout-scheduler",
+  "title": {
+    "zh": "动效布局预热与刷新调度",
+    "en": "Motion layout preparation scheduler"
+  },
+  "category": "layout",
+  "status": "active",
+  "summary": "共享可取消队列按元素与视口的距离排序，每帧准备一个组件，并在批次结束后合并ScrollTrigger刷新；它是效果基础设施，不直接绘制动画。",
+  "entryFiles": [
+    "src/utils/motionLayout.ts",
+    "src/utils/viewportEntrance.ts"
+  ],
+  "integrationFiles": [
+    "src/components/ReferenceIntroduction.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/utils/motionLayout.ts",
+      "symbols": [
+        "prepareMotionLayout",
+        "flushPreparation",
+        "requestMotionLayoutRefresh"
+      ],
+      "purpose": "读取候选位置、分帧执行准备与合并刷新。"
+    },
+    {
+      "file": "src/utils/viewportEntrance.ts",
+      "symbols": [
+        "createViewportEntrance"
+      ],
+      "purpose": "一次性视口入场与越界完成兜底。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "调用prepareMotionLayout或requestMotionLayoutRefresh。",
+    "stages": [
+      {
+        "name": "让出首轮布局",
+        "description": "warmFrame后排入prepareFrame，避免挂载同一任务内反复强制布局。",
+        "properties": [
+          "RAF scheduling"
+        ],
+        "timing": "两个requestAnimationFrame阶段，不承诺固定毫秒数"
+      },
+      {
+        "name": "按距离准备",
+        "description": "批量读候选rect，仅执行最近的一个run，再处理下一帧。",
+        "properties": [
+          "layout reads"
+        ],
+        "timing": "每帧最多一个组件"
+      },
+      {
+        "name": "批次刷新",
+        "description": "preparations为空且存在refreshRequests才调用全局刷新。",
+        "properties": [
+          "ScrollTrigger.refresh"
+        ],
+        "timing": "合并到独立RAF"
+      }
+    ],
+    "state": [
+      "preparations:Map<symbol,Preparation>",
+      "refreshRequests:Set<symbol>",
+      "warmFrame/prepareFrame/refreshFrame",
+      "preparing"
+    ],
+    "propertyOwnership": [
+      "队列不写元素transform，具体run回调由调用方持有",
+      "viewportEntrance只调用play/complete并返回trigger"
+    ],
+    "interruption": [
+      "返回取消函数只撤销本调用方任务",
+      "断开的元素被丢弃；空队列停止RAF"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在DOM挂载后prepareMotionLayout(element,run)。",
+      "把返回取消函数保存到组件卸载清理。",
+      "布局变化时请求requestMotionLayoutRefresh并保存其取消函数；实际动画保持组件上下文。"
+    ],
+    "inputs": [
+      "HTMLElement",
+      "run():void",
+      "createViewportEntrance的trigger/play/complete/start/finishAt"
+    ],
+    "outputs": [
+      "取消函数",
+      "ScrollTrigger实例"
+    ],
+    "dependencies": [
+      "gsap/ScrollTrigger",
+      "浏览器RAF与DOM"
+    ],
+    "assets": []
+  },
+  "accessibility": {
+    "reducedMotion": "工具无偏好判断，调用方需按reduce选择静态分支。",
+    "touch": "工具不接管输入。",
+    "keyboard": "工具不接管焦点；锚点越界通过complete补齐。"
+  },
+  "lifecycle": {
+    "setup": [
+      "按需求登记Symbol任务；使用者负责注册ScrollTrigger插件"
+    ],
+    "cleanup": [
+      "调用返回取消函数；viewportEntrance实例由宿主kill或context.revert"
+    ],
+    "knownLimitations": [
+      "队列为模块单例；不要在同一页面复制多个模块实例造成多次全局刷新。",
+      "分帧准备减少重复工作，不保证任意设备固定帧率。"
+    ]
+  },
+  "agentNotes": [
+    "延迟准备和允许播放是两种门闩，不能混用。",
+    "createViewportEntrance默认start top95%、end bottom top，不是scrub动画。"
+  ],
+  "relatedEffects": [
+    "text-line-reveal",
+    "about-scroll-reveal",
+    "poster-gallery-reveal",
+    "about-hero"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "快速换页后没有对已卸载DOM的分行/刷新。",
+      "快滚和锚点直达时已越过文字保持终态。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "scrolltrigger",
+    "raf",
+    "scheduler",
+    "performance"
+  ]
+}

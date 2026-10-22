@@ -1,0 +1,179 @@
+{
+  "$schema": "../../解析格式规范.json",
+  "schemaVersion": "1.0.0",
+  "id": "legacy-page-loader",
+  "title": {
+    "zh": "旧百分比加载幕",
+    "en": "Legacy percentage loader"
+  },
+  "category": "overlay",
+  "status": "legacy",
+  "summary": "保留的旧加载屏以RAF推动0–100%，到100后发ready，再等待canReveal允许CSS淡出；当前网站路由已使用route-curtain，此效果仅供历史迁移参考。",
+  "entryFiles": [
+    "src/components/PageLoader.vue"
+  ],
+  "integrationFiles": [],
+  "sourceSections": [
+    {
+      "file": "src/components/PageLoader.vue",
+      "symbols": [
+        "run",
+        "readySent",
+        "canReveal",
+        "loader-fade"
+      ],
+      "purpose": "计数和揭幕信号解耦，避免路由尚未就绪提前撤幕。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "onMounted延迟80ms调用run。",
+    "stages": [
+      {
+        "name": "计数",
+        "description": "用RAF按tickMs推进百分比，16颗粒由CSS错峰点亮。",
+        "properties": [
+          "displayPct",
+          "cell background",
+          "cell scale"
+        ],
+        "timing": "默认tickMs1100ms；颗粒280ms"
+      },
+      {
+        "name": "等待目标",
+        "description": "到100后停留holdMs，发ready；canReveal=false时保持遮挡。",
+        "properties": [
+          "visible"
+        ],
+        "timing": "默认holdMs220ms；等待canReveal时无固定上限"
+      },
+      {
+        "name": "淡出",
+        "description": "visible=false触发Vue Transition，after-leave发done。",
+        "properties": [
+          "opacity"
+        ],
+        "timing": "CSS400ms；reduce时无过渡"
+      }
+    ],
+    "state": [
+      "visible/displayPct",
+      "readySent",
+      "raf/holdTimer/startTimer"
+    ],
+    "propertyOwnership": [
+      "组件控制加载层自身；不负责router.push或全局滚动锁"
+    ],
+    "interruption": [
+      "canReveal提前为true也必须等readySent",
+      "卸载取消RAF与两个定时器"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "仅在需要兼容旧加载屏时使用，不与当前路由幕布叠加。",
+      "异步导航时传canReveal=false，ready后发起工作，完成后再允许揭幕。",
+      "调用方负责失败/超时出口和输入锁；组件自身没有等待超时策略。"
+    ],
+    "inputs": [
+      "cornerLeft/cornerRight/bigWord",
+      "tickMs/holdMs毫秒",
+      "canReveal:boolean"
+    ],
+    "outputs": [
+      "ready",
+      "done"
+    ],
+    "dependencies": [
+      "vue",
+      "浏览器RAF",
+      "CSS keyframes/transition"
+    ],
+    "assets": []
+  },
+  "accessibility": {
+    "reducedMotion": "CSS取消颗粒/上浮/离场过渡；计数RAF仍按tickMs运行。",
+    "touch": "全屏加载层遮挡内容，未额外提供触摸滚动防护。",
+    "keyboard": "role=status和aria-live；输入锁及焦点隔离由宿主负责。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted启动计数定时器"
+    ],
+    "cleanup": [
+      "取消RAF及start/hold timer"
+    ],
+    "knownLimitations": [
+      "当前无生产路由引用。",
+      "canReveal永不放行时会一直遮挡，调用方必须提供错误恢复。",
+      "百分比是视觉计时，不代表资源真实下载进度。"
+    ]
+  },
+  "agentNotes": [
+    "当前推荐阅读route-curtain掌握真实导航协议。",
+    "ms计数参数与GSAP秒参数不可混淆。"
+  ],
+  "relatedEffects": [
+    "route-curtain",
+    "home-preloader"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "独立宿主延迟canReveal，确认100%保持至目标就绪。",
+      "中途卸载后不再触发ready/done。"
+    ]
+  },
+  "tags": [
+    "legacy",
+    "raf",
+    "css",
+    "loader",
+    "percentage"
+  ],
+  "bundle": {
+    "format": "repository-source-bundle",
+    "standalone": false,
+    "textEncoding": "UTF-8, LF (CRLF normalized)",
+    "entryDirectory": "源码/",
+    "integrationContextDirectory": "集成示例/",
+    "entryFiles": [
+      "源码/项目源码/组件/旧页面加载幕.vue"
+    ],
+    "namingMap": "../../命名映射.json",
+    "imports": "源码/ 使用中文目录和文件名，按命名映射改写本地导入并包含传递源码依赖；集成示例/ 仅保留调用上下文，其依赖不保证完整。原始标识符及运行逻辑保持不变。",
+    "assets": "Directly imported src/assets images are included with original bytes; public images/videos/PDF files and third-party packages remain external references.",
+    "sourceOfTruth": "Edit the root src/ files, then npm run build:motion; do not edit generated snapshots.",
+    "browserOnly": true
+  },
+  "npmDependencies": [
+    {
+      "specifier": "vue",
+      "package": "vue",
+      "requested": "^3.5.32",
+      "locked": "3.5.40"
+    }
+  ],
+  "sources": [
+    {
+      "original": "src/components/PageLoader.vue",
+      "path": "源码/项目源码/组件/旧页面加载幕.vue",
+      "role": "entry",
+      "originalSha256": "1346bd41dddf9758d1334b4170730fe4bfd2585b03e428708ce35d1886bab5af",
+      "originalBytes": 10979,
+      "sha256": "1346bd41dddf9758d1334b4170730fe4bfd2585b03e428708ce35d1886bab5af",
+      "bytes": 10979
+    },
+    {
+      "original": "src/style.css",
+      "path": "源码/项目源码/全局样式.css",
+      "role": "global-style",
+      "originalSha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "originalBytes": 4142,
+      "sha256": "d17284112f7cd7ce1dc7f7e48847895d2086b25cd404079d5b5a5647475ec2ca",
+      "bytes": 4142
+    }
+  ]
+}

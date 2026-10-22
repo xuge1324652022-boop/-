@@ -1,0 +1,219 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "route-curtain",
+  "title": {
+    "zh": "全站弧形路由幕布",
+    "en": "Global curved route curtain"
+  },
+  "category": "mask",
+  "status": "active",
+  "summary": "用上下椭圆帽和整屏位移实现跨路由覆盖、停留与揭幕。PageCurtain只承担视觉动作；useRouteCurtainNavigation显式接收router与幕布引用，等待路由和首轮布局、控制门禁及处理异常。App保留渲染，首访子页从已覆盖状态起步。",
+  "entryFiles": [
+    "src/components/PageCurtain.vue",
+    "src/composables/usePageCurtain.ts"
+  ],
+  "integrationFiles": [
+    "src/App.vue",
+    "src/composables/useTransition.ts",
+    "src/router/index.ts",
+    "src/main.ts",
+    "src/style.css",
+    "src/composables/useRouteCurtainNavigation.ts",
+    "src/utils/navigationOwnership.ts"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/PageCurtain.vue",
+      "symbols": [
+        "cover",
+        "reveal",
+        "reset",
+        "stopCurrent",
+        "onMotionChange"
+      ],
+      "purpose": "暴露可等待的覆盖/揭幕/复位动作；维护 GSAP、原生文字动画和中断代次。"
+    },
+    {
+      "file": "src/composables/usePageCurtain.ts",
+      "symbols": [
+        "needsInitialCurtain",
+        "routeCurtainActive",
+        "routeCurtainBlocked",
+        "curtainTitleFor"
+      ],
+      "purpose": "全局响应式门禁和双语章节名；兼容 /card/01 至 /card/06。"
+    },
+    {
+      "file": "src/composables/useRouteCurtainNavigation.ts",
+      "symbols": [
+        "coverRoute",
+        "revealRoute",
+        "cancelCurtain",
+        "removeBeforeNavigation",
+        "removeAfterNavigation"
+      ],
+      "purpose": "导航所有权、等待时间、滚动与输入锁、失败恢复。"
+    },
+    {
+      "file": "src/router/index.ts",
+      "symbols": [
+        "router",
+        "preparedScrollTarget"
+      ],
+      "purpose": "全遮挡跨页导航在 beforeResolve 归零；scrollBehavior 处理历史位置与章节锚点。"
+    },
+    {
+      "file": "src/utils/navigationOwnership.ts",
+      "symbols": [
+        "createNavigationOwnership",
+        "beginNavigation",
+        "invalidateNavigation",
+        "focusedNavigationOutcome",
+        "isModuleNavigationError"
+      ],
+      "purpose": "用纯决策区分完整目标与代次、隔离迟到回调，并决定模块失败是否允许自动重试。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "跨 path 的应用内导航由 useRouteCurtainNavigation 的 beforeEach 发起；初访 /about、/edit、/news、/color、/poster、/photo、/cards 或 /card/* 走 cover(true)。同 path 的 query/hash 变化不重新播幕布。",
+    "stages": [
+      {
+        "name": "cover",
+        "description": "screen 从 yPercent=100 到 0，上帽 scaleY=0 到 -1；0.5 秒时已经完全遮挡并兑现 Promise，章节文字可以继续进入。",
+        "properties": [
+          "screen.yPercent",
+          "topCap.scaleY",
+          "topCap.yPercent"
+        ],
+        "timing": "0.5s power4.in；上帽 0.4s，均从 0s 开始。"
+      },
+      {
+        "name": "chapter-label",
+        "description": "文字由透明变可见并向上移动 50px；优先用采样 power4.out 的 Web Animations 帧，旧 WebView 回退 GSAP。",
+        "properties": [
+          "words.opacity",
+          "words.transform"
+        ],
+        "timing": "原生动画 delay 550ms、duration 800ms；GSAP 回退位置 .55s、时长 .8s。"
+      },
+      {
+        "name": "hold",
+        "description": "导航协调器等待导航及 nextTick、两帧 requestAnimationFrame；自完全遮挡时点起保证最低停留时间。",
+        "properties": [
+          "routeCurtainActive",
+          "routeCurtainBlocked"
+        ],
+        "timing": "普通导航最低 650ms；初访最低 500ms；减少动态模式为 0ms。"
+      },
+      {
+        "name": "reveal",
+        "description": "screen 向上退出，文字淡出，底部椭圆帽逐渐压平；正文入场在揭幕开始放行，用户输入在整个揭幕结束才解锁。",
+        "properties": [
+          "screen.yPercent",
+          "words.opacity",
+          "bottomCap.scaleY",
+          "bottomCap.yPercent"
+        ],
+        "timing": "screen .8s power3.inOut；文字 .6s；底帽从 .2s 开始 .85s，总 1.05s。"
+      }
+    ],
+    "state": [
+      "组件 phase: idle / covering / covered / revealing",
+      "generation 拦截迟到 nextTick 与 Promise",
+      "useRouteCurtainNavigation.navigationVersion 和 transitionTarget 决定导航所有权",
+      "routeCurtainActive 覆盖全程；routeCurtainBlocked 在揭幕开始变 false"
+    ],
+    "propertyOwnership": [
+      "PageCurtain 独占 screen、caps、words 的 transform/opacity；App 不直接改这些视觉节点。",
+      "App 持有 page-turn-lock、is-jumping、no-scroll 的交接和 route-stage.inert。"
+    ],
+    "interruption": [
+      "stopCurrent 递增 generation、kill 两条 GSAP 时间线、提交并取消原生文字动画、结算旧等待者。",
+      "reset 使用 context.revert；新导航按 navigationVersion 校验旧异步工作。",
+      "切换到减少动态效果时将当前阶段落到覆盖或隐藏终态。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "在应用顶层常驻一个 PageCurtain，用 active/title props 连接全局状态。",
+      "复用 useRouteCurtainNavigation({router, curtain}) 的 coverRoute/revealRoute 的守卫顺序；不要把 App/router 当独立视觉组件的递归入口。",
+      "保留 routeCurtainBlocked 对子组件入场的门禁，routeCurtainActive 对输入、媒体和索引的门禁。",
+      "保证全局 viewport CSS 变量与 overlayTouchGuard 可用；迁移时按宿主应用重接异常恢复。"
+    ],
+    "inputs": [
+      "active: boolean",
+      "title: { zh: string; en: string }",
+      "cover(entry?: boolean)",
+      "reveal()",
+      "reset()"
+    ],
+    "outputs": [
+      "cover/reveal 返回 Promise<void>；cover 在完全遮挡时完成",
+      "routeCurtainActive / routeCurtainBlocked 响应式状态"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "src/utils/overlayTouchGuard.ts",
+      "Vue Router 的宿主集成"
+    ],
+    "assets": [
+      "无需外部图片；背景与椭圆均为 CSS。",
+      "依赖 --stable-viewport-height 全局 CSS 变量。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "cover/reveal 改成 .12s 透明度切换，帽子压平、文字位移为 0；媒体查询 change 可中途终止大幅运动。",
+    "touch": "guardOverlayTouchScroll 按 active 状态防止幕布下的滚动链；CSS active 时可接收指针。",
+    "keyboard": "根节点 role=status、aria-live=polite、双语 lang；App 给 route-stage 设置 inert。幕布本身无可聚焦按钮。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted 绑定触摸守卫和减少动态媒体查询。",
+      "按 root 创建 GSAP context，所有视觉动作登记其中。"
+    ],
+    "cleanup": [
+      "onBeforeUnmount 标记 dead，移除触摸守卫和媒体查询监听，再 reset。",
+      "导航协调器卸载应同时注销路由守卫并取消自己的等待/错误恢复状态。"
+    ],
+    "knownLimitations": [
+      "视觉组件不是独立路由管理器；导航协调器中的错误恢复与 App 的错误提示、自动恢复和锁交接必须随宿主重接。",
+      "原生 words.animate 和 GSAP 的交接依赖 commitStyles，失败时捕获后继续。",
+      "usePageCurtain 在模块顶层读取 window.location，不直接适用于 SSR。"
+    ]
+  },
+  "agentNotes": [
+    "此包的 entryFiles 只指向视觉组件与状态；App/router 是 integrationFiles，避免将全应用当组件依赖复制。",
+    "useTransition 中 OVERLAY_COVER_MS=300、OVERLAY_REVEAL_MS=400 属旧兼容导出，不是现行幕布时长。",
+    "verification.commands 是建议运行的现有仓库命令，不表示本 JSON 编写时已经执行。"
+  ],
+  "relatedEffects": [
+    "gallery-focus",
+    "card-list-expand",
+    "home-preloader",
+    "index-overlay"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-runtime-navigation.mjs",
+      "node scripts/verify-mobile-overlays.mjs",
+      "node scripts/verify-navigation-state.mjs"
+    ],
+    "manualChecks": [
+      "从首页与 /cards 分别进入六个子页，检查盖满后换页、无露底。",
+      "直达 /photo 与 /card/06，检查章节名及初访揭幕。",
+      "覆盖、等待、揭幕期间快速后退/前进以及同页锚点导航，检查旧 Promise 不复写新幕。",
+      "开启动效减少，检查短淡入淡出及交互解锁。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "vue",
+    "route",
+    "curtain",
+    "mask",
+    "web-animations",
+    "navigation"
+  ]
+}

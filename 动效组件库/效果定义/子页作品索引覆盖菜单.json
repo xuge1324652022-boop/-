@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "index-overlay",
+  "title": {
+    "zh": "子页作品索引覆盖菜单",
+    "en": "Subpage works-index overlay"
+  },
+  "category": "overlay",
+  "status": "active",
+  "summary": "跨子页常驻的作品索引菜单。右上按钮因滚动唤醒、桌面闲置隐藏；面板 Teleport 到 body，背景 inert 并独占滚动锁。GSAP 控制背景淡入和章节行从裁切区上移，点击链接交接全局路由导航。",
+  "entryFiles": [
+    "src/components/SubpageIndex.vue"
+  ],
+  "integrationFiles": [
+    "src/App.vue",
+    "src/composables/useSubpageLanguage.ts",
+    "src/composables/useTransition.ts",
+    "src/composables/usePageCurtain.ts",
+    "src/style.css"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/SubpageIndex.vue",
+      "symbols": [
+        "preparePanel",
+        "enterPanel",
+        "leavePanel",
+        "wake",
+        "show",
+        "close",
+        "finishClose",
+        "onKeydown"
+      ],
+      "purpose": "弹层入退场、滚动唤醒、输入锁、焦点管理和路由关闭。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "右上索引按钮点击 show；scroll、wheel、touchmove 唤醒按钮，触屏保持可见。route.fullPath 变化自动 close(false)。",
+    "stages": [
+      {
+        "name": "wake",
+        "description": "按钮 visible=true；桌面非悬停、非聚焦、非打开时闲置隐藏。",
+        "properties": [
+          "visible",
+          "opacity",
+          "transform"
+        ],
+        "timing": "闲置 1600ms；CSS 进入 .5s、退出 .2s。"
+      },
+      {
+        "name": "prepare",
+        "description": "面板初始 opacity=0，章节行 yPercent=100；设置 #app.inert 并添加 html.has-subpage-index。",
+        "properties": [
+          "panel.opacity",
+          "line.yPercent",
+          "app.inert"
+        ],
+        "timing": "Vue before-enter 同步设置。"
+      },
+      {
+        "name": "enter",
+        "description": "面板淡入，六个章节行沿 yPercent 归零，父链接 overflow:clip 限定可见区域。",
+        "properties": [
+          "panel.opacity",
+          "line.yPercent"
+        ],
+        "timing": ".6s power2.out；行从 .15s 开始 .8s、stagger .04s、power3.out。"
+      },
+      {
+        "name": "leave",
+        "description": "kill 旧时间线，面板 inert 并禁指针；淡出后移除自己的锁。导航关闭先撤锁便于新页归零。",
+        "properties": [
+          "panel.opacity",
+          "panel.pointerEvents",
+          "panel.inert"
+        ],
+        "timing": ".4s power2.in；减少动态模式立即 done。"
+      }
+    ],
+    "state": [
+      "open / visible / closing",
+      "hold 保留悬停入口",
+      "background 与 hadInert 保存原背景 inert",
+      "idleTimer 与 menuAnimation 属本实例"
+    ],
+    "propertyOwnership": [
+      "子页菜单只拥有 has-subpage-index，不能清除查看器或幕布的 no-scroll。",
+      "面板在 body，脱离被 inert 的 #app；背景原来的 inert 状态关闭时还原。"
+    ],
+    "interruption": [
+      "每次 prepare/leave 先 kill 旧 menuAnimation。",
+      "show 在 routeCurtainActive、no-scroll、已有查看器或页面旧 intro 幕存在时拒绝叠加。",
+      "路由变化关闭时不恢复入口焦点；普通关闭先把焦点还给按钮。"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "按 App 当前方式跨六个子页常驻，保留 Teleport 与 #app 根节点约定。",
+      "以 CHAPTERS 生成顺序并用 jumpPathFor 导航。",
+      "保留 source 判断：query.from=cards 或旧 /card/* 的默认来源决定返回 /cards，其余返回 /。",
+      "在宿主样式提供 --stable-viewport-height / --dynamic-viewport-height；接入 overlayTouchGuard。"
+    ],
+    "inputs": [
+      "当前 route.path/fullPath/query.from",
+      "subpageLanguage: zh/en",
+      "CHAPTERS",
+      "routeCurtainActive"
+    ],
+    "outputs": [
+      "router links 至六章节并携带 from",
+      "has-subpage-index 滚动锁",
+      "语言状态变更",
+      "关闭时的焦点恢复"
+    ],
+    "dependencies": [
+      "vue",
+      "vue-router",
+      "gsap",
+      "src/data/chapters.ts",
+      "src/utils/overlayTouchGuard.ts"
+    ],
+    "assets": [
+      "无需图像；背景使用半透明暖白 + backdrop-filter:blur(40px)。"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "prepare 直接把 opacity 和 yPercent 放终态，enter/leave 立即 done；CSS 的按钮和行 hover 位移也禁 transition。",
+    "touch": "coarse/无 hover 设备不因闲置隐藏入口；触摸守卫允许面板内部合法滚动并阻断背景滚动链；移动按钮>=44px。",
+    "keyboard": "role=dialog/aria-modal、aria-controls/expanded；打开聚焦关闭按钮，Tab 首尾循环、Escape 关闭，关闭还原入口焦点。"
+  },
+  "lifecycle": {
+    "setup": [
+      "onMounted wake、绑定触摸守卫、touchQuery change 和 scroll/wheel/touchmove。",
+      "watch route.fullPath 关闭弹层。"
+    ],
+    "cleanup": [
+      "卸载 releaseTouchGuard、kill 时间线、clearTimeout、移除监听、撤自己的锁并恢复背景 inert。"
+    ],
+    "knownLimitations": [
+      "依赖文档 id=app 的背景根节点及固定菜单 id；同文档不应重复挂载多个实例。",
+      "motionQuery 的 matches 在每次入退场读取，但未添加运行中 motionQuery change 的主动终止监听。",
+      "首页 ThreeHome.vue 含另一套索引弹层，已由 gallery-focus 收录；本文件不是首页那套菜单。"
+    ]
+  },
+  "agentNotes": [
+    "不要为了合并两套菜单而改变源文件：本次是解析与源码整理。",
+    "选择链接 close(false) 会立刻撤锁以允许 router.scrollBehavior 运行，而普通 close 等 after-leave 撤锁。"
+  ],
+  "relatedEffects": [
+    "route-curtain",
+    "gallery-focus"
+  ],
+  "verification": {
+    "commands": [
+      "npm run typecheck",
+      "node scripts/verify-mobile-overlays.mjs"
+    ],
+    "manualChecks": [
+      "桌面滚动后闲置观察入口隐藏，聚焦/hover 时保持可见。",
+      "触屏静置入口仍在；长菜单内部可滚动且背景不穿透。",
+      "打开菜单循环 Tab、Escape 关闭、普通关闭恢复焦点。",
+      "菜单中跳转其他子页，检查背景 inert 和滚动锁正确交接。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "vue",
+    "teleport",
+    "dialog",
+    "index",
+    "clip",
+    "focus-management"
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "poster-gallery-reveal",
+  "title": {
+    "zh": "实习海报章节标题遮罩",
+    "en": "Internship gallery heading masks"
+  },
+  "category": "mask",
+  "status": "active",
+  "summary": "海报编排层将章节标题的内层文字从行遮罩下方揭示一次；作品碎片、CSS演示和空间叠层由下层效果分别负责。",
+  "entryFiles": [
+    "src/components/about/InternshipPosterGallery.vue"
+  ],
+  "integrationFiles": [
+    "src/views/PosterView.vue"
+  ],
+  "sourceSections": [
+    {
+      "file": "src/components/about/InternshipPosterGallery.vue",
+      "symbols": [
+        "revealed",
+        "armHeadings",
+        "disarmHeadings"
+      ],
+      "purpose": "独立记录已读标题，并在页面门闩开放时登记视口触发器。"
+    },
+    {
+      "file": "src/utils/viewportEntrance.ts",
+      "symbols": [
+        "createViewportEntrance"
+      ],
+      "purpose": "快滚与锚点进入后直接补齐终态。"
+    }
+  ],
+  "mechanism": {
+    "trigger": "matchMedia(no-preference)创建paused tween，pageGate开放时调用armHeadings。",
+    "stages": [
+      {
+        "name": "建立行遮罩",
+        "description": ".ipg__title-line裁切，内层span从行下方进入。",
+        "properties": [
+          "yPercent"
+        ],
+        "timing": "100→0，0.95s，stagger 0.09s，power2.out"
+      },
+      {
+        "name": "视口触发与终态补齐",
+        "description": "createViewportEntrance默认top 95%开始，bottom top结束；已越过则完成。",
+        "properties": [
+          "timeline progress"
+        ],
+        "timing": "一次性自然播放；快滚直接补终态"
+      }
+    ],
+    "state": [
+      "revealed:WeakSet<Element>",
+      "pending标题列表",
+      "triggers:Map",
+      "pageGate"
+    ],
+    "propertyOwnership": [
+      "编排层只动画标题span的yPercent",
+      "单张作品和空间构图保持各自节点及时间线所有权"
+    ],
+    "interruption": [
+      "关闭门闩杀触发器，恢复后仅为未读标题重建",
+      "媒体条件退出时revert并清理函数；revealed跨媒体实例保留"
+    ]
+  },
+  "integration": {
+    "steps": [
+      "传入groups和lang，按当前产品组数据建立章节结构。",
+      "父页面provide(referenceIntroductionGate)控制何时可触发。",
+      "保持标题外层裁切、内层位移结构；监听open事件交给页面查看器。"
+    ],
+    "inputs": [
+      "groups:readonly InternshipPosterGroup[]",
+      "lang:zh|en",
+      "referenceIntroductionGate"
+    ],
+    "outputs": [
+      "open(item,trigger)转发"
+    ],
+    "dependencies": [
+      "vue",
+      "gsap",
+      "ScrollTrigger",
+      "createViewportEntrance",
+      "requestMotionLayoutRefresh"
+    ],
+    "assets": [
+      "groups中的public/internship-clean图像由页面提供"
+    ]
+  },
+  "accessibility": {
+    "reducedMotion": "无动画媒体分支不创建标题tween，原始文字静态可读。",
+    "touch": "章节导航使用原生锚点；单张点击由下层按钮实现。",
+    "keyboard": "原生章节链接、作品按钮可聚焦。"
+  },
+  "lifecycle": {
+    "setup": [
+      "nextTick后创建matchMedia",
+      "监听pageGate、lang和字体就绪刷新"
+    ],
+    "cleanup": [
+      "dead标记阻止迟到刷新",
+      "取消刷新请求并media.revert()",
+      "分支cleanup杀所有标题trigger"
+    ],
+    "knownLimitations": [
+      "语言变更只刷新布局；组键须匹配INTERNSHIP_MOTION_THEMES。",
+      "宿主包含完整编排和子效果，不能把其所有动画都算作标题效果。"
+    ]
+  },
+  "agentNotes": [
+    "标题已读标记与媒体查询实例分离。",
+    "V10L12–15从普通页序排除，交poster-depth展示。"
+  ],
+  "relatedEffects": [
+    "text-line-reveal",
+    "poster-artwork-reveal",
+    "poster-depth",
+    "poster-motion-tile"
+  ],
+  "verification": {
+    "commands": [
+      "npm run check:motion",
+      "npm run typecheck"
+    ],
+    "manualChecks": [
+      "打开海报页，滚入章节标题后回滚不重播。",
+      "快滚到深处、锚点跳转及切换减少动态后标题仍可读。"
+    ]
+  },
+  "tags": [
+    "gsap",
+    "scrolltrigger",
+    "line-mask",
+    "poster",
+    "once"
+  ]
+}
