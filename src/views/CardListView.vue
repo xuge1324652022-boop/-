@@ -216,6 +216,8 @@ onBeforeUnmount(() => window.clearTimeout(expansionTimer))
   perspective: 1200px;
   perspective-origin: 50% 30%;
   transform-style: preserve-3d;
+  /* 牌堆实际包围盒还包含五次横移，整体居中不能只按第一张卡的宽度算。 */
+  transform: translateX(calc(-2.5 * var(--fan-x)));
 }
 
 .card {
@@ -311,12 +313,12 @@ onBeforeUnmount(() => window.clearTimeout(expansionTimer))
   font-size: 13px;
 }
 
-/* 手机首屏剩余高度放不下六张扇牌；让六个入口按文档流完整呈现，避免舞台裁掉末张。 */
-@media (max-width: 760px), (max-height: 550px) {
+/* 扇牌至少需要约880px高的桌面首屏；不足时让六个入口按文档流完整呈现。 */
+@media (max-width: 1024px), (max-height: 880px) {
   .hero { height:auto; min-height:100vh; min-height:100svh; }
   .hero__head { padding:90px 20px 0; }
   .stage { flex:none; overflow:visible; padding:30px 20px 52px; }
-  .stack { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; width:100%; height:auto; perspective:none; }
+  .stack { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; width:100%; height:auto; perspective:none; transform:none; }
   .card { position:relative; left:auto; top:auto; width:100%; height:170px; padding:20px; transform:none; }
   .card--expanding { transform:rotate(var(--card-rotate)) scale(var(--card-scale)); }
   .card__label { font-size:11px; letter-spacing:.14em; }

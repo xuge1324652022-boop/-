@@ -1,10 +1,10 @@
 <template>
   <section ref="root" class="ipg" aria-labelledby="internship-posters-title">
     <header class="ipg__intro">
-      <span class="ipg__eyebrow">PRODUCT COMMUNICATION / INTERNSHIP WORK</span>
-      <h2 id="internship-posters-title" class="ipg__big"><span class="ipg__title-line"><span>海报</span></span><span class="ipg__title-line"><span lang="en">POSTERS</span></span></h2>
-      <ReferenceIntroduction class="ipg__intro-copy" :text="GALLERY_INTRO" label="Internship work" variant="section" />
-      <nav class="ipg__nav" :aria-label="lang === 'zh' ? '实习海报章节' : 'Internship poster chapters'">
+      <span class="ipg__eyebrow">SYNTHETIC LAYOUTS / TEMPLATE EXAMPLES</span>
+      <h2 id="internship-posters-title" class="ipg__big"><span class="ipg__title-line"><span>版面示例</span></span><span class="ipg__title-line"><span lang="en">LAYOUT SAMPLES</span></span></h2>
+      <ReferenceIntroduction class="ipg__intro-copy" :text="GALLERY_INTRO" label="Synthetic layout samples" variant="section" />
+      <nav class="ipg__nav" :aria-label="lang === 'zh' ? '合成版面章节' : 'Synthetic layout chapters'">
         <a v-for="(chapter, i) in chapters" :key="chapter.group.id" :href="`#internship-${chapter.group.id}`">
           <span>{{ String(i + 1).padStart(2, '0') }}</span>{{ chapter.theme.model }}<span>↓</span>
         </a>
@@ -13,12 +13,12 @@
 
     <section v-for="(chapter, i) in chapters" :id="`internship-${chapter.group.id}`" :key="chapter.group.id" class="ipg__chapter">
       <header class="ipg__chapter-heading">
-        <span class="ipg__eyebrow">{{ String(i + 1).padStart(2, '0') }} / {{ chapter.group.items.length }} {{ lang === 'zh' ? '页 · 实习产出' : 'PAGES · INTERNSHIP WORK' }}</span>
+        <span class="ipg__eyebrow">{{ String(i + 1).padStart(2, '0') }} / {{ chapter.group.items.length }} {{ lang === 'zh' ? '页 · 合成示例' : 'PAGES · SYNTHETIC SAMPLES' }}</span>
         <h3><span class="ipg__title-line ipg__model"><span>{{ chapter.theme.model }}</span></span><span class="ipg__title-line"><span lang="zh">{{ chapter.theme.title.zh }}</span></span><span class="ipg__title-line ipg__english"><span lang="en">{{ chapter.theme.title.en }}</span></span></h3>
         <ReferenceIntroduction :text="chapter.group.description" :label="chapter.theme.model" variant="section" />
       </header>
 
-      <!-- 交互动效版与 PDF 原版并置；后续页面完整展开，不再折叠为文档入口 -->
+      <!-- 交互动效与合成版面并置；后续示例完整展开，不再折叠为文档入口 -->
       <div class="ipg__feature">
         <div class="ipg__motion">
           <InternshipMotionTile :theme="chapter.theme" :lang="lang" />
@@ -35,15 +35,15 @@
         <ReferenceIntroduction v-if="block.statement" class="ipg__statement" :text="block.statement" :label="chapter.theme.model" />
       </template>
     </section>
-    <!-- 激光海报空间叠层单独收尾：智能草坪之后、军事个人练习之前。 -->
+    <!-- 版面 B 的空间叠层单独收尾，位于其他版面章节之后、几何海报系列之前。 -->
     <InternshipDepthComposition v-if="depthItems.length" :items="depthItems" :lang="lang" @open="forwardOpen" />
   </section>
 </template>
 
 <script setup lang="ts">
 /**
- * 实习作品编排层：按产品分章，单张交给 MotionCard，方法演示交给 MotionTile。
- * V10L 12–15 由独立空间组件呈现，在这里从普通页序中排除，防止同稿重复出现。
+ * 合成版面编排层：按示例组分章，单张交给 MotionCard，方法演示交给 MotionTile。
+ * 版面 B 的第 12–15 页 由独立空间组件呈现，在这里从普通页序中排除，防止同稿重复出现。
  * 此处只创建章节标题的首次入场；作品内部动画和查看器状态各由下层、页面持有。
  */
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -62,7 +62,7 @@ import { createViewportEntrance } from '../../utils/viewportEntrance'
 import { requestMotionLayoutRefresh } from '../../utils/motionLayout'
 
 const props = defineProps<{ groups: readonly InternshipPosterGroup[]; lang: Lang }>()
-const GALLERY_INTRO: Bi = { zh: '文字、图形、画面，一起进入运动', en: 'Type, graphic and image — brought into motion' }
+const GALLERY_INTRO: Bi = { zh: '合成几何素材，展示版面、层次与交互动效', en: 'Synthetic geometric assets demonstrate layouts, layers and interactive motion' }
 const emit = defineEmits<{ open: [item: VisualAsset, trigger: HTMLElement] }>()
 const root = ref<HTMLElement | null>(null)
 const pageGate = inject(referenceIntroductionGate, ref(true))
@@ -77,7 +77,7 @@ const chapters = computed(() => props.groups.map(group => {
     for (let start = 0; start < items.length; start += 6) blocks.push({ items: items.slice(start, start + 6) })
   }
   if (group.id === 'demo-measure') {
-    // V10L 正文保留第1页；第12–15页由展区末尾的独立叠层呈现。
+    // 版面 B 正文保留第1页；第12–15页由展区末尾的独立叠层呈现。
     pages(remaining.filter(item => Number(item.id.slice(-2)) < 12))
     if (blocks.length) blocks[blocks.length - 1]!.statement = theme.statements[0]
   } else pages(remaining)

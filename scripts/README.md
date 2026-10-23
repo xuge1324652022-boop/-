@@ -8,15 +8,15 @@
 | `打包源码资料包.mjs` | 包配置与中文动效组件库 → `tmp/源码资料包/` 内可安装的 npm 源码资料包；只复制白名单内容，并校验实际 `.tgz` 文件 |
 | `发布源码资料包.mjs` | 仅在本仓库 main 分支的 GitHub Actions 中发布已核验 `.tgz` 到 GitHub Packages；相同版本内容一致时跳过，不同内容要求增加版本号 |
 | `打包发布版本.mjs` | 指定 Git 提交 → 网站源码 ZIP、中文动效组件库 ZIP 与 SHA-256 校验清单；仅打包已提交内容，默认写入 `tmp/发布/<版本>/`，不上传或覆盖已有文件 |
-| `生成模板示例素材.py` | 生成不含真实人物、履历和音轨的几何图片、静音视频与空白简历；原件先保存到本机私有目录，公开素材以审核清单登记 |
+| `生成模板示例素材.py` | 生成不含真实人物、履历和音轨的几何图片、静音视频与空白简历；原件先保存到本机私有目录，公开素材以审核清单登记；`--static-images-only` 仅刷新已登记静态合成图，不改 PDF 或视频 |
 | `检查公开隐私.mjs` | 检查 Git/index/工作区、所有文本及公开素材；拒绝私人目录、联系方式、凭据、符号链接、未审核二进制与暂存差异 |
 | `verify-public-privacy.mjs` / `verify-public-media-isolation.mjs` | 无网络 Git 夹具与素材夹具，覆盖漏扫扩展、忽略资源、暂存差异及私人原片隔离 |
-| `build-portfolio-images.py` | 历史本机原件转换工具，可写入 public；不属于公开模板发布流程，输出不能未经替换和审核直接发布 |
-| `_contact-sheet.py` | 已生成网页图 → 本机缩略联系表；复用作品映射，不重复维护文件清单 |
+| `build-portfolio-images.py` | 默认与 `--verify` 只读核验公开 manifest 登记的摄影、海报三档图片；`--probe` 加印尺寸与字节数；按 `sample-photo-编号` / `sample-poster-编号` 动态分组，不读取私人目录或转换原片 |
+| `_contact-sheet.py` | 已审核公开示例 → 仓库 `tmp/contact-sheets/` 内的摄影、海报联系表；复用动态 manifest 映射，先核验哈希、尺寸、元数据，不改公开图片 |
 | `build-color-previews.py` | 历史本机原片转换工具，可写入 public；公开模板不得直接采用其私人原片输出 |
 | `build-color-media.py` | 历史本机原片 → 被忽略的 media/color；公开服务和发布助手不读取该目录 |
-| `build-internship-posters.py` | 显式PDF页计划 → 本机 `参考资料/实习原始转换预览/`、资源manifest；完整转换基线不随网站发布 |
-| `build-logo-free-internship.py` | 历史本机版面处理工具；去除标志不等于脱敏，输出不进入默认公开发布流程 |
+| `build-internship-posters.py` | 默认与 `--verify` 只读核验公开 manifest 登记的 `public/internship-clean/` 合成海报三档图片；`--probe` 加印信息；旧 PDF 转换功能已移除，不读取任何 PDF 原件 |
+| `build-logo-free-internship.py` | 兼容旧命令名，现为 `build-internship-posters.py` 的只读核验入口；不转换原件、不移除标志；去除标志本身不能保证资料已经脱敏 |
 | `verify-photo-story.mjs` | 摄影章节行程的纯数学边界与停留检查 |
 | `verify-internship-motion.mjs` | 海报入场、收拢、逐页观看、回退及箭头定位的纯数学检查 |
 | `verify-runtime-navigation.mjs` | 真实源码的路由/触摸/开场清理回归，含真实 GSAP 上下文交接测试 |
@@ -40,6 +40,9 @@
 ```sh
 npm run check:privacy
 npm run check:motion
+python scripts/build-portfolio-images.py --verify
+python scripts/build-internship-posters.py --verify
+python scripts/_contact-sheet.py
 node scripts/verify-public-privacy.mjs
 node scripts/verify-public-media-isolation.mjs
 python scripts/verify-release.py

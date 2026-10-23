@@ -1,7 +1,7 @@
 /**
- * 实习 PDF 版面登记：plan 管文案和来源页号，manifest 管稳定素材 id 与比例。
- * 页面只消费此处筛选后的干净展示图；转换清单保留完整页号，删除展位不删除原件。
- * JSON 字段与重建顺序见本目录 README.md，个人军事练习仍由 visualPortfolio 独立登记。
+ * 合成版面示例登记：plan 管公开文案与页号，manifest 管稳定素材 id 与比例。
+ * 所有展示图均为程序生成的几何示例，不包含真实实习、产品品牌或原始 PDF。
+ * 保留历史导出接口供组件引用；JSON 字段约定见本目录 README.md。
  */
 import plan from './internship-poster-plan.json'
 import manifest from './internship-poster-assets.json'
@@ -15,13 +15,11 @@ export interface InternshipPosterGroup {
   items: readonly VisualAsset[]
 }
 
-const attribution: Bi = { zh: '实习产出', en: 'Internship work' }
+const attribution: Bi = { zh: '合成版面示例', en: 'Synthetic layout sample' }
 // 图片内容更新时使用同一版本号，开场、卡片和查看器一起刷新浏览器缓存。
-const previewVersion = 'brand-free-20261014'
+const previewVersion = 'synthetic-layout-v2'
 
-// 保留原 PDF 与转换清单；网页及查看器只收录选定海报。
-// 工程引导只保留 EC100 封面；GNSS 产品阵列与工地场景同步退出展示、开场和查看器。
-// V10L 只保留第1页与第12–15页，Vela 只展示封面。
+// 仅展示选定页号；保留完整清单用于检验素材覆盖，未展示页不会进入查看器。
 const posterPageSelection: Readonly<Record<string, readonly number[]>> = {
   'demo-guidance': [1],
   'demo-measure': [1, 12, 13, 14, 15],
@@ -39,14 +37,14 @@ export const internshipGroups: readonly InternshipPosterGroup[] = plan.map(group
     return {
       id: entry.id,
       title: page.title,
-      // manifest 是 PDF 点数 ×100 的比例整数，不是 WebP 文件的实际像素尺寸。
+      // manifest 记录版面比例整数，不是 WebP 文件的实际像素尺寸。
       width: entry.width,
       height: entry.height,
       src: `/internship-clean/${entry.id}-1600.webp?v=${previewVersion}`,
       large: `/internship-clean/${entry.id}-2560.webp?v=${previewVersion}`,
       thumb: `/internship-clean/${entry.id}-400.webp?v=${previewVersion}`,
       note: attribution,
-      alt: { zh: `${page.title.zh}，产品介绍版面`, en: `${page.title.en}, product communication layout` },
+      alt: { zh: `${page.title.zh}，网格背景上的合成色块与圆环`, en: `${page.title.en}, synthetic colour blocks and a ring on a grid` },
     }
   }),
 }))
@@ -54,7 +52,7 @@ export const internshipGroups: readonly InternshipPosterGroup[] = plan.map(group
 export const internshipPages = internshipGroups.flatMap(group => group.items)
 // 开场叠层只使用当前保留的海报；筛选后的海报在下方展示区直接展开。
 const FEATURED_IDS = ['demo-guidance-01', 'demo-measure-01', 'demo-garden-01']
-// 这些内部 id 兼容既有导出文件与动效映射；可见品牌字样由清理后的图片内容决定。
+// 稳定内部 id 连接公开合成素材、页面编排与动效映射。
 export const internshipFeatured = FEATURED_IDS.map(id => {
   const item = internshipPages.find(page => page.id === id)
   if (!item) throw new Error(`Missing featured internship poster: ${id}`)
@@ -62,6 +60,6 @@ export const internshipFeatured = FEATURED_IDS.map(id => {
 })
 
 export const POSTER_INTRO: Bi = {
-  zh: '把技术信息，变成清晰的视觉表达。从实习中的产品介绍，到个人军事海报练习，让文字、画面与节奏一起传达主题',
-  en: 'Turning technical information into clear visual communication. From product communication to personal military poster studies, type, imagery and rhythm work together to express the subject',
+  zh: '用合成几何素材演示版面与海报模板，体验开场叠层、章节切换和查看器；所有展示内容均为虚构示例',
+  en: 'Synthetic geometric assets demonstrate layout and poster templates, opening layers, chapter transitions and the viewer. All content is fictional sample material',
 }

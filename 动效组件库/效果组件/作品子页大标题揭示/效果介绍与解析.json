@@ -224,10 +224,10 @@
       "original": "src/assets/color-frames/frame-07.jpg",
       "path": "源码/项目源码/素材/调色帧/调色第7帧.jpg",
       "role": "imported-asset",
-      "originalSha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
-      "originalBytes": 28192,
-      "sha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
-      "bytes": 28192
+      "originalSha256": "39f80a2ac1c6a700722c64ab1e044cfcdfe59e5f80f2df9d754b06a0ce7eaf85",
+      "originalBytes": 22761,
+      "sha256": "39f80a2ac1c6a700722c64ab1e044cfcdfe59e5f80f2df9d754b06a0ce7eaf85",
+      "bytes": 22761
     },
     {
       "original": "src/components/ReferenceIntroduction.ts",
@@ -251,10 +251,10 @@
       "original": "src/components/WorkContinuation.vue",
       "path": "源码/项目源码/组件/作品续读导航.vue",
       "role": "dependency",
-      "originalSha256": "a388b8b11350e3e7b417f3db375d04cbf4d1b7462fbf559b9fb1c9d7ee0517a6",
-      "originalBytes": 8620,
-      "sha256": "3dc02b058d955de9b1b8855ff30821d4c3d10cd8ebb6f234f3c4e8313e6b6e94",
-      "bytes": 8628
+      "originalSha256": "8dd74a1401c043ee556205c9975f83b880c83f4d9a6587fe298bd3c56ffef716",
+      "originalBytes": 8944,
+      "sha256": "3193e8b0caad5099b5c24f1d44d90c5aad6240baee362e7514373eee21b6ab60",
+      "bytes": 8952
     },
     {
       "original": "src/components/about/AboutSection.vue",
@@ -269,10 +269,10 @@
       "original": "src/components/about/EditorialPair.vue",
       "path": "源码/项目源码/组件/人物与作品/摄影编辑对照.vue",
       "role": "dependency",
-      "originalSha256": "126c0aa50499928cba1278925109dd98f6e8cc382ec6082caa801e464f668153",
-      "originalBytes": 8462,
-      "sha256": "454db24d73009cd63c1e6553d93e9a22788fceade51dfa80e4ea8620fd5d238e",
-      "bytes": 8470
+      "originalSha256": "9cd3298e9b937044907afca9f11be386260b0a446c6ce94e20892a99b5c70e6f",
+      "originalBytes": 8477,
+      "sha256": "3abb339775046a73e8c5356580ce77d1c2fd680f32d34b0d9aa59de7d75c3f54",
+      "bytes": 8485
     },
     {
       "original": "src/components/about/InternshipAnimatedArtwork.vue",
@@ -287,10 +287,10 @@
       "original": "src/components/about/InternshipDepthComposition.vue",
       "path": "源码/项目源码/组件/人物与作品/实习海报空间构图.vue",
       "role": "dependency",
-      "originalSha256": "8c27cefacf9597b0536b4c12315ad11ef1ba8d024f303a22e7fff22a7df02bbb",
-      "originalBytes": 30298,
-      "sha256": "1ad6559e8fe11557079da3fa94bcc275dfe8b1f6b3f1affa88d93ad76accf2a5",
-      "bytes": 30306
+      "originalSha256": "57054df3d821b9e19f8612f30275ca516990cb2160642dc33c0fe5ac1f90c70a",
+      "originalBytes": 30379,
+      "sha256": "284452f76964947fa76b31988f2d41e99d7b30a15356b33a5ae7ad1dabfc4514",
+      "bytes": 30387
     },
     {
       "original": "src/components/about/InternshipMotionCard.vue",
@@ -314,37 +314,37 @@
       "original": "src/components/about/InternshipPosterGallery.vue",
       "path": "源码/项目源码/组件/人物与作品/实习海报画廊.vue",
       "role": "dependency",
-      "originalSha256": "4e080a008b1fb3b5be3daa5589858b62b43d56ab56c04f1a08490f99543501b7",
-      "originalBytes": 10805,
-      "sha256": "50380d9d28f073a99422b86ae643059ab759185cad7524553eee4f1d2938e247",
-      "bytes": 10826
+      "originalSha256": "e037c1b08603c8897cf10062568d9205bf75fb82887d4a7d7eaca7f1cdc44a0f",
+      "originalBytes": 10900,
+      "sha256": "eb83bc3a1e1f5db23bcb148507106e945fa3bef06284780ee78ff0fb6eef209b",
+      "bytes": 10921
     },
     {
       "original": "src/components/about/InternshipPosterStack.vue",
       "path": "源码/项目源码/组件/人物与作品/实习海报叠层.vue",
       "role": "dependency",
-      "originalSha256": "22c8018f7d73fc02b6a492e175849d910c22a2e82fbf053c3b77b01804d6a2f1",
-      "originalBytes": 18665,
-      "sha256": "29f8a7f3209f7c297a983efeb7cc4a27e0cf5511e3ae9ff937406a508cfa4b83",
-      "bytes": 18683
+      "originalSha256": "3ae3983b21bbaa1ac10ae8edb909599163c1de381a1e68513c6682cc807aa13c",
+      "originalBytes": 18741,
+      "sha256": "1e45b6fde0c5c902fb24e4581a30e101e94de8e003182efc7d3effc7635a4e9d",
+      "bytes": 18759
     },
     {
       "original": "src/components/about/PhotoSets.vue",
       "path": "源码/项目源码/组件/人物与作品/摄影双列章节.vue",
       "role": "dependency",
-      "originalSha256": "971a10015a398342fc7ae203375b3aca9c4524fe20bce665164bd13bc3b66ee5",
-      "originalBytes": 20715,
-      "sha256": "fb108f7b5a243a50dc65d807a6c71e7410d17703df904dd3fa4afbd8c23f3b0c",
-      "bytes": 20747
+      "originalSha256": "0b125e7f23585a419cb0f87f410bc3c7df8a7a755f7c7e1c2d16599032cbd5eb",
+      "originalBytes": 20717,
+      "sha256": "4f9c220146faf6180601e700ca85a6c75172d669eec2e7274891657ef228bc3a",
+      "bytes": 20749
     },
     {
       "original": "src/components/about/PosterColourChapters.vue",
       "path": "源码/项目源码/组件/人物与作品/海报色彩章节.vue",
       "role": "dependency",
-      "originalSha256": "c20af7b607af73d8a9b21bf78cfbed4e2313ea966cf5617adc27cf709f926d3d",
-      "originalBytes": 14166,
-      "sha256": "583df3323b0a444126f7c8640b8357a86cefa7d55ba7f171ab9a938088409f55",
-      "bytes": 14181
+      "originalSha256": "48c8f644fde2947baaa8dc33e116d57bcb89aa239222f03a20f1f7b4c6f9cc10",
+      "originalBytes": 14143,
+      "sha256": "49683487afaeed4d42d94a34f144df49200019428fdd721b934363989eed640a",
+      "bytes": 14158
     },
     {
       "original": "src/components/about/PosterPalette.vue",
@@ -359,10 +359,10 @@
       "original": "src/components/about/VisualViewer.vue",
       "path": "源码/项目源码/组件/人物与作品/完整作品查看器.vue",
       "role": "dependency",
-      "originalSha256": "f294e8fbb5ad44dcab1dee3e6f203f6b8c8dde95c44cb321e9cdea9a853af37a",
-      "originalBytes": 20270,
-      "sha256": "515cfc811f8a3c9724620898c72719666c902599f8a9f53734ac719bdfb278b1",
-      "bytes": 20283
+      "originalSha256": "603e23430f62a2807049656bcd0a9fd66806ea5df38835168a7ebf2be107aaca",
+      "originalBytes": 20255,
+      "sha256": "32358d156a8a77863c510afaf1337561e467ea4f501a70bdb6c9f165d988256c",
+      "bytes": 20268
     },
     {
       "original": "src/components/about/internshipArtworkMotion.ts",
@@ -467,19 +467,19 @@
       "original": "src/data/foundationPages.ts",
       "path": "源码/项目源码/数据/基础作品页资料.ts",
       "role": "dependency",
-      "originalSha256": "2840ca1a34206b284559208f83225f82c7529adc8886267cc3450243e3a6e56a",
-      "originalBytes": 5701,
-      "sha256": "010dd235ea74b94d36e27db2cf516d27a724bd95348fd646fcec7eb938bf2f2f",
-      "bytes": 5701
+      "originalSha256": "d16b0702ee282facb8398ad03e0c868f3a94d8c1ee7c72089832c84f7783efbf",
+      "originalBytes": 5766,
+      "sha256": "b3e508c62385f0cff54d9138a7325abf2cf53f772b5dd8af2c90db0f03ca869c",
+      "bytes": 5766
     },
     {
       "original": "src/data/imageVariants.json",
       "path": "源码/项目源码/数据/图片实际尺寸.json",
       "role": "dependency",
-      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
-      "originalBytes": 12182,
-      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
-      "bytes": 12182
+      "originalSha256": "14e09713c5eeaf886e5070e91559145fc6914b67b25a97d86af51351bc40482a",
+      "originalBytes": 12605,
+      "sha256": "14e09713c5eeaf886e5070e91559145fc6914b67b25a97d86af51351bc40482a",
+      "bytes": 12605
     },
     {
       "original": "src/data/internship-poster-assets.json",
@@ -494,55 +494,55 @@
       "original": "src/data/internship-poster-plan.json",
       "path": "源码/项目源码/数据/实习海报动效计划.json",
       "role": "dependency",
-      "originalSha256": "dbe3166a8fe3740d78c1000597695a13cf4ca772de05a00481cba48516846a23",
-      "originalBytes": 3902,
-      "sha256": "dbe3166a8fe3740d78c1000597695a13cf4ca772de05a00481cba48516846a23",
-      "bytes": 3902
+      "originalSha256": "fbf7a1a631656333401f2fef306c6958d8f3b3ba7a2c9f911c032e7d8bcd6771",
+      "originalBytes": 5502,
+      "sha256": "fbf7a1a631656333401f2fef306c6958d8f3b3ba7a2c9f911c032e7d8bcd6771",
+      "bytes": 5502
     },
     {
       "original": "src/data/internshipPosterMotion.ts",
       "path": "源码/项目源码/数据/实习海报动效数据.ts",
       "role": "dependency",
-      "originalSha256": "1d93a8cf7792abd7f18a52bffc94ea5e9d64f50d69b6ecf53d0b88013f9a0eaa",
-      "originalBytes": 4015,
-      "sha256": "37eaf14fb8fc4d2175c78567bf823b773dd85f3221313eab5589273e0f70b204",
-      "bytes": 4018
+      "originalSha256": "e65f24c72ebd990a4ec81d2dbcc41573d5771dad67a8bee02580a50d5192f8e1",
+      "originalBytes": 4083,
+      "sha256": "44ab8082a4d090bb7d00e4b4a7f815205db26eb1e12ebaad1cb321c066fd2bd2",
+      "bytes": 4086
     },
     {
       "original": "src/data/internshipPosters.ts",
       "path": "源码/项目源码/数据/实习海报资料.ts",
       "role": "dependency",
-      "originalSha256": "d5f66c6803a0079bca81f4fb780cb16df06d5385ffefb32a3d1e34ff9ef6b6ac",
-      "originalBytes": 3447,
-      "sha256": "d19b676e88bb14eb8bc47ddb71c631aa341c0305a176e1e56835676b774ba9ca",
-      "bytes": 3446
+      "originalSha256": "06eb6291fcec10d86740212994c8d78ddad0e48c966fd0ffd35e08e7fd93ce5e",
+      "originalBytes": 3217,
+      "sha256": "e219258b80f3e52fd22d8fbb490b6892dd84302afe1f697ef1ba00c14582b505",
+      "bytes": 3216
     },
     {
       "original": "src/data/photoPage.ts",
       "path": "源码/项目源码/数据/摄影页资料.ts",
       "role": "dependency",
-      "originalSha256": "674cd6bb0840b123d0dfe80a4d3adedb51b15a0e0517b1edf8fdc431e9b07ba1",
-      "originalBytes": 10237,
-      "sha256": "77e68863647cc5f7e377cbdf51fc863ba30f4ccedd84bbe5ce892976103b8476",
-      "bytes": 10240
+      "originalSha256": "44b20f10888c6928d6a1283a4eb9318d4914733666c076832102e42b2f05b042",
+      "originalBytes": 10384,
+      "sha256": "9f160e571bfa8401a888f2518a85471a874a2c0dca31995b038295c259947efb",
+      "bytes": 10387
     },
     {
       "original": "src/data/posterPage.ts",
       "path": "源码/项目源码/数据/海报页资料.ts",
       "role": "dependency",
-      "originalSha256": "f7dc96f84c5d74ee71abab2aaa57b135743f8a7ba413bbcdbf0c72d24291325a",
-      "originalBytes": 8937,
-      "sha256": "1e45cfb7032a2e57f51aeb42f187c69b25552b8a4e2615d57758e6a74f72898d",
-      "bytes": 8940
+      "originalSha256": "eea75b1a4acce76f3ab2dddef7ee6b4c08c9dc7232236b650b1ea53b32e17e17",
+      "originalBytes": 4359,
+      "sha256": "0763329e5ca1df52f0a705ab67a5e1b81c524c234f6f855f75a0f7e7c739a0d5",
+      "bytes": 4362
     },
     {
       "original": "src/data/visualPortfolio.ts",
       "path": "源码/项目源码/数据/视觉作品资料.ts",
       "role": "dependency",
-      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
-      "originalBytes": 22342,
-      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
-      "bytes": 22342
+      "originalSha256": "2dc65f38af5e16e2355506a1c810264995579b6e321969215a6834d203d679ae",
+      "originalBytes": 22243,
+      "sha256": "73d03676e0a0373563f529ef6c5a7e3e680027f20870f26b92b1a1b69eff3f99",
+      "bytes": 22243
     },
     {
       "original": "src/style.css",
@@ -611,28 +611,28 @@
       "original": "src/views/PhotoView.vue",
       "path": "源码/项目源码/页面/摄影作品页.vue",
       "role": "entry",
-      "originalSha256": "1def0b25e43fde58989fd906e1e38e7d8c5f5591e265ca9195ec9800cd1535a3",
-      "originalBytes": 18541,
-      "sha256": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
-      "bytes": 18629
+      "originalSha256": "cbf8d00718cc3729fea54bd580cad474346c4f254a96b5b8038fad630bd3fcc3",
+      "originalBytes": 19255,
+      "sha256": "4b287ffe2b3372dc46caad873a85a185898cf5673cc4a9579c37249167dfeabf",
+      "bytes": 19343
     },
     {
       "original": "src/views/PosterView.vue",
       "path": "源码/项目源码/页面/海报作品页.vue",
       "role": "entry",
-      "originalSha256": "61cb26ac58819bcc1deb631a6ac6d60765e63670f712ff28f426ab19517137fd",
-      "originalBytes": 12143,
-      "sha256": "9d05705afb9bfe2c8af5eceacab02cd273384719197be7dfee30f3007a218b18",
-      "bytes": 12234
+      "originalSha256": "e1052539305fe3180a0a5282b621386da91b6a7fce09a3fcf5d55f1cc3e8b5b0",
+      "originalBytes": 12141,
+      "sha256": "6a050c446fab37dca3e2c52c2968a78c7ee5324424533be1d480be36dc8325d5",
+      "bytes": 12232
     },
     {
       "original": "src/App.vue",
       "path": "集成示例/项目源码/应用根组件.vue",
       "role": "integration-context",
-      "originalSha256": "e6bca4248f237a5a155ece71e4646d279d2dd9d2ff166b1123a6f28b0aa4f21a",
-      "originalBytes": 4810,
-      "sha256": "0ee8b11ffd8758ee025e354e65ec6220badd498ed607f55d1970c00e0c318aa6",
-      "bytes": 4811
+      "originalSha256": "41bdd7d5a9dea2fa1e687c665b0d0f32a616ebd579feb4901349e467fb0da5ee",
+      "originalBytes": 4888,
+      "sha256": "18eb5107cfa5e9af4cfc998ca59bc3c1456aeaa283f13417caa15b0083bbb2a7",
+      "bytes": 4889
     }
   ]
 }

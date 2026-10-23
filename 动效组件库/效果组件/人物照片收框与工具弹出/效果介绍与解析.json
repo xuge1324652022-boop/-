@@ -262,10 +262,10 @@
       "original": "src/data/imageVariants.json",
       "path": "源码/项目源码/数据/图片实际尺寸.json",
       "role": "dependency",
-      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
-      "originalBytes": 12182,
-      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
-      "bytes": 12182
+      "originalSha256": "14e09713c5eeaf886e5070e91559145fc6914b67b25a97d86af51351bc40482a",
+      "originalBytes": 12605,
+      "sha256": "14e09713c5eeaf886e5070e91559145fc6914b67b25a97d86af51351bc40482a",
+      "bytes": 12605
     },
     {
       "original": "src/data/resumeEmphasis.ts",

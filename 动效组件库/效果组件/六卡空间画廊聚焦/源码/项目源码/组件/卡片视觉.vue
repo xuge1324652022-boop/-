@@ -60,6 +60,7 @@
  * 重建或卸载前必须 destroy 旧实例，释放它登记的 quickTo、监听和观察器。
  */
 import { onMounted, onUnmounted, ref, watch } from 'vue'
+import gsap from 'gsap'
 import AboutExperience from './人物与作品/人物经历.vue'
 import EditCardVisual from './卡面/剪辑卡面.vue'
 import ColorCardVisual from './卡面/调色卡面.vue'
@@ -74,6 +75,7 @@ const props = defineProps<{ index: number; kind: string; active?: boolean }>()
 const hostRef = ref<HTMLElement | null>(null)
 let anim: CardAnimation | null = null
 let playing = true
+const motionMedia = window.matchMedia('(prefers-reduced-motion: reduce)')
 // 有些循环会测量自己的宿主，所以尺寸真的变了就必须重建 ——
 // 但不能每个 resize 事件都重建，那会把时间线反复打散。
 let lastSizeKey = ''
@@ -88,15 +90,34 @@ function sizeKey(): string {
 function build(): void {
   if (!hostRef.value) return
   anim?.destroy()
-  anim = createCardAnimation(props.index)
+  // 同一章节只建立一个实例，保留BaseAnimation记下的显影终态。
+  anim ??= createCardAnimation(props.index)
   if (!anim) return
   anim.mount(hostRef.value)
   anim.setActive(props.active !== false)
   lastSizeKey = sizeKey()
 }
 
+/** 重用实例以保留已完成的入场；重挂载负责撤销/重新登记卡内指针监听。 */
+function onMotionChange(): void {
+  const host = hostRef.value
+  if (!host || !anim) return
+  anim.pause()
+  anim.destroy()
+  // quickTo 与 ABOUT 的宿主补间不在基类时间线内，同样归当前卡片持有。
+  // ABOUT内部三层视差由自己的实例管理，不能杀掉它随后还要复用的quickTo。
+  const nodes = [host, ...host.querySelectorAll<HTMLElement>('*')].filter(node => !node.closest('.about-exp'))
+  gsap.killTweensOf(nodes)
+  gsap.set(nodes, { clearProps: 'transform,opacity,clipPath' })
+  anim.mount(host)
+  anim.setActive(props.active !== false)
+  if (playing) anim.play()
+  else anim.pause()
+}
+
 onMounted(() => {
   build()
+  motionMedia.addEventListener('change', onMotionChange)
   if (playing) anim?.play()
   else anim?.pause()
   // 只有当前在屏幕上的那张卡才应该监听指针
@@ -109,6 +130,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  motionMedia.removeEventListener('change', onMotionChange)
   anim?.destroy()
   anim = null
 })

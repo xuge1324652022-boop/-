@@ -19,8 +19,8 @@
             <div v-for="(item, i) in lane" :key="item.id" class="ps__slot">
               <!-- 照片原位叠放，只移动裁切边界；新图覆盖旧图，不移动整条图片轨道。 -->
               <figure class="ps__card">
-                <button class="ps__photo" :class="{ 'ps__photo--collage': item.id === 'annual-review-2025' }" type="button" :data-cursor="lang === 'zh' ? '查看' : 'Explore'" data-cursor-action="view" :tabindex="staticMode || (group === active && i === Math.min(photoIndices[group] ?? 0, lane.length - 1)) ? 0 : -1"
-                  :aria-label="`${lang === 'zh' ? '查看完整照片' : 'View photograph'}: ${pick(item.title, lang)}`"
+                <button class="ps__photo" :class="{ 'ps__photo--collage': item.id === 'sample-photo-26' }" type="button" :data-cursor="lang === 'zh' ? '查看' : 'Explore'" data-cursor-action="view" :tabindex="staticMode || (group === active && i === Math.min(photoIndices[group] ?? 0, lane.length - 1)) ? 0 : -1"
+                  :aria-label="`${lang === 'zh' ? '查看完整示例图' : 'View sample image'}: ${pick(item.title, lang)}`"
                   @click="emit('open', item, $event.currentTarget as HTMLElement)">
                   <!--
                     高清：三档都给，浏览器按「框的实际宽度 × 屏幕像素比」自己挑。

@@ -1,5 +1,5 @@
 <template>
-  <footer class="wc" :aria-label="lang === 'zh' ? '继续浏览作品' : 'Explore more work'">
+  <footer class="wc" :aria-label="lang === 'zh' ? '继续浏览模板示例' : 'Explore more template examples'">
     <div class="wc__inner">
       <p class="wc__prompt"><span>继续浏览</span><span lang="en">Keep exploring</span></p>
       <RouterLink class="wc__next" :to="nextTo" :data-cursor="lang === 'zh' ? '探索' : 'Explore'" data-cursor-action="explore" :aria-label="`${lang === 'zh' ? '查看' : 'Explore'} ${work.title.zh} / ${work.title.en}`">
@@ -18,7 +18,7 @@
       </RouterLink>
       <div class="wc__base">
         <RouterLink class="wc__return" :to="backTo">
-          <span aria-hidden="true">←</span><span>{{ lang === 'zh' ? source === 'cards' ? '返回列表' : '返回作品集' : source === 'cards' ? 'Back to list' : 'All works' }}</span>
+          <span aria-hidden="true">←</span><span>{{ lang === 'zh' ? source === 'cards' ? '返回列表' : '返回模板目录' : source === 'cards' ? 'Back to list' : 'Template index' }}</span>
         </RouterLink>
         <button class="wc__top" type="button" @click="toTop">
           <span>{{ lang === 'zh' ? '回到顶部' : 'Back to top' }}</span><span aria-hidden="true">↑</span>
@@ -45,22 +45,22 @@ type Work = { path: string; title: Bilingual; description: Bilingual; image?: st
 
 const props = defineProps<{ next: Destination }>()
 const destinations: Record<Destination, Work> = {
-  about: { path: '/about', title: { zh: '关于我', en: 'About me' },
-    description: { zh: '经历、创作与内容实践', en: 'Experience, creation and content practice' }, image: '/about/portrait.webp' },
-  edit: { path: '/edit', title: { zh: '剪辑', en: 'Editing' },
-    description: { zh: '节奏、衔接与声音的主题研究', en: 'Studies in rhythm, continuity and sound' } },
-  video: { path: '/edit', title: { zh: '剪辑', en: 'Editing' },
-    description: { zh: '节奏、衔接与声音的主题研究', en: 'Studies in rhythm, continuity and sound' } },
-  color: { path: '/color', title: { zh: '影像调色', en: 'Colour grading' },
-    description: { zh: '在明暗与冷暖之间，寻找画面的情绪', en: 'Light, colour and the mood of an image' }, image: colorFrame },
-  news: { path: '/news', title: { zh: '新闻影像', en: 'News & visual stories' },
-    description: { zh: '人物、现场与观察的叙事笔记', en: 'Notes on people, place and context' } },
-  creative: { path: '/news', title: { zh: '新闻影像', en: 'News & visual stories' },
-    description: { zh: '人物、现场与观察的叙事笔记', en: 'Notes on people, place and context' } },
-  poster: { path: '/poster', title: { zh: '海报设计', en: 'Poster design' },
-    description: { zh: '实习产出与个人视觉练习', en: 'Internship work and personal poster studies' }, image: visualById('mbt-2000').src },
-  photo: { path: '/photo', title: { zh: '摄影', en: 'Photography' },
-    description: { zh: '光线、风景与被记录的瞬间', en: 'Light, landscapes and moments observed' }, image: visualById('mountain-cloud').src },
+  about: { path: '/about', title: { zh: '模板介绍', en: 'About the template' },
+    description: { zh: '虚构身份、经历与工作流示例', en: 'Fictional identity, experience and workflow examples' }, image: '/about/portrait.webp' },
+  edit: { path: '/edit', title: { zh: '剪辑示例', en: 'Editing examples' },
+    description: { zh: '虚构主题演示节奏、衔接与阅读结构', en: 'Fictional themes demonstrate rhythm, continuity and reading structure' } },
+  video: { path: '/edit', title: { zh: '剪辑示例', en: 'Editing examples' },
+    description: { zh: '虚构主题演示节奏、衔接与阅读结构', en: 'Fictional themes demonstrate rhythm, continuity and reading structure' } },
+  color: { path: '/color', title: { zh: '色彩示例', en: 'Colour examples' },
+    description: { zh: '合成短片演示播放与分段色轨', en: 'Synthetic clips demonstrate playback and segmented colour tracks' }, image: colorFrame },
+  news: { path: '/news', title: { zh: '叙事示例', en: 'Storytelling examples' },
+    description: { zh: '虚构主题演示信息编排与阅读顺序', en: 'Fictional themes demonstrate information layout and reading order' } },
+  creative: { path: '/news', title: { zh: '叙事示例', en: 'Storytelling examples' },
+    description: { zh: '虚构主题演示信息编排与阅读顺序', en: 'Fictional themes demonstrate information layout and reading order' } },
+  poster: { path: '/poster', title: { zh: '海报示例', en: 'Poster examples' },
+    description: { zh: '合成几何海报与版面交互示例', en: 'Synthetic geometric posters and interactive layout examples' }, image: visualById('sample-poster-01').src },
+  photo: { path: '/photo', title: { zh: '图像示例', en: 'Image examples' },
+    description: { zh: '合成图像演示章节与画廊浏览', en: 'Synthetic images demonstrate chapter and gallery browsing' }, image: visualById('sample-photo-01').src },
 }
 const route = useRoute()
 const work = computed(() => destinations[props.next])

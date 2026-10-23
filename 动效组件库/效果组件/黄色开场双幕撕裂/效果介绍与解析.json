@@ -241,10 +241,10 @@
       "original": "src/components/ThreeHome.vue",
       "path": "集成示例/项目源码/组件/六卡空间首页.vue",
       "role": "integration-context",
-      "originalSha256": "ec5e4d12a10f2e255da4bd6fb1ba5a46487cbc4830ef60410d4ad3635ac8d461",
-      "originalBytes": 55655,
-      "sha256": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
-      "bytes": 55720
+      "originalSha256": "3fbaeb346202507902151ea85d94ec0b01ca937a44e2ee2fa47e9b10a50beb56",
+      "originalBytes": 56928,
+      "sha256": "dbd707eab8311b4020c920f898ef91d7c6b67996b1df00beca04251727d7f336",
+      "bytes": 56993
     },
     {
       "original": "src/main.ts",

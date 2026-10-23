@@ -1,11 +1,11 @@
 <template>
-  <section id="v10l-depth-composition" ref="root" class="idc" :class="{ 'idc--fallback': !supportsContainerUnits }" :aria-label="t.label">
+  <section id="sample-layout-b-depth" ref="root" class="idc" :class="{ 'idc--fallback': !supportsContainerUnits }" :aria-label="t.label">
     <div ref="scrollRegion" class="idc__sequence"><div ref="stage" class="idc__stage">
       <!-- 收整屏色域的边界，终点与主海报完全重合；不是把四张图片同时缩小 -->
       <div class="idc__field" aria-hidden="true"></div>
       <header class="idc__heading">
-        <span>V10L / {{ lang === 'zh' ? '原稿' : 'ORIGINALS' }} 12—15</span>
-        <h4>排布 · 感知 · 连接 <span lang="en">Layout · Sensing · Connection</span></h4>
+        <span>{{ lang === 'zh' ? '示例版面 B / 合成图像' : 'SAMPLE LAYOUT B / SYNTHETIC IMAGES' }} 12—15</span>
+        <h4>排布 · 层次 · 连接 <span lang="en">Layout · Layers · Connection</span></h4>
       </header>
       <div class="idc__space"><div class="idc__departure"><div class="idc__scene">
         <div v-for="(item, i) in items" :key="item.id" class="idc__layer"
@@ -14,16 +14,16 @@
             :data-cursor="lang === 'zh' ? '查看' : 'Explore'" data-cursor-action="view"
             @click="emit('open', item, $event.currentTarget as HTMLElement)">
             <div class="idc__sheet" :class="{ 'is-highlighted': highlighted === i }">
-              <!-- 首稿产品文案成为可动双语排版，去Logo后的完整海报保留在右下图和查看器 -->
+              <!-- 首张示例使用可动双语排版，完整合成图像保留在右下图和查看器 -->
               <div v-if="!i && supportsContainerUnits" class="idc__main-poster">
                 <div class="idc__main-title">
-                  <span class="idc__brand">V10L / LASER RTK</span>
-                  <span class="idc__headline" lang="en">SELL SMART<br>LAYOUT</span>
-                  <span class="idc__headline-zh" lang="zh">智绘放样</span>
+                  <span class="idc__brand">SAMPLE B / GEOMETRY</span>
+                  <span class="idc__headline" lang="en">SAMPLE<br>LAYOUT</span>
+                  <span class="idc__headline-zh" lang="zh">几何版面</span>
                 </div>
                 <div class="idc__main-description">
-                  <span lang="zh">AR 引导<br>让放样清晰可见</span>
-                  <span lang="en">Boost project accuracy<br>with AR guidance</span>
+                  <span lang="zh">合成图形<br>展示版式层次</span>
+                  <span lang="en">Synthetic shapes<br>demonstrate hierarchy</span>
                 </div>
               </div>
               <!-- 图像与色域用同一条曲线收拢。放在纸面外，收拢前不会被小海报边界截断 -->
@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { visualImageSources } from '../../utils/responsiveImage'
 /**
- * 四张 V10L 的连续场景：满屏色域与实字收为首稿，随后三稿入场，阅读后再侧转离场。
+ * 版面 B 的四张合成示例连续场景：满屏色域与实字收为首稿，随后三稿入场，阅读后再侧转离场。
  * wrapper 负责滚动锚点，perspective 负责侧转，sheet 负责悬停；分层防止 transform 冲突。
  * 只有空间位置可随倒滚回溯，内部标题用 introduced 记忆首次展示，不重复弹出。
  * 外部介绍留在正常文档流中，不能跟舞台一起 scrub，否则释放 sticky 时会反向拉扯。
@@ -79,11 +79,11 @@ const introduced = reactive(new Set<string>())
 // 纸张落位后内部文案也须读全；已完成状态不随倒滚清空，避免反复弹出。
 const settled = reactive(new Set<string>())
 const pageGate = inject(referenceIntroductionGate, ref(true))
-const OUTRO_LABEL = { zh: '应用', en: 'In use' }
-const OUTRO = { zh: '把技术主题拆成清晰的信息层级，再以文字、色彩和画面连接不同的产品场景', en: 'Technical themes become clear information hierarchies, connected through type, colour and imagery across product scenes' }
+const OUTRO_LABEL = { zh: '示例说明', en: 'Sample notes' }
+const OUTRO = { zh: '用合成几何图像演示信息层级，以文字、色彩与叠层呈现可替换的版面模板', en: 'Synthetic geometry demonstrates information hierarchy, using type, colour and layers to present a replaceable layout template' }
 const t = computed(() => props.lang === 'zh'
-  ? { label: 'V10L 第12至15张海报空间叠层', hint: '滚动展开 · 点击查看完整作品', open: '查看完整作品', choose: '四张完整海报' }
-  : { label: 'V10L posters 12 to 15 in depth', hint: 'Scroll to unfold · Click to view the full poster', open: 'View full poster', choose: 'Four complete posters' })
+  ? { label: '示例版面 B 第12至15页空间叠层', hint: '滚动展开 · 点击查看完整示例', open: '查看完整示例', choose: '四张合成版面示例' }
+  : { label: 'Sample layout B pages 12 to 15 in depth', hint: 'Scroll to unfold · Click to view the full sample', open: 'View full sample', choose: 'Four synthetic layout samples' })
 let media: gsap.MatchMedia | undefined
 let dead = false
 let refreshPresentation = () => {}

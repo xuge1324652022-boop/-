@@ -1,48 +1,240 @@
 [
   {
-    "id": "demo-guidance", "file": "EC100.pdf", "title": {"zh": "工程引导", "en": "Machine guidance"},
-    "description": {"zh": "EC100 挖掘机引导系统，以施工现场与设备画面呈现产品主题。", "en": "The EC100 excavator guidance system, presented through on-site imagery and equipment."},
+    "id": "demo-guidance",
+    "file": "示例版面A.pdf",
+    "title": {
+      "zh": "版面示例 A",
+      "en": "Layout sample A"
+    },
+    "description": {
+      "zh": "合成几何版面组 A，以网格、色块与圆环演示内容层级、页面切换和查看器展示。",
+      "en": "Synthetic geometric layout group A, using grids, colour blocks and rings to demonstrate hierarchy, page transitions and the viewer."
+    },
     "pages": [
-      {"page": 1, "title": {"zh": "EC100 · 挖掘机引导系统", "en": "EC100 · Excavator Guidance System"}},
-      {"page": 2, "title": {"zh": "GNSS · 产品阵列", "en": "GNSS · Product Range"}},
-      {"page": 3, "title": {"zh": "GNSS · 工地场景", "en": "GNSS · On Site"}}
+      {
+        "page": 1,
+        "title": {
+          "zh": "版面 A · 示例 01",
+          "en": "Layout A · Sample 01"
+        }
+      },
+      {
+        "page": 2,
+        "title": {
+          "zh": "版面 A · 示例 02",
+          "en": "Layout A · Sample 02"
+        }
+      },
+      {
+        "page": 3,
+        "title": {
+          "zh": "版面 A · 示例 03",
+          "en": "Layout A · Sample 03"
+        }
+      }
     ]
   },
   {
-    "id": "demo-measure", "file": "V10L-EN.pdf", "title": {"zh": "V10L 激光 RTK", "en": "V10L Laser RTK"},
-    "description": {"zh": "围绕激光测量、影像定位、AR 放样与经销商招募，展开产品信息与应用场景。", "en": "Product communication for laser measurement, video targeting, AR stakeout and dealer recruitment."},
+    "id": "demo-measure",
+    "file": "示例版面B.pdf",
+    "title": {
+      "zh": "版面示例 B",
+      "en": "Layout sample B"
+    },
+    "description": {
+      "zh": "合成几何版面组 B，以网格、色块与圆环演示内容层级、页面切换和查看器展示。",
+      "en": "Synthetic geometric layout group B, using grids, colour blocks and rings to demonstrate hierarchy, page transitions and the viewer."
+    },
     "pages": [
-      {"page": 1, "title": {"zh": "V10L · Auto IMU", "en": "V10L · Auto IMU"}},
-      {"page": 2, "title": {"zh": "V10L · 激光、影像与 AR", "en": "V10L · Laser, Video & AR"}},
-      {"page": 3, "title": {"zh": "V10L · 经销商招募与场景", "en": "V10L · Dealers & Applications"}},
-      {"page": 4, "title": {"zh": "V10L · 非接触放样", "en": "V10L · Non-Contact Stakeout"}},
-      {"page": 5, "title": {"zh": "V10L · RTK 定位", "en": "V10L · RTK Positioning"}},
-      {"page": 6, "title": {"zh": "V10L · 工业测量场景", "en": "V10L · Industrial Surveying"}},
-      {"page": 7, "title": {"zh": "V10L · Measure Smarter", "en": "V10L · Measure Smarter"}},
-      {"page": 8, "title": {"zh": "V10L · Built for Real Sites", "en": "V10L · Built for Real Sites"}},
-      {"page": 9, "title": {"zh": "V10L · See It. Stake It.", "en": "V10L · See It. Stake It."}},
-      {"page": 10, "title": {"zh": "V10L · Precision Made Visible", "en": "V10L · Precision Made Visible"}},
-      {"page": 11, "title": {"zh": "V10L · 安全距离测量", "en": "V10L · Measure from a Safe Distance"}},
-      {"page": 12, "title": {"zh": "V10L · Sell Smart Layout", "en": "V10L · Sell Smart Layout"}},
-      {"page": 13, "title": {"zh": "V10L · Fast Layout", "en": "V10L · Fast Layout"}},
-      {"page": 14, "title": {"zh": "V10L · 第二代 IMU", "en": "V10L · 2nd Gen IMU"}},
-      {"page": 15, "title": {"zh": "V10L · 持续连接", "en": "V10L · Unbreakable Connectivity"}},
-      {"page": 16, "title": {"zh": "V10L · 盲区测量", "en": "V10L · Perfect for Blind Spots"}},
-      {"page": 17, "title": {"zh": "V10L · 快速启动", "en": "V10L · Faster Startup"}},
-      {"page": 18, "title": {"zh": "V10L · 80m 非接触测量", "en": "V10L · 80m Non-Contact Surveying"}},
-      {"page": 19, "title": {"zh": "V10L · AR 放样效率", "en": "V10L · AR Stakeout Efficiency"}}
+      {
+        "page": 1,
+        "title": {
+          "zh": "版面 B · 示例 01",
+          "en": "Layout B · Sample 01"
+        }
+      },
+      {
+        "page": 2,
+        "title": {
+          "zh": "版面 B · 示例 02",
+          "en": "Layout B · Sample 02"
+        }
+      },
+      {
+        "page": 3,
+        "title": {
+          "zh": "版面 B · 示例 03",
+          "en": "Layout B · Sample 03"
+        }
+      },
+      {
+        "page": 4,
+        "title": {
+          "zh": "版面 B · 示例 04",
+          "en": "Layout B · Sample 04"
+        }
+      },
+      {
+        "page": 5,
+        "title": {
+          "zh": "版面 B · 示例 05",
+          "en": "Layout B · Sample 05"
+        }
+      },
+      {
+        "page": 6,
+        "title": {
+          "zh": "版面 B · 示例 06",
+          "en": "Layout B · Sample 06"
+        }
+      },
+      {
+        "page": 7,
+        "title": {
+          "zh": "版面 B · 示例 07",
+          "en": "Layout B · Sample 07"
+        }
+      },
+      {
+        "page": 8,
+        "title": {
+          "zh": "版面 B · 示例 08",
+          "en": "Layout B · Sample 08"
+        }
+      },
+      {
+        "page": 9,
+        "title": {
+          "zh": "版面 B · 示例 09",
+          "en": "Layout B · Sample 09"
+        }
+      },
+      {
+        "page": 10,
+        "title": {
+          "zh": "版面 B · 示例 10",
+          "en": "Layout B · Sample 10"
+        }
+      },
+      {
+        "page": 11,
+        "title": {
+          "zh": "版面 B · 示例 11",
+          "en": "Layout B · Sample 11"
+        }
+      },
+      {
+        "page": 12,
+        "title": {
+          "zh": "版面 B · 示例 12",
+          "en": "Layout B · Sample 12"
+        }
+      },
+      {
+        "page": 13,
+        "title": {
+          "zh": "版面 B · 示例 13",
+          "en": "Layout B · Sample 13"
+        }
+      },
+      {
+        "page": 14,
+        "title": {
+          "zh": "版面 B · 示例 14",
+          "en": "Layout B · Sample 14"
+        }
+      },
+      {
+        "page": 15,
+        "title": {
+          "zh": "版面 B · 示例 15",
+          "en": "Layout B · Sample 15"
+        }
+      },
+      {
+        "page": 16,
+        "title": {
+          "zh": "版面 B · 示例 16",
+          "en": "Layout B · Sample 16"
+        }
+      },
+      {
+        "page": 17,
+        "title": {
+          "zh": "版面 B · 示例 17",
+          "en": "Layout B · Sample 17"
+        }
+      },
+      {
+        "page": 18,
+        "title": {
+          "zh": "版面 B · 示例 18",
+          "en": "Layout B · Sample 18"
+        }
+      },
+      {
+        "page": 19,
+        "title": {
+          "zh": "版面 B · 示例 19",
+          "en": "Layout B · Sample 19"
+        }
+      }
     ]
   },
   {
-    "id": "demo-garden", "file": "Vela.pdf", "title": {"zh": "Vela 机器人割草机", "en": "Vela Robotic Mower"},
-    "description": {"zh": "以草坪生活场景与产品主体，呈现 Vela 机器人割草机封面海报。", "en": "A cover poster for the Vela robotic mower, bringing a lawn lifestyle scene and the product into focus."},
+    "id": "demo-garden",
+    "file": "示例版面C.pdf",
+    "title": {
+      "zh": "版面示例 C",
+      "en": "Layout sample C"
+    },
+    "description": {
+      "zh": "合成几何版面组 C，以网格、色块与圆环演示内容层级、页面切换和查看器展示。",
+      "en": "Synthetic geometric layout group C, using grids, colour blocks and rings to demonstrate hierarchy, page transitions and the viewer."
+    },
     "pages": [
-      {"page": 1, "title": {"zh": "Vela · 机器人割草机", "en": "Vela · Robotic Mower"}},
-      {"page": 2, "title": {"zh": "Vela · 智能草坪护理", "en": "Vela · Smart Lawn Care"}},
-      {"page": 3, "title": {"zh": "Vela · 建图与自主导航", "en": "Vela · Mapping & Navigation"}},
-      {"page": 4, "title": {"zh": "Vela · 清洁与维护", "en": "Vela · Cleaning & Maintenance"}},
-      {"page": 5, "title": {"zh": "Vela · 刀片与地形适应", "en": "Vela · Blades & Terrain"}},
-      {"page": 6, "title": {"zh": "Vela · 产品规格", "en": "Vela · Specifications"}}
+      {
+        "page": 1,
+        "title": {
+          "zh": "版面 C · 示例 01",
+          "en": "Layout C · Sample 01"
+        }
+      },
+      {
+        "page": 2,
+        "title": {
+          "zh": "版面 C · 示例 02",
+          "en": "Layout C · Sample 02"
+        }
+      },
+      {
+        "page": 3,
+        "title": {
+          "zh": "版面 C · 示例 03",
+          "en": "Layout C · Sample 03"
+        }
+      },
+      {
+        "page": 4,
+        "title": {
+          "zh": "版面 C · 示例 04",
+          "en": "Layout C · Sample 04"
+        }
+      },
+      {
+        "page": 5,
+        "title": {
+          "zh": "版面 C · 示例 05",
+          "en": "Layout C · Sample 05"
+        }
+      },
+      {
+        "page": 6,
+        "title": {
+          "zh": "版面 C · 示例 06",
+          "en": "Layout C · Sample 06"
+        }
+      }
     ]
   }
 ]

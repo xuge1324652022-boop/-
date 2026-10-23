@@ -179,7 +179,8 @@ const t = computed(() =>
 
 /* ---------------- 全局揭幕后的标题入场 ---------------- */
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const motionMedia = window.matchMedia('(prefers-reduced-motion: reduce)')
+let reduceMotion = motionMedia.matches
 
 const rootRef = ref<HTMLElement | null>(null)
 const titleRef = ref<HTMLElement | null>(null)
@@ -248,13 +249,28 @@ function playIntro(): void {
 async function buildReveal(): Promise<void> {
   if (reduceMotion || !rootRef.value || reveal) return
   await nextTick()
-  if (disposed || !rootRef.value || reveal) return
+  if (disposed || reduceMotion || !introGone.value || covered.value || !rootRef.value || reveal) return
   reveal = setupAboutReveal(rootRef.value, { reduceMotion })
 }
 
 watch(covered, (isCovered) => {
-  if (!isCovered) playIntro()
+  if (!isCovered) { playIntro(); if (introGone.value) void buildReveal() }
 })
+
+/** 偏好可在页面打开后改变；释放滚动揭示，并让正在入场的标题完整可读。 */
+function onMotionChange(): void {
+  reduceMotion = motionMedia.matches
+  if (reduceMotion) {
+    introTimeline?.kill()
+    introTimeline = undefined
+    introGone.value = true
+    gsap.set(titleRef.value, { clearProps: 'transform,opacity' })
+    reveal?.dispose()
+    reveal = null
+  } else if (introGone.value && !covered.value) {
+    void buildReveal()
+  }
+}
 
 /* ---------------- 拖动 ---------------- */
 
@@ -327,6 +343,7 @@ function onOpenGallery(i: number, e: Event): void {
 /* ---------------- 生命周期 ---------------- */
 
 onMounted(async () => {
+  motionMedia.addEventListener('change', onMotionChange)
   await nextTick()
 
   if (disposed) return
@@ -337,6 +354,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   disposed = true
+  motionMedia.removeEventListener('change', onMotionChange)
   introTimeline?.kill()
   reveal?.dispose()
   reveal = null

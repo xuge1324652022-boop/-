@@ -237,10 +237,10 @@
       "original": "src/components/about/PhotoRunway.vue",
       "path": "源码/项目源码/组件/人物与作品/摄影取景舞台.vue",
       "role": "entry",
-      "originalSha256": "e8a58d868c72dfb825e84c00a0d4ee99ed4fb9c6afdf5e7f12df09260ad4c3a1",
-      "originalBytes": 22528,
-      "sha256": "fb02c27cea291543dc9efb5c4625252eecfd69932205ff56a6f2be07db9e1afc",
-      "bytes": 22536
+      "originalSha256": "5824517fa063848642435599217b23232e87c8a109369f6b337927d5061f5dc0",
+      "originalBytes": 22541,
+      "sha256": "ddc18ae5dba4c7601be4fe68a5979272ec4839b1f1d33ae5e17b7aa9f8098b11",
+      "bytes": 22549
     },
     {
       "original": "src/data/aboutProfile.ts",
@@ -255,19 +255,19 @@
       "original": "src/data/imageVariants.json",
       "path": "源码/项目源码/数据/图片实际尺寸.json",
       "role": "dependency",
-      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
-      "originalBytes": 12182,
-      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
-      "bytes": 12182
+      "originalSha256": "14e09713c5eeaf886e5070e91559145fc6914b67b25a97d86af51351bc40482a",
+      "originalBytes": 12605,
+      "sha256": "14e09713c5eeaf886e5070e91559145fc6914b67b25a97d86af51351bc40482a",
+      "bytes": 12605
     },
     {
       "original": "src/data/visualPortfolio.ts",
       "path": "源码/项目源码/数据/视觉作品资料.ts",
       "role": "dependency",
-      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
-      "originalBytes": 22342,
-      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
-      "bytes": 22342
+      "originalSha256": "2dc65f38af5e16e2355506a1c810264995579b6e321969215a6834d203d679ae",
+      "originalBytes": 22243,
+      "sha256": "73d03676e0a0373563f529ef6c5a7e3e680027f20870f26b92b1a1b69eff3f99",
+      "bytes": 22243
     },
     {
       "original": "src/style.css",
@@ -291,10 +291,10 @@
       "original": "src/components/about/BeyondWork.vue",
       "path": "集成示例/项目源码/组件/人物与作品/工作之外.vue",
       "role": "integration-context",
-      "originalSha256": "8503e0911c3655d72aeb03bf9870eef18cc16028e8afd25f7365331b510220e3",
-      "originalBytes": 6287,
-      "sha256": "5bd9cf77a2dfe5e7146d0f969a990c5b269f5267a2c0eddff09c32254969e20b",
-      "bytes": 6301
+      "originalSha256": "572d44948e6a711df40e57812bbf06758ad790df5c4facdfa0059fce8253f68e",
+      "originalBytes": 6215,
+      "sha256": "e1ae1d5c0cca31031bfe4032d578dbecf144df74ec1831d7349007db4fd96f88",
+      "bytes": 6229
     },
     {
       "original": "src/views/AboutView.vue",

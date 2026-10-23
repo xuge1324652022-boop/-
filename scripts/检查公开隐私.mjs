@@ -86,6 +86,73 @@ export function textPrivacyCategories(text, localTokens = []) {
   return problems
 }
 
+/** 检查实际导出的示例素材及其文件集合；错误只包含固定类别和公开目录。 */
+export function templateVisualPrivacyProblems(visuals, portfolioFiles, approvedPaths) {
+  const problems = new Map()
+  const modulePath = 'src/data/visualPortfolio.ts'
+  const add = (category, file = modulePath) => problems.set(`${category}:${file}`, [category, file])
+  const expectedIds = new Set()
+  const expectedFiles = new Set()
+  for (const [collection, prefix, count] of [
+    ['photoCollection', 'sample-photo', 26],
+    ['posterCollection', 'sample-poster', 10],
+  ]) {
+    const ids = new Set(
+      Array.from(
+        { length: count },
+        (_, index) => `${prefix}-${String(index + 1).padStart(2, '0')}`,
+      ),
+    )
+    for (const id of ids) expectedIds.add(id)
+    const entries = visuals?.[collection]
+    if (!Array.isArray(entries) || entries.length !== count) add('non-template-visual-collection')
+    const seen = new Set()
+    for (const item of Array.isArray(entries) ? entries : []) {
+      if (!ids.has(item?.id) || seen.has(item.id)) add('non-template-visual-id')
+      seen.add(item?.id)
+      if (
+        typeof item?.title?.zh !== 'string' ||
+        !item.title.zh.includes('示例') ||
+        typeof item?.title?.en !== 'string' ||
+        !/\bsample\b/iu.test(item.title.en)
+      )
+        add('non-template-visual-title')
+      if (
+        typeof item?.alt?.zh !== 'string' ||
+        !item.alt.zh.includes('合成') ||
+        typeof item?.alt?.en !== 'string' ||
+        !/\bsynthetic\b/iu.test(item.alt.en)
+      )
+        add('non-template-visual-alt')
+      if (
+        !Number.isFinite(item?.width) ||
+        !Number.isFinite(item?.height) ||
+        item.width <= 0 ||
+        item.height <= 0
+      )
+        add('invalid-template-visual-dimensions')
+      for (const [field, size] of [
+        ['src', 1600],
+        ['large', 2560],
+        ['thumb', 400],
+      ]) {
+        if (item?.[field] !== `/portfolio/${item?.id}-${size}.webp`) add('non-template-visual-path')
+      }
+    }
+    if ([...ids].some((id) => !seen.has(id))) add('incomplete-template-visual-ids')
+  }
+  for (const id of expectedIds)
+    for (const size of [400, 1600, 2560]) expectedFiles.add(`public/portfolio/${id}-${size}.webp`)
+  const actualFiles = new Set(portfolioFiles)
+  if ([...actualFiles].some((file) => !expectedFiles.has(file)))
+    add('unexpected-template-visual-asset', 'public/portfolio')
+  if ([...expectedFiles].some((file) => !actualFiles.has(file)))
+    add('missing-template-visual-asset', 'public/portfolio')
+  if ([...expectedFiles].some((file) => !approvedPaths.has(file)))
+    add('unapproved-template-visual-asset', 'public/portfolio')
+  return [...problems.values()]
+}
+
 function normalFile(relative) {
   let current = process.cwd()
   const parts = relative.split('/')
@@ -185,7 +252,10 @@ export function checkPublicPrivacy({ localAudit = false } = {}) {
   exports.assertParity()
 
   // PDF和图片不能只依靠文本正则；只允许字节与已批准的合成示例一致的资源。
-  assert(normalFile('public/模板素材清单.json') && normalFile('发布配置/公开第三方素材.json'), '审核配置不是普通文件')
+  assert(
+    normalFile('public/模板素材清单.json') && normalFile('发布配置/公开第三方素材.json'),
+    '审核配置不是普通文件',
+  )
   const approved = JSON.parse(readFileSync('public/模板素材清单.json', 'utf8'))
   const generated = Array.isArray(approved) ? approved : approved.files
   const rows = generated.concat(
@@ -208,6 +278,25 @@ export function checkPublicPrivacy({ localAudit = false } = {}) {
     approvedPaths.add(relative)
     if (!existsSync(relative) || hash(readFileSync(relative)) !== row.sha256)
       problems.push(['unapproved-media-bytes', relative])
+  }
+  // 默认视觉模块存在时必须运行真实导出，避免换掉图片却继续公开旧标题、alt 或路径。
+  const visualModulePath = 'src/data/visualPortfolio.ts'
+  if (existsSync(visualModulePath)) {
+    assert(normalFile(visualModulePath), '默认视觉模块不是普通文件')
+    const visualExports = {}
+    vm.runInNewContext(
+      ts.transpileModule(readFileSync(visualModulePath, 'utf8'), {
+        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+      }).outputText,
+      { exports: visualExports },
+    )
+    problems.push(
+      ...templateVisualPrivacyProblems(
+        visualExports,
+        files.filter((file) => file.startsWith('public/portfolio/')),
+        approvedPaths,
+      ),
+    )
   }
   for (const file of files) {
     if (

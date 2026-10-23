@@ -237,10 +237,10 @@
       "original": "src/assets/color-frames/frame-07.jpg",
       "path": "源码/项目源码/素材/调色帧/调色第7帧.jpg",
       "role": "imported-asset",
-      "originalSha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
-      "originalBytes": 28192,
-      "sha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
-      "bytes": 28192
+      "originalSha256": "39f80a2ac1c6a700722c64ab1e044cfcdfe59e5f80f2df9d754b06a0ce7eaf85",
+      "originalBytes": 22761,
+      "sha256": "39f80a2ac1c6a700722c64ab1e044cfcdfe59e5f80f2df9d754b06a0ce7eaf85",
+      "bytes": 22761
     },
     {
       "original": "src/components/ReferenceIntroduction.ts",
@@ -264,10 +264,10 @@
       "original": "src/components/WorkContinuation.vue",
       "path": "源码/项目源码/组件/作品续读导航.vue",
       "role": "dependency",
-      "originalSha256": "a388b8b11350e3e7b417f3db375d04cbf4d1b7462fbf559b9fb1c9d7ee0517a6",
-      "originalBytes": 8620,
-      "sha256": "3dc02b058d955de9b1b8855ff30821d4c3d10cd8ebb6f234f3c4e8313e6b6e94",
-      "bytes": 8628
+      "originalSha256": "8dd74a1401c043ee556205c9975f83b880c83f4d9a6587fe298bd3c56ffef716",
+      "originalBytes": 8944,
+      "sha256": "3193e8b0caad5099b5c24f1d44d90c5aad6240baee362e7514373eee21b6ab60",
+      "bytes": 8952
     },
     {
       "original": "src/components/color/ColorWave.vue",
@@ -336,19 +336,19 @@
       "original": "src/data/colorPage.ts",
       "path": "源码/项目源码/数据/调色页资料.ts",
       "role": "dependency",
-      "originalSha256": "1dc468203dee430c60a2da1b4fd7302e6d88fb96f349ce2584fe6038e02bdac0",
-      "originalBytes": 7624,
-      "sha256": "1dc468203dee430c60a2da1b4fd7302e6d88fb96f349ce2584fe6038e02bdac0",
-      "bytes": 7624
+      "originalSha256": "00f1070b3c7ba91b6ad41694a1236fb65a1e9d73b23c79aa712dfc54c63452d6",
+      "originalBytes": 5003,
+      "sha256": "00f1070b3c7ba91b6ad41694a1236fb65a1e9d73b23c79aa712dfc54c63452d6",
+      "bytes": 5003
     },
     {
       "original": "src/data/visualPortfolio.ts",
       "path": "源码/项目源码/数据/视觉作品资料.ts",
       "role": "dependency",
-      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
-      "originalBytes": 22342,
-      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
-      "bytes": 22342
+      "originalSha256": "2dc65f38af5e16e2355506a1c810264995579b6e321969215a6834d203d679ae",
+      "originalBytes": 22243,
+      "sha256": "73d03676e0a0373563f529ef6c5a7e3e680027f20870f26b92b1a1b69eff3f99",
+      "bytes": 22243
     },
     {
       "original": "src/style.css",

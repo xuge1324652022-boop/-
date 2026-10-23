@@ -1,46 +1,50 @@
-# 内容数据与素材清单
+# 公开模板的数据与素材清单
 
-页面组件负责交互，数据文件负责内容、来源和编排。双语文本使用 `Bi = { zh, en }`；修改时同时维护两种语言，不在组件中另存一份相同事实。
+页面组件负责交互，数据文件负责公开内容与编排。当前身份、经历和项目均为虚构示例；图片与视频使用程序生成的几何素材，不代表维护者的真实简历、实习或个人作品。
+
+双语文本使用 `Bi = { zh, en }`。替换内容时同时维护两种语言、图像标题和无障碍替代文本，不在组件中保存重复事实。
 
 | 文件 | 职责与修改边界 |
 | --- | --- |
 | `chapters.ts` | 六张首页卡片的编号、标题、顺序与环境动画相位。实际路径集中在 `useTransition.ts`。 |
-| `aboutProfile.ts` | 简历身份、完整经历、技能、公开联系信息及既有组件的兼容案例接口。经历数字以原简历为准。 |
-| `resumeEmphasis.ts` | 简历加粗片段到网页 `strong` 的映射；不会改写正文或自动把所有数字加粗。 |
-| `aboutDividers.ts` | 关于我各区间之间的双语导语。 |
-| `aboutCampaign.ts` | 人物定位及保留的早期 AI 方法文案；当前五个交互页签使用 `creativeProcess.ts`。 |
-| `creativeProcess.ts` | 当前五步工作流的判断、工具辅助与交付形式。`tools` 使用 `aiTools.ts` 的稳定 id。 |
-| `aiTools.ts` | 六个工具的图标路径、职责说明和资料来源；不是技能认证或业绩记录。 |
-| `foundationPages.ts` | 剪辑、新闻基础页的主题研究。正式作品迁入前，不把这些示例当客户案例。 |
-| `visualPortfolio.ts` | 个人摄影、军事海报和封面练习的素材登记、比例、替代文本与路径。 |
-| `photoPage.ts` | 摄影分章、画廊顺序与文案；素材通过 `visualById` 引用。 |
-| `posterPage.ts` | 个人海报与编辑设计的文案、排序；不混入实习产品版面。 |
-| `internshipPosters.ts` | 连接两份 PDF JSON 清单、筛选公开展位并构造干净图片地址。 |
-| `internshipPosterMotion.ts` | 实习版面的组别主题、标题裁片与归一化坐标。 |
+| `aboutProfile.ts` | 虚构求职者的身份、经历、技能、示例联系信息及兼容案例接口。 |
+| `resumeEmphasis.ts` | 示例正文的加粗片段映射，不改写正文或自动把所有数字加粗。 |
+| `aboutDividers.ts` | 各区间之间的双语过渡文案。 |
+| `aboutCampaign.ts` | 模板定位及六步方法示例；当前五个交互页签使用 `creativeProcess.ts`。 |
+| `creativeProcess.ts` | 虚构工作流的判断、工具辅助与交付形式，不陈述维护者的个人经历。 |
+| `aiTools.ts` | 六个工具的图标路径、一般用途和资料来源，不表示技能认证或实际业绩。 |
+| `foundationPages.ts` | 剪辑、新闻页的虚构主题与阅读结构，不含真实客户、报道或采访。 |
+| `visualPortfolio.ts` | 26 张合成图像与 10 张合成海报的编号标题、比例、替代文本与路径。 |
+| `photoPage.ts` | 图像展示页的章节、舞台配色与完整画廊顺序，素材通过 `visualById` 引用。 |
+| `posterPage.ts` | 合成海报与编辑设计示例的文案、排序，保持既有导出接口。 |
+| `colorPage.ts` | 15 段合成静音短片的字幕、预览、说明与分段轨道。 |
+| `internshipPosters.ts` | 连接两份版面 JSON 清单，筛选公开示例槽位并构造素材地址；文件名沿用历史接口。 |
+| `internshipPosterMotion.ts` | 合成版面的组别主题、裁片与归一化坐标，不对应真实产品。 |
+| `imageVariants.json` | 响应式图片的实际像素尺寸与路径，由生成脚本维护。 |
 
-## PDF JSON 契约
+## 示例版面 JSON 契约
 
-JSON 保持标准格式，不能直接加入 `//` 或块注释；字段含义在这里维护。
+JSON 使用标准格式，字段说明维护在本文件中。
 
-`internship-poster-plan.json` 是人工编排来源，每个组包含：
+`internship-poster-plan.json` 登记编排，每组包含：
 
-- `id`：稳定组别键，供素材文件名、筛选和动效主题连接使用。
-- `file`：本地原 PDF 的文件名，不是公开网站 URL。
-- `title`、`description`：双语展示内容。
-- `pages`：原 PDF 页号与双语标题；`page` 从 1 开始。保留完整转换清单，网页选择另由 `posterPageSelection` 决定。
+- `id`：稳定组别键，连接素材文件名、筛选与动效配置。
+- `file`：虚构的示例文档标签，不是公开 URL，也不要求读取本机 PDF。
+- `title`、`description`：双语示例说明。
+- `pages`：一基页号与双语示例标题。网页选择另由 `posterPageSelection` 决定。
 
-`internship-poster-assets.json` 由 `scripts/build-internship-posters.py` 生成，每条包含：
+`internship-poster-assets.json` 登记素材比例，每条包含：
 
 - `id`：`<group>-<两位页号>`，例如 `demo-measure-12`。
-- `group`、`page`：连接 plan 的复合键；不能拿筛选后的显示序号代替原页号。
-- `width`、`height`：PDF 页面点数乘 100 后取整，仅提供宽高比，**不是实际 WebP 像素数**。
+- `group`、`page`：连接 plan 的复合键，不能用筛选后的显示序号代替。
+- `width`、`height`：版面比例整数，不是实际 WebP 像素尺寸。
 
-这些历史内部 id 用于连接已生成文件，不代表网页必须显示对应品牌文字。网页与查看器统一读取 `public/internship-clean/`；原始转换预览留在本机 `参考资料/实习原始转换预览/`，不随 `public/` 上线。更换图片时同步 `previewVersion`，让开场、卡片和查看器同时更新缓存；重新生成图片后运行 `node scripts/生成响应式图片清单.mjs` 更新真实像素宽度。
+网页与查看器统一读取 `public/internship-clean/` 中的合成素材。修改图像后更新 `previewVersion`，让开场、卡片和查看器使用相同缓存版本，并运行响应式图片清单生成与检查。
 
 ## 素材与校验
 
-个人作品输出由 `scripts/build-portfolio-images.py` 维护；PDF 原始转换由 `scripts/build-internship-posters.py` 维护；清理后的品牌图片由现有干净素材流程维护。不要用原始转换覆盖已清理的图片。
+公开示例由 `scripts/生成模板示例素材.py` 生成，批准文件的尺寸与哈希登记在 `public/模板素材清单.json`。不要把本机私有目录、原始摄影、简历、PDF 或声音复制进公开素材目录。历史转换脚本不应作为匿名模板重建的默认入口。
 
-显示尺寸分三档：默认 1600、查看器 / 大屏 2560、缩略图 400，数值指最长边上限。图片加载前通过登记的比例预留空间，避免布局跳动。
+图片显示尺寸包括默认 1600、查看器 / 大屏 2560、缩略图 400；数字表示最长边上限。组件使用登记的宽高比预留空间，并从响应式清单读取实际候选宽度。
 
-开发期断言分别检查简历双语与关联、个人作品命名空间、完整素材覆盖，以及摄影分章是否恰好覆盖每张照片。它们验证数据结构与引用，不能代替人工核实内容事实。
+开发期断言检查双语与数据关联、不同示例的命名空间、完整素材覆盖，以及章节是否恰好覆盖每张图像。结构检查不能代替人工观察构图、裁切、文字描述和视觉对齐。

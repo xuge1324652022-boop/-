@@ -1,6 +1,6 @@
 {
   "name": "@xuge1324652022-boop/animation-source-package",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "动效源码包：求职应聘模板网站配套的 38 个遮罩、转场与滚动效果，包含中文源码、集成示例及 agent 可读 JSON 解析。",
   "license": "MIT",
   "repository": {

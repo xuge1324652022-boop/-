@@ -1,7 +1,7 @@
 /**
- * 实习海报的动效版面配置
- * 矩形使用完整页面的归一化坐标（0–1），分层终态对齐当前展示图，原 PDF 保持不动。
- * 产品组 id 与 internshipPosters 保持一致；标题裁片按原始页号索引，不能按筛选后的序号取。
+ * 合成版面示例的动效配置
+ * 矩形使用完整页面的归一化坐标（0–1），裁片与展示图共用同一公开素材，避免重复请求。
+ * 示例组 id 与 internshipPosters 保持一致；裁片按清单页号索引，不能按筛选后的序号取。
  */
 import type { Bi } from './人物资料'
 import type { VisualAsset } from './视觉作品资料'
@@ -23,34 +23,34 @@ export interface InternshipMotionTheme {
 
 export const INTERNSHIP_MOTION_THEMES: Readonly<Record<string, InternshipMotionTheme>> = {
   'demo-guidance': {
-    model: 'EC100',
-    title: { zh: '工程引导', en: 'MACHINE GUIDANCE' },
-    words: [{ zh: '引导', en: 'GUIDE' }, { zh: '定位', en: 'POSITION' }, { zh: '施工', en: 'BUILD' }],
-    statements: [{ zh: '把方向，变成坐标', en: 'GUIDANCE IN VIEW' }],
+    model: 'DEMO A',
+    title: { zh: '版面示例 A', en: 'LAYOUT SAMPLE A' },
+    words: [{ zh: '网格', en: 'GRID' }, { zh: '色块', en: 'BLOCK' }, { zh: '层次', en: 'LAYER' }],
+    statements: [{ zh: '合成图形，展示版面', en: 'SYNTHETIC LAYOUT STUDY' }],
     background: '#181a19', accent: '#ffbc25', kind: 'guidance',
   },
   'demo-measure': {
-    model: 'V10L',
-    title: { zh: '激光测量', en: 'LASER RTK' },
-    words: [{ zh: '激光', en: 'LASER' }, { zh: '影像', en: 'VIDEO' }, { zh: '放样', en: 'AR' }],
+    model: 'DEMO B',
+    title: { zh: '版面示例 B', en: 'LAYOUT SAMPLE B' },
+    words: [{ zh: '圆环', en: 'RING' }, { zh: '对比', en: 'CONTRAST' }, { zh: '节奏', en: 'RHYTHM' }],
     statements: [
-      { zh: '精度，进入视野', en: 'PRECISION MADE VISIBLE' },
-      { zh: '连接，持续在线', en: 'UNBREAKABLE CONNECTIVITY' },
+      { zh: '留白，组织信息', en: 'SPACE ORGANISES CONTENT' },
+      { zh: '几何，连接画面', en: 'GEOMETRY CONNECTS FRAMES' },
     ],
     background: '#171717', accent: '#ffd22d', kind: 'laser',
   },
   'demo-garden': {
-    model: 'VELA',
-    title: { zh: '智能草坪', en: 'ROBOTIC MOWER' },
-    words: [{ zh: '建图', en: 'MAP' }, { zh: '修剪', en: 'MOW' }, { zh: '护理', en: 'CARE' }],
-    statements: [{ zh: '留出生活的空间', en: 'PRECISE MOWING, PERFECT LAWNS' }],
+    model: 'DEMO C',
+    title: { zh: '版面示例 C', en: 'LAYOUT SAMPLE C' },
+    words: [{ zh: '组合', en: 'COMPOSE' }, { zh: '比例', en: 'RATIO' }, { zh: '平衡', en: 'BALANCE' }],
+    statements: [{ zh: '以合成素材，演示层次', en: 'SYNTHETIC SHAPES, CLEAR LAYERS' }],
     background: '#154d3c', accent: '#d9ea99', kind: 'lawn',
   },
 }
 
 const fragment = (kind: PosterFragment['kind'], rect: PosterRect): PosterFragment => ({ kind, rect })
 
-// 各页标题位置不一致，逐页登记，不用一个坐标裁所有产品海报
+// 各槽位保留独立裁片配置；更换合成构图后，应逐页复核裁片与展示图的对齐
 const laserHeadlines: readonly PosterRect[] = [
   [.055, .52, .69, .31], [.04, .085, .68, .18], [.12, .12, .79, .17],
   [.065, .13, .85, .13], [.065, .12, .84, .29], [.065, .11, .83, .13],

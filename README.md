@@ -14,6 +14,6 @@ See the [Chinese guide](./README.zh-CN.md), [effect index](./动效组件库/组
 
 Use Node 22.16+ (22.x) or Node 24.x. Run `npm ci`, then `npm run dev`. Run `npm run build:cloudflare` for the privacy and quality checks plus an offline production preparation. Deployment is an explicit separate step using environment-provided credentials and a configured hostname.
 
-The published package `@xuge1324652022-boop/animation-source-package@0.2.3` contains Chinese source snapshots and machine-readable effect metadata for copying or agent inspection. It is not a precompiled component dependency. Download the audited website and component source archives from [Release v0.2.3](https://github.com/xuge1324652022-boop/job-application-template/releases/tag/v0.2.3).
+The published package `@xuge1324652022-boop/animation-source-package@0.2.4` contains Chinese source snapshots and machine-readable effect metadata for copying or agent inspection. It is not a precompiled component dependency. Download the audited website and component source archives from [Release v0.2.4](https://github.com/xuge1324652022-boop/job-application-template/releases/tag/v0.2.4).
 
 The repository uses [MIT](./LICENSE) for original code and documentation. Third-party tool marks retain their respective terms; see [NOTICE](./NOTICE.md).

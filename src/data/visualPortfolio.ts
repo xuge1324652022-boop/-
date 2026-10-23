@@ -1,33 +1,8 @@
 /**
- * 视觉作品素材的**唯一内容来源**（个人摄影 + 海报/设计）。
- *
- * ⚠️ 这个文件与 `aboutProfile.ts` **刻意分开**，两者不能互相污染：
- *
- *    `aboutProfile.ts`  → 就业案例（公司 / 时间 / 成果数字），是**可核对的履历**；
- *    本文件            → 个人摄影与设计作品，是**个人创作的展示**。
- *
- *    方案原文：「这些作品独立展示，不套用到现有公司的工作案例中」，
- *    「新增作品数据与现有就业案例数据分开，不能把个人摄影和海报当成公司案例封面」。
- *    曾经踩过一次同类错误：四个公司案例的封面全挂了 `/color/` 的调色素材，
- *    归属根本不成立（见 `aboutProfile.ts` 里 `Work` 的注释）。所以这里
- *    在开发期直接**断言两套 id 不重叠**，从结构上防止再次混用。
- *
- * ⚠️ **清单是显式的，不自动扫描目录**：`作品/摄影-照片/` 有 26 张，
- *    `作品/海报-设计/八一-个人练习海报/` 有 10 张；实习 PDF 由 internshipPosters 独立登记。
- *    自动列目录会把未经挑选的素材推上网页，而且以后往目录里丢一张新图就会
- *    静默上线。数量判据写在 `assertCollectionCoverage()`，改清单必须同步改那里。
- *
- * ⚠️ 图片文件由 `scripts/build-portfolio-images.py` 生成到 `public/portfolio/`：
- *    1600 档默认展示、2560 档用于查看器及按需高清展示、400 档给缩略图导航。
- *    生成脚本里有一份 **id ↔ 原始文件**的映射表（原图是中文名，集中在那里，
- *    改名不会断链）。**两处清单必须一致** —— `python scripts/build-portfolio-images.py --verify`
- *    会核对源文件、输出文件与比例。
- *
- * ⚠️ 结构（2026-10-10 全量扩展后）：
- *    ① 完整集合 `photoCollection`(26) / `posterCollection`(10) —— 每个原图只登记一次；
- *    ② `visualById` 走 **Map 索引**，重复 id 直接抛错（不能静默覆盖）；
- *    ③ 保留的八张精选是对完整集合的引用（photography / editorial / posters），
- *       兼容既有组件和校验；当前 About 人物专题不等同于旧八图版面。
+ * 公开模板的合成图像与海报清单，不登记个人摄影、原始文件或真实项目。
+ * 26 张图像与 10 张海报均使用程序生成的几何素材，标题按编号展示。
+ * 素材清单保持显式登记；页面章节与顺序分别由 photoPage、posterPage 管理。
+ * 图片三档地址由 id 构造，尺寸只用于预留同一宽高比的展示区域。
  */
 
 import type { Bi } from './aboutProfile'
@@ -38,10 +13,10 @@ export type { Bi }
 export interface VisualAsset {
   /** 唯一 id：同时是文件名前缀（`<id>-1600.webp` / `<id>-2560.webp` / `<id>-400.webp`） */
   id: string
-  /** 作品名 */
+  /** 示例标题 */
   title: Bi
   /**
-   * 摄影 / 个人海报登记原始像素宽高（EXIF 摆正后的值）；实习 PDF 另存等比例整数。
+   * 合成素材登记版面比例整数；示例文档版面另存等比例整数。
    * ⚠️ 只用来给 `<img>` 提供宽高比（避免加载时布局跳动），不是文件实际尺寸 ——
    *    网页版是等比例缩放过的，比例相同，所以宽高比照样对。
    */
@@ -57,13 +32,13 @@ export interface VisualAsset {
    *    等于打开一次多拉好几 MB —— 缩略图本身在屏幕上只有几十像素宽。
    */
   thumb: string
-  /** 用途标注（方案要求）：如「个人封面排版练习」「个人主题海报系列」 */
+  /** 用途标注：说明这是合成模板示例 */
   note?: Bi
   /** 无障碍替代文本（**按实际画面写**，不能只从中文文件名推测） */
   alt: Bi
 }
 
-/** 个人作品路径只在此处由 id 构造；仍需生成脚本验证对应输出真实存在。 */
+/** 示例素材路径只在此处由 id 构造；输出文件需通过公开素材清单校验。 */
 function asset(
   id: string,
   title: Bi,
@@ -85,298 +60,277 @@ function asset(
   }
 }
 
-/** 个人主题海报系列的用途标注（九张车辆海报共用）。 */
-const POSTER_NOTE: Bi = { zh: '个人主题海报系列', en: 'Personal poster series' }
-/** 封面排版练习的用途标注（千年楼阁）。 */
-const COVER_NOTE: Bi = { zh: '个人封面排版练习', en: 'Personal cover layout study' }
+/** 九张合成海报共用的示例标注。 */
+const POSTER_NOTE: Bi = { zh: '合成海报示例', en: 'Synthetic poster sample' }
+/** 编辑设计示例的用途标注。 */
+const COVER_NOTE: Bi = { zh: '封面版式示例', en: 'Sample cover layout' }
 
-/* ═══════════════════════ 完整集合 ═══════════════════════
- *
- * ⚠️ 这里的顺序**只是素材清单自己的顺序**，不是页面上出现的顺序：
- *    `/photo` 的章节划分与画廊顺序由 `photoPage.ts` 的 `SET_PLAN` 决定
- *    （按主色与明度编排，晴蓝 → 雾青 → 苔绿 → 鎏金 → 银白），
- *    `photoCollection` 只负责「有哪 26 张」。
- *    分组按题材聚拢，读起来是一段一段的，而不是随机。
- * ⚠️ 尺寸全部来自 `python scripts/build-portfolio-images.py --probe`（EXIF 摆正后）。
- */
-
-/** 摄影完整集合（26 张）。章节划分见 `photoPage.ts`。 */
+/* 显式清单：保留不同横竖比例，供响应式布局与查看器演示。 */
 export const photoCollection: readonly VisualAsset[] = [
-  // ---- 山、镜、洞与银杏（画面最开阔的六张）----
   asset(
-    'mountain-cloud',
-    { zh: '山云', en: 'Mountain & Cloud' },
+    'sample-photo-01',
+    { zh: '图像示例 01', en: 'Image sample 01' },
     5568,
     3712,
-    { zh: '云雾中的层叠山脊', en: 'Layered mountain ridges in cloud' },
+    { zh: '横向合成几何示例 01，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 01, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'sky-mirror',
-    { zh: '天空之镜', en: 'Mirror of the Sky' },
+    'sample-photo-02',
+    { zh: '图像示例 02', en: 'Image sample 02' },
     3712,
     5568,
-    { zh: '逆光下的水面倒影与远处的人影', en: 'Backlit reflections on water with a distant figure' },
+    { zh: '竖向合成几何示例 02，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 02, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'cave',
-    { zh: '盗墓笔记', en: 'The Lost Tomb' },
+    'sample-photo-03',
+    { zh: '图像示例 03', en: 'Image sample 03' },
     5568,
     3712,
-    { zh: '洞口框出的纵深与两个人物剪影', en: 'Two silhouetted figures framed by a cave mouth' },
+    { zh: '横向合成几何示例 03，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 03, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'sunward',
-    { zh: '向阳', en: 'Facing the Sun' },
+    'sample-photo-04',
+    { zh: '图像示例 04', en: 'Image sample 04' },
     3712,
     5568,
-    { zh: '背对镜头望向海面的两个人影', en: 'Two figures seen from behind, looking out to sea' },
+    { zh: '竖向合成几何示例 04，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 04, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'daylight',
-    { zh: '天光', en: 'Sky Light' },
+    'sample-photo-05',
+    { zh: '图像示例 05', en: 'Image sample 05' },
     5568,
     3712,
-    { zh: '海面上方云隙间落下的天光', en: 'Light breaking through clouds above the sea' },
+    { zh: '横向合成几何示例 05，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 05, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'ginkgo-road',
-    { zh: '银杏路', en: 'Ginkgo Road' },
+    'sample-photo-06',
+    { zh: '图像示例 06', en: 'Image sample 06' },
     6240,
     4160,
-    { zh: '逆光下的金色银杏叶', en: 'Golden ginkgo leaves in backlight' },
+    { zh: '横向合成几何示例 06，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 06, with colour blocks, a ring and short lines on a grid' },
   ),
-  // ---- 银杏组其余三张 ----
   asset(
-    'ginkgo-road-1',
-    { zh: '银杏路 (1)', en: 'Ginkgo Road I' },
+    'sample-photo-07',
+    { zh: '图像示例 07', en: 'Image sample 07' },
     3840,
     2160,
-    { zh: '蓝天下金黄的银杏枝叶', en: 'Golden ginkgo foliage against blue sky' },
+    { zh: '横向合成几何示例 07，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 07, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'ginkgo-road-2',
-    { zh: '银杏路 (2)', en: 'Ginkgo Road II' },
+    'sample-photo-08',
+    { zh: '图像示例 08', en: 'Image sample 08' },
     3840,
     2160,
-    { zh: '蓝天下的银杏树冠', en: 'A ginkgo canopy against blue sky' },
+    { zh: '横向合成几何示例 08，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 08, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'ginkgo-road-4',
-    { zh: '银杏路4', en: 'Ginkgo Road IV' },
+    'sample-photo-09',
+    { zh: '图像示例 09', en: 'Image sample 09' },
     6240,
     4160,
-    { zh: '逆光中虚化的金色银杏叶', en: 'Backlit ginkgo leaves against a blurred background' },
+    { zh: '横向合成几何示例 09，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 09, with colour blocks, a ring and short lines on a grid' },
   ),
-  // ---- 山与树 ----
   asset(
-    'zhangjiajie-mountains',
-    { zh: '青山张家界', en: 'Zhangjiajie Mountains' },
+    'sample-photo-10',
+    { zh: '图像示例 10', en: 'Image sample 10' },
     4032,
     2268,
-    { zh: '云雾中群山环抱的城镇', en: 'A town among misty mountains' },
+    { zh: '横向合成几何示例 10，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 10, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'mountain-bird',
-    { zh: '山鸟', en: 'Mountain Birds' },
+    'sample-photo-11',
+    { zh: '图像示例 11', en: 'Image sample 11' },
     3712,
     5568,
-    { zh: '乌云下飞过山脊的鸟群', en: 'Birds crossing a ridge beneath dark cloud' },
+    { zh: '竖向合成几何示例 11，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 11, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'qingri-molun',
-    { zh: '青日摩伦', en: 'Qingri Molun' },
+    'sample-photo-12',
+    { zh: '图像示例 12', en: 'Image sample 12' },
     5568,
     3712,
-    { zh: '雾中巨大的摩天轮', en: 'A large Ferris wheel in the mist' },
+    { zh: '横向合成几何示例 12，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 12, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'tall-tree',
-    { zh: '长树', en: 'Tall Tree' },
+    'sample-photo-13',
+    { zh: '图像示例 13', en: 'Image sample 13' },
     3712,
     5568,
-    { zh: '仰视光秃的高树', en: 'Looking up a tall bare tree' },
+    { zh: '竖向合成几何示例 13，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 13, with colour blocks, a ring and short lines on a grid' },
   ),
-  // ---- 村落与城镇 ----
   asset(
-    'old-village-walk',
-    { zh: '漫步老村', en: 'A Walk Through the Old Village' },
+    'sample-photo-14',
+    { zh: '图像示例 14', en: 'Image sample 14' },
     3712,
     5568,
-    { zh: '田野间驶过村落的列车', en: 'A train passing fields beside a village' },
+    { zh: '竖向合成几何示例 14，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 14, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'urban-village',
-    { zh: '城中村', en: 'Urban Village' },
+    'sample-photo-15',
+    { zh: '图像示例 15', en: 'Image sample 15' },
     4032,
     2268,
-    { zh: '山谷中密集的城中村屋顶', en: 'Dense rooftops of an urban village in a valley' },
+    { zh: '横向合成几何示例 15，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 15, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'guyong-city',
-    { zh: '古庸城', en: 'Guyong Old Town' },
+    'sample-photo-16',
+    { zh: '图像示例 16', en: 'Image sample 16' },
     4032,
     1968,
-    { zh: '群山与云层下的古镇', en: 'An old town beneath mountains and cloud' },
+    { zh: '横向合成几何示例 16，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 16, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'road-to-city',
-    { zh: '进城之路', en: 'Road to the City' },
+    'sample-photo-17',
+    { zh: '图像示例 17', en: 'Image sample 17' },
     5568,
     3712,
-    { zh: '暮色中穿过群山通往城镇的公路', en: 'A road winding through hills toward town at dusk' },
+    { zh: '横向合成几何示例 17，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 17, with colour blocks, a ring and short lines on a grid' },
   ),
-  // ---- 校园 ----
   asset(
-    'campus',
-    { zh: '校园', en: 'Campus' },
+    'sample-photo-18',
+    { zh: '图像示例 18', en: 'Image sample 18' },
     3712,
     5568,
-    { zh: '蓝天下的路灯', en: 'A street lamp against a clear sky' },
+    { zh: '竖向合成几何示例 18，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 18, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'zhangyuan-panorama',
-    { zh: '张院全景', en: 'Zhangyuan Panorama' },
+    'sample-photo-19',
+    { zh: '图像示例 19', en: 'Image sample 19' },
     5568,
     3712,
-    { zh: '俯瞰校园建筑与远处的群山', en: 'An aerial view of the campus and distant mountains' },
+    { zh: '横向合成几何示例 19，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 19, with colour blocks, a ring and short lines on a grid' },
   ),
-  // ---- 楼阁 ----
   asset(
-    'pavilion-photo',
-    { zh: '滕王阁', en: 'Tengwang Pavilion' },
+    'sample-photo-20',
+    { zh: '图像示例 20', en: 'Image sample 20' },
     8064,
     4536,
-    { zh: '滕王阁与江对岸的城市天际线', en: 'Tengwang Pavilion against the city skyline' },
+    { zh: '横向合成几何示例 20，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 20, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'pavilion-photo-2',
-    { zh: '滕王阁2', en: 'Tengwang Pavilion II' },
+    'sample-photo-21',
+    { zh: '图像示例 21', en: 'Image sample 21' },
     8064,
     3846,
-    { zh: '滕王阁与江对岸的城市天际线（另一张）', en: 'Tengwang Pavilion and the city skyline, second frame' },
+    { zh: '横向合成几何示例 21，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 21, with colour blocks, a ring and short lines on a grid' },
   ),
-  // ---- 海与花 ----
   asset(
-    'mazu-overlooking-sea',
-    { zh: '妈祖望海', en: 'Mazu Looking to Sea' },
+    'sample-photo-22',
+    { zh: '图像示例 22', en: 'Image sample 22' },
     3712,
     5568,
-    { zh: '仰望蓝天下的妈祖石像', en: 'The Mazu stone statue seen from below against blue sky' },
+    { zh: '竖向合成几何示例 22，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 22, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'seaside-sunset',
-    { zh: '海边落日', en: 'Seaside Sunset' },
+    'sample-photo-23',
+    { zh: '图像示例 23', en: 'Image sample 23' },
     3712,
     5568,
-    { zh: '落日下海滩上的人物剪影', en: 'Silhouettes on the beach at sunset' },
+    { zh: '竖向合成几何示例 23，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 23, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'binglang-valley',
-    { zh: '槟榔谷', en: 'Binglang Valley' },
+    'sample-photo-24',
+    { zh: '图像示例 24', en: 'Image sample 24' },
     8064,
     4536,
-    { zh: '热带山谷中的河流与山体', en: 'A river running through a tropical valley' },
+    { zh: '横向合成几何示例 24，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 24, with colour blocks, a ring and short lines on a grid' },
   ),
   asset(
-    'purple-leaf-plum',
-    { zh: '红叶李', en: 'Purple-Leaf Plum' },
+    'sample-photo-25',
+    { zh: '图像示例 25', en: 'Image sample 25' },
     3712,
     5568,
-    { zh: '枝头盛开的白粉色花朵', en: 'Pale pink and white blossoms on branches' },
+    { zh: '竖向合成几何示例 25，网格背景上排列色块、圆环与短线', en: 'Portrait synthetic geometric sample 25, with colour blocks, a ring and short lines on a grid' },
   ),
-  // ---- 年度总结 ----
   asset(
-    'annual-review-2025',
-    { zh: '2025年度总结', en: '2025 in Review' },
+    'sample-photo-26',
+    { zh: '图像示例 26', en: 'Image sample 26' },
     6938,
     3800,
-    { zh: '由年度照片拼成的 2025 字样', en: 'The year 2025 spelled out over a grid of photographs' },
+    { zh: '横向合成几何示例 26，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 26, with colour blocks, a ring and short lines on a grid' },
   ),
 ]
 
-/** 海报 / 设计完整集合（10 件）：九张车辆主题海报 + 一张封面排版练习。 */
+/** 海报 / 设计完整集合（10 件）：九张系列示例与一张封面版式示例。 */
 export const posterCollection: readonly VisualAsset[] = [
   asset(
-    'mbt-2000',
-    { zh: 'MBT-2000', en: 'MBT-2000' },
+    'sample-poster-01',
+    { zh: '海报示例 01', en: 'Poster sample 01' },
     5118,
     3198,
-    { zh: 'MBT-2000 主战坦克主题海报', en: 'MBT-2000 main battle tank poster' },
+    { zh: '横向合成几何示例 01，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 01, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'plz-05',
-    { zh: 'PLZ-05榴', en: 'PLZ-05' },
+    'sample-poster-02',
+    { zh: '海报示例 02', en: 'Poster sample 02' },
     5118,
     3198,
-    { zh: 'PLZ-05 自行榴弹炮主题海报', en: 'PLZ-05 self-propelled howitzer poster' },
+    { zh: '横向合成几何示例 02，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 02, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'plz-02',
-    { zh: 'PLZ-02轮', en: 'PLZ-02' },
+    'sample-poster-03',
+    { zh: '海报示例 03', en: 'Poster sample 03' },
     5118,
     3198,
-    { zh: 'PLZ-02 轮式突击炮主题海报', en: 'PLZ-02 wheeled assault gun poster' },
+    { zh: '横向合成几何示例 03，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 03, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'aft-09',
-    { zh: 'AFT-09', en: 'AFT-09' },
+    'sample-poster-04',
+    { zh: '海报示例 04', en: 'Poster sample 04' },
     5118,
     3198,
-    { zh: 'AFT-09 反坦克导弹发射车主题海报', en: 'AFT-09 anti-tank missile vehicle poster' },
+    { zh: '横向合成几何示例 04，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 04, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'pg4-04a',
-    { zh: 'PGZ-04A', en: 'PGZ-04A' },
+    'sample-poster-05',
+    { zh: '海报示例 05', en: 'Poster sample 05' },
     5118,
     3198,
-    { zh: 'PGZ-04A 弹炮合一自行防空系统主题海报', en: 'PGZ-04A self-propelled gun-and-missile air-defence system poster' },
+    { zh: '横向合成几何示例 05，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 05, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'pgz-09',
-    { zh: 'PGZ-09高', en: 'PGZ-09' },
+    'sample-poster-06',
+    { zh: '海报示例 06', en: 'Poster sample 06' },
     5118,
     3198,
-    { zh: 'PGZ-09 自行高炮主题海报', en: 'PGZ-09 self-propelled anti-aircraft gun poster' },
+    { zh: '横向合成几何示例 06，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 06, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'ztz-59',
-    { zh: 'ZTZ-59式', en: 'ZTZ-59' },
+    'sample-poster-07',
+    { zh: '海报示例 07', en: 'Poster sample 07' },
     5118,
     3198,
-    { zh: 'ZTZ-59 式主战坦克主题海报', en: 'ZTZ-59 main battle tank poster' },
+    { zh: '横向合成几何示例 07，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 07, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'ztz-96a',
-    { zh: 'ZTZ-96A', en: 'ZTZ-96A' },
+    'sample-poster-08',
+    { zh: '海报示例 08', en: 'Poster sample 08' },
     5118,
     3198,
-    { zh: 'ZTZ-96A 主战坦克主题海报', en: 'ZTZ-96A main battle tank poster' },
+    { zh: '横向合成几何示例 08，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 08, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'ztz-96',
-    { zh: 'ZTZ96式', en: 'ZTZ-96' },
+    'sample-poster-09',
+    { zh: '海报示例 09', en: 'Poster sample 09' },
     5118,
     3198,
-    { zh: 'ZTZ-96 式主战坦克主题海报', en: 'ZTZ-96 main battle tank poster' },
+    { zh: '横向合成几何示例 09，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 09, with colour blocks, a ring and short lines on a grid' },
     POSTER_NOTE,
   ),
   asset(
-    'pavilion-cover',
-    { zh: '千年楼阁 · 个人封面排版练习', en: 'Millennium Pavilion · personal cover layout study' },
+    'sample-poster-10',
+    { zh: '海报示例 10', en: 'Poster sample 10' },
     6666,
     3750,
-    {
-      zh: '以滕王阁照片排版的封面练习，含标题与信息层级',
-      en: 'Cover layout study using the pavilion photograph, with title and information hierarchy',
-    },
+    { zh: '横向合成几何示例 10，网格背景上排列色块、圆环与短线', en: 'Landscape synthetic geometric sample 10, with colour blocks, a ring and short lines on a grid' },
     COVER_NOTE,
   ),
 ]
@@ -407,35 +361,24 @@ export function visualById(id: string): VisualAsset {
 
 /* ═══════════════════ 保留的八张精选引用（不复制素材记录） ═══════════════════ */
 
-/**
- * 摄影精选三张：山体层次 / 逆光倒影 / 洞口框景。
- * 顺序供使用这组数据的摄影组件读取；当前 BeyondWork 也从个人素材集合取图。
- */
+/** 图像精选三张，供相关组件展示合成几何素材。 */
 export const photography: readonly VisualAsset[] = [
-  visualById('mountain-cloud'),
-  visualById('sky-mirror'),
-  visualById('cave'),
+  visualById('sample-photo-01'),
+  visualById('sample-photo-02'),
+  visualById('sample-photo-03'),
 ]
 
-/**
- * 一张摄影原片 + 一张基于它做的封面排版（PosterView 的编辑设计区）。
- * ⚠️ 这是「同一素材 → 不同信息层级」的对照，两张必须**成对**出现；
- *    分成两个不相干的列表就读不出「转换」这件事了。
- */
+/** 两张编辑设计示例成对展示，用于比较版面与比例。 */
 export const editorial: readonly VisualAsset[] = [
-  visualById('pavilion-photo'),
-  visualById('pavilion-cover'),
+  visualById('sample-photo-20'),
+  visualById('sample-poster-10'),
 ]
 
-/**
- * 三张同系列车辆海报的保留精选：同一套视觉语言换不同主体与色调。
- * ⚠️ 三张都是 5118×3198 ≈ **8:5**，不是 16:9 —— 裁成 16:9 会把标题切掉，
- *    所以作品带里只按**高度**统一、宽度随原始比例走（见 `WorkStrip.vue`）。
- */
+/** 三张系列合成海报；按高度统一，保留各自版面比例。 */
 export const posters: readonly VisualAsset[] = [
-  visualById('mbt-2000'),
-  visualById('plz-05'),
-  visualById('plz-02'),
+  visualById('sample-poster-01'),
+  visualById('sample-poster-02'),
+  visualById('sample-poster-03'),
 ]
 
 /** 保留精选的合并集合，供既有组件 / 开发期结构自检使用，不替代完整专题清单。 */
@@ -450,27 +393,27 @@ export const ALL_VISUALS: readonly VisualAsset[] = [...photography, ...editorial
  */
 export const SECTIONS = {
   photography: {
-    label: 'PHOTOGRAPHY',
-    title: { zh: '摄影精选', en: 'Selected Photography' },
+    label: 'SAMPLE IMAGERY',
+    title: { zh: '图像示例', en: 'Sample imagery' },
     lead: {
-      zh: '先看画面。三张照片分别处理山体的层次、逆光的倒影与洞口的纵深。',
-      en: 'Look first. Three photographs: the layers of a mountain, backlit reflections, and depth framed by a cave mouth.',
+      zh: '三张合成几何示例，用于展示不同图像比例、版面留白与浏览交互。',
+      en: 'Three synthetic geometric samples demonstrate image ratios, layout spacing and browsing interactions.',
     },
   },
   editorial: {
-    label: 'FROM PHOTO TO LAYOUT',
-    title: { zh: '从照片到版面', en: 'From Photograph to Layout' },
+    label: 'LAYOUT STUDIES',
+    title: { zh: '版式示例', en: 'Layout studies' },
     lead: {
-      zh: '从拍下画面，到组织信息。一张照片负责吸引视线，标题、留白与层级决定信息如何被阅读。',
-      en: 'From capturing a frame to organising information. The photograph draws the eye; the title, whitespace and hierarchy decide how it is read.',
+      zh: '用两张合成示例观察比例、留白与信息层级，展示编辑设计区的成对布局。',
+      en: 'Two synthetic samples demonstrate proportions, whitespace and information hierarchy in a paired editorial layout.',
     },
   },
   posters: {
     label: 'SERIES',
     title: { zh: '系列设计', en: 'Series Design' },
     lead: {
-      zh: '同一套视觉语言，换主体、换色调，看它能不能站住。',
-      en: 'One visual language, different subjects and tones — a test of whether it holds.',
+      zh: '以统一的几何元素演示系列海报、切换控件与色彩章节。',
+      en: 'A shared set of geometric elements demonstrates a poster series, switching controls and colour chapters.',
     },
   },
 } as const satisfies Record<string, { label: string; title: Bi; lead: Bi }>
@@ -481,7 +424,7 @@ export const SECTIONS = {
  * 保留八张精选接口的结构自检（只在 DEV 调用）。
  *
  * ⚠️ 它防的是**结构错**，不是文案错：
- *   ① 两套 id 命名空间不能重叠 —— 一旦个人作品和公司案例撞 id，锚点、
+ *   ① 两套 id 命名空间不能重叠 —— 一旦示例图像和示例经历案例撞 id，锚点、
  *      封面、查看器会互相串（这正是方案要求「两套数据分开」的原因）；
  *   ② 八张必须齐 —— 少一张就是页面上一个空框，而空框在截图里常常看不出来；
  *   ③ 路径必须由 id 推出来 —— 防止有人手写一个和 id 不一致的 src。
@@ -498,7 +441,7 @@ export function assertVisuals(workIds: readonly string[]): void {
     seen.add(v.id)
 
     if (workIds.includes(v.id)) {
-      bad.push(`个人作品 id「${v.id}」与公司案例 id 撞名 —— 两套数据必须分开`)
+      bad.push(`示例图像 id「${v.id}」与示例经历案例 id 撞名 —— 两套数据必须分开`)
     }
     if (v.src !== `/portfolio/${v.id}-1600.webp`) bad.push(`${v.id} 的 src 与 id 不一致`)
     if (v.large !== `/portfolio/${v.id}-2560.webp`) bad.push(`${v.id} 的 large 与 id 不一致`)
@@ -508,8 +451,8 @@ export function assertVisuals(workIds: readonly string[]): void {
     if (!v.alt.zh.trim() || !v.alt.en.trim()) bad.push(`${v.id} 的替代文本缺语言`)
   }
 
-  if (photography.length !== 3) bad.push(`摄影应为 3 张，实为 ${photography.length}`)
-  if (editorial.length !== 2) bad.push(`照片到版面应为 2 张，实为 ${editorial.length}`)
+  if (photography.length !== 3) bad.push(`图像示例应为 3 张，实为 ${photography.length}`)
+  if (editorial.length !== 2) bad.push(`编辑设计示例应为 2 张，实为 ${editorial.length}`)
   if (posters.length !== 3) bad.push(`系列海报应为 3 张，实为 ${posters.length}`)
   if (ALL_VISUALS.length !== 8) bad.push(`精选素材应为 8 张，实为 ${ALL_VISUALS.length}`)
 
@@ -524,17 +467,14 @@ export function assertVisuals(workIds: readonly string[]): void {
  * ⚠️ 刻意**不合并进 `assertVisuals`** —— 那个函数的 3/2/3/8 判据是 `/about`
  *    八张精选的回归依据，混进来就分不清「谁坏了」。
  *
- * ⚠️ 26 / 10 是**当前明确授权的素材清单数量**（`作品/摄影-照片/` 26 张、
- *    `作品/海报-设计/八一-个人练习海报/` 10 张）。将来新增素材由清单变更同步更新这里，
- *    不以「自动扫描目录」静默上线。
- * ⚠️ 前端数量自检**不能代替**文件覆盖检查 —— 那一步在
- *    `scripts/build-portfolio-images.py --verify`（源 / 输出 / 比例）。
+ * 26 / 10 是公开示例清单的数量。新增素材时同步更新清单与断言，
+ * 并通过模板素材清单、响应式图片检查确认文件覆盖和尺寸。
  */
 export function assertCollectionCoverage(workIds: readonly string[]): void {
   const bad: string[] = []
 
   if (photoCollection.length !== 26) {
-    bad.push(`摄影完整集合应为 26 张，实为 ${photoCollection.length}`)
+    bad.push(`图像完整集合应为 26 张，实为 ${photoCollection.length}`)
   }
   if (posterCollection.length !== 10) {
     bad.push(`海报完整集合应为 10 件，实为 ${posterCollection.length}`)
@@ -546,7 +486,7 @@ export function assertCollectionCoverage(workIds: readonly string[]): void {
     seen.add(item.id)
 
     if (workIds.includes(item.id)) {
-      bad.push(`素材 id「${item.id}」与公司案例撞名 —— 两套数据必须分开`)
+      bad.push(`素材 id「${item.id}」与示例经历案例撞名 —— 两套数据必须分开`)
     }
     if (!Number.isFinite(item.width) || !Number.isFinite(item.height) || item.width <= 0 || item.height <= 0) {
       bad.push(`${item.id} 的宽高无效`)
@@ -566,7 +506,7 @@ export function assertCollectionCoverage(workIds: readonly string[]): void {
   // 章节与画廊都要能「横竖交替」：两种朝向都得有，否则版式读起来是平的
   const portrait = photoCollection.filter((v) => v.height > v.width).length
   if (portrait < 1 || portrait === photoCollection.length) {
-    bad.push(`摄影完整集合必须有横有竖，实测竖 ${portrait} / 共 ${photoCollection.length}`)
+    bad.push(`图像完整集合必须有横有竖，实测竖 ${portrait} / 共 ${photoCollection.length}`)
   }
 
   if (bad.length) {

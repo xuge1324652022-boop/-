@@ -17,10 +17,21 @@ const temporary = join(root, 'tmp', 'privacy-gate-tests')
 await mkdir(temporary, { recursive: true })
 const work = await mkdtemp(join(temporary, 'case-'))
 const profile = await readFile(join(root, 'src/data/aboutProfile.ts'))
+const visualSource = await readFile(join(root, 'src/data/visualPortfolio.ts'), 'utf8')
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const sample = Buffer.from('generated fixture media')
 const fakeEmail = ['fixture', 'example.invalid'].join('@')
 let count = 0
+let cases = 0
+const visualFiles = [
+  ['sample-photo', 26],
+  ['sample-poster', 10],
+].flatMap(([prefix, total]) =>
+  Array.from({ length: total }, (_, index) => String(index + 1).padStart(2, '0')).flatMap(
+    (number) =>
+      [400, 1600, 2560].map((size) => `public/portfolio/${prefix}-${number}-${size}.webp`),
+  ),
+)
 
 async function put(project, file, bytes) {
   const absolute = join(project, ...file.split('/'))
@@ -35,7 +46,7 @@ function git(project, ...args) {
   })
 }
 
-async function fixture() {
+async function fixture({ withVisuals = false } = {}) {
   const project = join(work, String(++count))
   await mkdir(project)
   const rows = []
@@ -43,6 +54,13 @@ async function fixture() {
     const file = `public/fixture-${index}.jpg`
     await put(project, file, sample)
     rows.push({ path: file, sha256: sha256(sample) })
+  }
+  if (withVisuals) {
+    await put(project, 'src/data/visualPortfolio.ts', visualSource)
+    for (const file of visualFiles) {
+      await put(project, file, sample)
+      rows.push({ path: file, sha256: sha256(sample) })
+    }
   }
   await put(project, 'public/模板素材清单.json', JSON.stringify({ files: rows }))
   await put(project, '发布配置/公开第三方素材.json', JSON.stringify({ files: [] }))
@@ -66,12 +84,102 @@ function inspect(project) {
 
 async function check(title, task) {
   await task()
+  cases++
   console.log(`PASS ${title}`)
 }
 
 try {
   await check('a clean staged template passes the actual project scan', async () => {
     assert.equal(inspect(await fixture()).passed, true)
+  })
+  await check('the actual visual module and all 108 numbered assets pass together', async () => {
+    assert.equal(inspect(await fixture({ withVisuals: true })).passed, true)
+  })
+  await check('replacing image bytes cannot retain a non-template visual title', async () => {
+    for (const [before, after] of [
+      ["'图像示例 01'", "'虚构场景练习'"],
+      ["'Image sample 01'", "'Imaginary study'"],
+    ]) {
+      const project = await fixture({ withVisuals: true })
+      const source = visualSource.replace(before, after)
+      assert.notEqual(source, visualSource)
+      await put(project, 'src/data/visualPortfolio.ts', source)
+      git(project, 'add', 'src/data/visualPortfolio.ts')
+      assert(
+        inspect(project).problems.some(([category]) => category === 'non-template-visual-title'),
+      )
+    }
+  })
+  await check('both alt text languages must identify synthetic sample imagery', async () => {
+    for (const source of [
+      visualSource.replace(/'横向合成几何示例 01，[^']*'/u, "'虚构几何构图'"),
+      visualSource.replace(
+        /'Landscape synthetic geometric sample 01,[^']*'/u,
+        "'An illustration of a fictional scene'",
+      ),
+    ]) {
+      const project = await fixture({ withVisuals: true })
+      assert.notEqual(source, visualSource)
+      await put(project, 'src/data/visualPortfolio.ts', source)
+      git(project, 'add', 'src/data/visualPortfolio.ts')
+      assert(inspect(project).problems.some(([category]) => category === 'non-template-visual-alt'))
+    }
+  })
+  await check(
+    'a legacy-style identifier and mismatched paths fail the actual module gate',
+    async () => {
+      const project = await fixture({ withVisuals: true })
+      const source = visualSource
+        .replaceAll('sample-photo-01', 'fictional-scene-01')
+        .replace(
+          'src: `/portfolio/${id}-1600.webp`',
+          'src: `/portfolio/unregistered-${id}-1600.webp`',
+        )
+      assert.notEqual(source, visualSource)
+      await put(project, 'src/data/visualPortfolio.ts', source)
+      git(project, 'add', 'src/data/visualPortfolio.ts')
+      const result = inspect(project)
+      for (const expected of ['non-template-visual-id', 'non-template-visual-path'])
+        assert(result.problems.some(([category]) => category === expected))
+      assert(!JSON.stringify(result.problems).includes('fictional-scene-01'))
+    },
+  )
+  await check(
+    'unregistered portfolio files cannot ship alongside approved numbered images',
+    async () => {
+      const project = await fixture({ withVisuals: true })
+      await put(project, 'public/portfolio/unregistered-demo-1600.webp', sample)
+      assert(
+        inspect(project).problems.some(
+          ([category]) => category === 'unexpected-template-visual-asset',
+        ),
+      )
+    },
+  )
+  await check('the numbered visual assets must also exist in the approval manifest', async () => {
+    const project = await fixture({ withVisuals: true })
+    const file = join(project, 'public/模板素材清单.json')
+    const manifest = JSON.parse(await readFile(file, 'utf8'))
+    manifest.files = manifest.files.filter((row) => row.path !== visualFiles[0])
+    await writeFile(file, JSON.stringify(manifest))
+    git(project, 'add', 'public/模板素材清单.json')
+    assert(
+      inspect(project).problems.some(
+        ([category]) => category === 'unapproved-template-visual-asset',
+      ),
+    )
+  })
+  await check('a missing numbered image fails even after its approval row is removed', async () => {
+    const project = await fixture({ withVisuals: true })
+    await unlink(join(project, visualFiles[0]))
+    const file = join(project, 'public/模板素材清单.json')
+    const manifest = JSON.parse(await readFile(file, 'utf8'))
+    manifest.files = manifest.files.filter((row) => row.path !== visualFiles[0])
+    await writeFile(file, JSON.stringify(manifest))
+    git(project, 'add', '--all')
+    assert(
+      inspect(project).problems.some(([category]) => category === 'missing-template-visual-asset'),
+    )
   })
   await check('an untracked SVG is scanned for non-example contact details', async () => {
     const project = await fixture()
@@ -169,7 +277,7 @@ try {
       assert.deepEqual(textPrivacyCategories(fakeEmail), ['non-example-email'])
     },
   )
-  console.log(JSON.stringify({ passed: true, cases: 13, networkRequests: 0 }))
+  console.log(JSON.stringify({ passed: true, cases, networkRequests: 0 }))
 } finally {
   assert.equal(dirname(work), temporary)
   const stat = await lstat(work)

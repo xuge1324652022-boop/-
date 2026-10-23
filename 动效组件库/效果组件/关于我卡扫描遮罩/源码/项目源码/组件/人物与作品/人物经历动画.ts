@@ -49,8 +49,8 @@ const LAYERS: readonly LayerSpec[] = [
 interface BoundLayer {
   ax: number
   ay: number
-  sx: (v: number) => void
-  sy: (v: number) => void
+  sx: gsap.QuickToFunc
+  sy: gsap.QuickToFunc
 }
 
 export interface AboutExperienceHandle {
@@ -72,6 +72,8 @@ function prefersReducedMotion(): boolean {
  */
 export function createAboutExperience(host: HTMLElement): AboutExperienceHandle {
   const layers: BoundLayer[] = []
+  const motionMedia = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)') : undefined
 
   for (const spec of LAYERS) {
     const el = host.querySelector<HTMLElement>(spec.selector)
@@ -112,16 +114,30 @@ export function createAboutExperience(host: HTMLElement): AboutExperienceHandle 
    * 让构图停在被设计好的位置上才对。passive: 只读坐标，绝不拦截画廊
    * 自己的拖拽转环逻辑。
    */
-  if (!prefersReducedMotion()) {
-    window.addEventListener('pointermove', onMove, { passive: true })
-    document.addEventListener('pointerleave', toBase)
+  function onMotionChange(): void {
+    window.removeEventListener('pointermove', onMove)
+    document.removeEventListener('pointerleave', toBase)
+    if (prefersReducedMotion()) {
+      for (const layer of layers) {
+        layer.sx(0); layer.sy(0)
+        layer.sx.tween.progress(1).pause()
+        layer.sy.tween.progress(1).pause()
+      }
+    } else {
+      window.addEventListener('pointermove', onMove, { passive: true })
+      document.addEventListener('pointerleave', toBase)
+    }
   }
+  onMotionChange()
+  motionMedia?.addEventListener('change', onMotionChange)
 
   return {
     /** 摘掉两个全局监听并清空图层引用。组件卸载时必须调用（幂等）。 */
     destroy() {
+      motionMedia?.removeEventListener('change', onMotionChange)
       window.removeEventListener('pointermove', onMove)
       document.removeEventListener('pointerleave', toBase)
+      for (const layer of layers) { layer.sx.tween.kill(); layer.sy.tween.kill() }
       layers.length = 0
     },
   }

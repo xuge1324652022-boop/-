@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { visualImageSources } from '../../utils/responsiveImage'
 /**
- * 军事个人海报的色彩阅读段：稳定素材 id 决定章节，frame.index 保留原列表索引，
+ * 合成海报示例的色彩阅读段：稳定素材 id 决定章节，frame.index 保留原列表索引，
  * 因此重新按颜色分组后仍能打开正确的大图。换组纵向揭示，同组横向揭示。
  * render 是仅有的遮罩写入者；95ms 指数追赶使用实际帧间隔，偏好变更会清掉旧裁切。
  */
@@ -41,10 +41,10 @@ const props = defineProps<{ items: readonly VisualAsset[]; lang: Lang }>()
 const emit = defineEmits<{ open: [index: number, trigger: HTMLElement] }>()
 // 按画面环境归组，使用稳定 id，避免素材排序改变时把作品配到错误颜色。
 const groups = [
-  { ids: ['mbt-2000'], paper: '#513b2c', ink: '#f5e9d6', name: { zh: '火光', en: 'Ember' }, description: { zh: '橙色火光、深褐烟尘。让明亮的标题从暗色环境中显现', en: 'Orange fire and deep brown smoke. Bright typography emerges from a dark setting' } },
-  { ids: ['plz-05', 'aft-09', 'ztz-59'], paper: '#b5a06b', ink: '#22251c', name: { zh: '旷野', en: 'Earth' }, description: { zh: '麦田、土地与植被的暖色，共同承托画面中的车辆主体', en: 'Warm fields, earth and vegetation frame the vehicles' } },
-  { ids: ['plz-02', 'pg4-04a', 'pgz-09'], paper: '#bccbd1', ink: '#202c30', name: { zh: '冷调', en: 'Cool' }, description: { zh: '天空与浅灰环境铺开冷色底，红黄文字成为醒目的色彩对照', en: 'Sky and pale grey surroundings create a cool field, punctuated by red and yellow type' } },
-  { ids: ['ztz-96a', 'ztz-96'], paper: '#77764f', ink: '#faf2dc', name: { zh: '橄榄', en: 'Olive' }, description: { zh: '暗绿车体与低饱和环境互相呼应，明亮文字建立阅读层级', en: 'Dark green vehicles meet muted surroundings, with bright type defining the hierarchy' } },
+  { ids: ['sample-poster-01'], paper: '#513b2c', ink: '#f5e9d6', name: { zh: '暖棕', en: 'Warm brown' }, description: { zh: '以暖棕舞台承托合成几何图，演示明暗层次', en: 'A warm brown stage frames synthetic geometry to demonstrate tonal layers' } },
+  { ids: ['sample-poster-02', 'sample-poster-04', 'sample-poster-07'], paper: '#b5a06b', ink: '#22251c', name: { zh: '沙金', en: 'Sand gold' }, description: { zh: '以沙金舞台比较色块、圆环和留白的关系', en: 'A sand gold stage compares colour blocks, rings and negative space' } },
+  { ids: ['sample-poster-03', 'sample-poster-05', 'sample-poster-06'], paper: '#bccbd1', ink: '#202c30', name: { zh: '冷灰', en: 'Cool grey' }, description: { zh: '浅灰舞台与合成示例构成冷暖对照', en: 'A pale grey stage contrasts with the synthetic sample palette' } },
+  { ids: ['sample-poster-08', 'sample-poster-09'], paper: '#77764f', ink: '#faf2dc', name: { zh: '灰绿', en: 'Grey green' }, description: { zh: '低饱和舞台呈现图形与文字的层级示例', en: 'A muted stage presents examples of hierarchy in shapes and text' } },
 ]
 const frames = computed(() => groups.flatMap((group, n) => {
   const found = group.ids.flatMap(id => { const index = props.items.findIndex(item => item.id === id); return index < 0 ? [] : [{ item: props.items[index]!, index }] })
@@ -54,7 +54,7 @@ const root = ref<HTMLElement | null>(null)
 const stage = ref<HTMLElement | null>(null)
 const media = window.matchMedia('(prefers-reduced-motion: reduce)')
 const reduced = ref(media.matches)
-const compactMedia = window.matchMedia('(max-width: 760px) and (max-height: 660px), (max-height: 500px)')
+const compactMedia = window.matchMedia('(max-width: 760px) and (max-height: 660px), (max-height: 580px)')
 const compact = ref(compactMedia.matches)
 // 短视口容不下固定舞台时按流逐张阅读，内容、完整图和查看入口都保留。
 const staticLayout = computed(() => reduced.value || compact.value)

@@ -235,10 +235,10 @@
       "original": "src/components/about/PhotoSets.vue",
       "path": "源码/项目源码/组件/人物与作品/摄影双列章节.vue",
       "role": "entry",
-      "originalSha256": "971a10015a398342fc7ae203375b3aca9c4524fe20bce665164bd13bc3b66ee5",
-      "originalBytes": 20715,
-      "sha256": "fb108f7b5a243a50dc65d807a6c71e7410d17703df904dd3fa4afbd8c23f3b0c",
-      "bytes": 20747
+      "originalSha256": "0b125e7f23585a419cb0f87f410bc3c7df8a7a755f7c7e1c2d16599032cbd5eb",
+      "originalBytes": 20717,
+      "sha256": "4f9c220146faf6180601e700ca85a6c75172d669eec2e7274891657ef228bc3a",
+      "bytes": 20749
     },
     {
       "original": "src/composables/usePhotoDrag.ts",
@@ -262,28 +262,28 @@
       "original": "src/data/imageVariants.json",
       "path": "源码/项目源码/数据/图片实际尺寸.json",
       "role": "dependency",
-      "originalSha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
-      "originalBytes": 12182,
-      "sha256": "587d48f6652f68e36163495d309268cac8f75bdb436b97f973059aa8a580a624",
-      "bytes": 12182
+      "originalSha256": "14e09713c5eeaf886e5070e91559145fc6914b67b25a97d86af51351bc40482a",
+      "originalBytes": 12605,
+      "sha256": "14e09713c5eeaf886e5070e91559145fc6914b67b25a97d86af51351bc40482a",
+      "bytes": 12605
     },
     {
       "original": "src/data/photoPage.ts",
       "path": "源码/项目源码/数据/摄影页资料.ts",
       "role": "dependency",
-      "originalSha256": "674cd6bb0840b123d0dfe80a4d3adedb51b15a0e0517b1edf8fdc431e9b07ba1",
-      "originalBytes": 10237,
-      "sha256": "77e68863647cc5f7e377cbdf51fc863ba30f4ccedd84bbe5ce892976103b8476",
-      "bytes": 10240
+      "originalSha256": "44b20f10888c6928d6a1283a4eb9318d4914733666c076832102e42b2f05b042",
+      "originalBytes": 10384,
+      "sha256": "9f160e571bfa8401a888f2518a85471a874a2c0dca31995b038295c259947efb",
+      "bytes": 10387
     },
     {
       "original": "src/data/visualPortfolio.ts",
       "path": "源码/项目源码/数据/视觉作品资料.ts",
       "role": "dependency",
-      "originalSha256": "bbe835e1b180cc6cd81711ff18c0a985042d017e7dcdfe9b0a0f29416a5343f4",
-      "originalBytes": 22342,
-      "sha256": "44e3e70f9e418bfc65705d732d134daa4d17f300462e0e63501bbb804cecf633",
-      "bytes": 22342
+      "originalSha256": "2dc65f38af5e16e2355506a1c810264995579b6e321969215a6834d203d679ae",
+      "originalBytes": 22243,
+      "sha256": "73d03676e0a0373563f529ef6c5a7e3e680027f20870f26b92b1a1b69eff3f99",
+      "bytes": 22243
     },
     {
       "original": "src/style.css",
@@ -316,10 +316,10 @@
       "original": "src/views/PhotoView.vue",
       "path": "集成示例/项目源码/页面/摄影作品页.vue",
       "role": "integration-context",
-      "originalSha256": "1def0b25e43fde58989fd906e1e38e7d8c5f5591e265ca9195ec9800cd1535a3",
-      "originalBytes": 18541,
-      "sha256": "2953ec6abd8977c76289418c73818c8b6228487fb6b7874738f92a5e9466f73b",
-      "bytes": 18629
+      "originalSha256": "cbf8d00718cc3729fea54bd580cad474346c4f254a96b5b8038fad630bd3fcc3",
+      "originalBytes": 19255,
+      "sha256": "4b287ffe2b3372dc46caad873a85a185898cf5673cc4a9579c37249167dfeabf",
+      "bytes": 19343
     }
   ]
 }

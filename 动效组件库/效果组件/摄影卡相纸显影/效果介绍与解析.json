@@ -215,10 +215,10 @@
       "original": "src/cardAnimations/base.ts",
       "path": "源码/项目源码/卡片动画/卡片动画基础.ts",
       "role": "dependency",
-      "originalSha256": "224b9d5f83d4610d948d34efe803b4013dc032fcfa759966265419a639f40057",
-      "originalBytes": 7501,
-      "sha256": "be9a1fb0db1c1f158d657adce06961407b5650a0820b517e70b1b7f17dc7d694",
-      "bytes": 7514
+      "originalSha256": "0fcbd5c74a13f457e8b6437ff95451dd84149375e1fc20f728ad997f53666c5c",
+      "originalBytes": 8024,
+      "sha256": "29fc1bb6bad826f880b3079690f741d4b1796eac6bd1ca5625d0c47e965e819e",
+      "bytes": 8037
     },
     {
       "original": "src/cardAnimations/photo.ts",
@@ -251,19 +251,19 @@
       "original": "src/components/CardVisual.vue",
       "path": "集成示例/项目源码/组件/卡片视觉.vue",
       "role": "integration-context",
-      "originalSha256": "8c7356656c704ff4a48f1469202d9f580ffaa3300adfe6e697a82ece98afcee4",
-      "originalBytes": 8038,
-      "sha256": "6795060c74fea2eae7edf8bce2be7edc98950d93626efae306e475fbc2e9df77",
-      "bytes": 8076
+      "originalSha256": "32dc5d6f5dd982006dc68c3355e5b45dd1421cbfb240df41b29bbfaeb4aff61d",
+      "originalBytes": 9079,
+      "sha256": "fc9e2e4ae5e6a894b11cbe53a76f5552ee362cdd009865ab719ee7c477058e85",
+      "bytes": 9117
     },
     {
       "original": "src/components/ThreeHome.vue",
       "path": "集成示例/项目源码/组件/六卡空间首页.vue",
       "role": "integration-context",
-      "originalSha256": "ec5e4d12a10f2e255da4bd6fb1ba5a46487cbc4830ef60410d4ad3635ac8d461",
-      "originalBytes": 55655,
-      "sha256": "ad7b4fde7db293926a48f250bc9a790bc2514629e1ba3f2e80fd2bd460ce3d7a",
-      "bytes": 55720
+      "originalSha256": "3fbaeb346202507902151ea85d94ec0b01ca937a44e2ee2fa47e9b10a50beb56",
+      "originalBytes": 56928,
+      "sha256": "dbd707eab8311b4020c920f898ef91d7c6b67996b1df00beca04251727d7f336",
+      "bytes": 56993
     },
     {
       "original": "src/cardAnimations/index.ts",

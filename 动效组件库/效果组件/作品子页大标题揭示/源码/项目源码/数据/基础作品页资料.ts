@@ -1,5 +1,5 @@
 /**
- * 剪辑 / 新闻基础页的数据契约：先形成可进入、可阅读、可操作的版面，等待正式作品迁入。
+ * 剪辑 / 新闻基础页的数据契约：先形成可进入、可阅读、可操作的版面，当前仅使用虚构主题与合成素材。
  * 这里的主题与文案属于创作研究，不应补上不存在的客户、业绩或成片路径。
  */
 import type { Bi } from './人物资料'
@@ -24,13 +24,13 @@ export type FoundationPage = {
   themes: readonly FoundationTheme[]
 }
 
-/** 先建立主题与阅读结构，独立于后续迁入的正式作品清单 */
+/** 公开模板的主题与阅读结构，不代表真实客户或个人作品清单 */
 export const FOUNDATION_PAGES: Record<FoundationKind, FoundationPage> = {
   edit: {
     id: '02', heading: 'EDITING', title: { zh: '剪辑', en: 'Editing' },
     introduction: {
-      zh: '把零散的片段组织成一次完整的观看，让节奏带着情绪前行，让每一次切换都有理由',
-      en: 'A sequence becomes a story through rhythm, emotion and the reason behind every cut',
+      zh: '模板示例：用虚构主题演示剪辑页的阅读结构、节奏与交互，可替换为自己的公开作品',
+      en: 'Template example: fictional themes demonstrate reading structure, rhythm and interaction. Replace them with your own public work',
     },
     studyLabel: { zh: '节奏实验', en: 'A study in rhythm' },
     closing: {
@@ -67,8 +67,8 @@ export const FOUNDATION_PAGES: Record<FoundationKind, FoundationPage> = {
   news: {
     id: '04', heading: 'NEWS', title: { zh: '新闻影像', en: 'News & visual stories' },
     introduction: {
-      zh: '从现场出发，把人物、细节与背景放回同一个故事，让影像不仅记录发生了什么，也帮助理解为什么',
-      en: 'Begin on location, bring people and context into the same story, and use images to make events easier to understand',
+      zh: '模板示例：用虚构主题演示新闻影像页的内容编排，不包含真实采访、报道或现场素材',
+      en: 'Template example: fictional themes demonstrate a news imagery layout, without real interviews, reports or on-location footage',
     },
     studyLabel: { zh: '观察笔记', en: 'Notes on observation' },
     closing: {

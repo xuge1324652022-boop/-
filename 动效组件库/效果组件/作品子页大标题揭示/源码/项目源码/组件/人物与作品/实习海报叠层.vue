@@ -2,7 +2,7 @@
   <section ref="root" class="ims" :class="{ 'is-static': staticLayout, 'is-gathered': phase === 'gallery' || phase === 'complete' }" :aria-label="t.label">
     <div ref="stage" class="ims__stage">
       <header ref="heading" class="ims__heading">
-        <span>01 / PRODUCT COMMUNICATION</span>
+        <span>01 / SYNTHETIC LAYOUTS</span>
         <h2>{{ t.title }}</h2>
         <p>{{ t.lead }}</p>
         <p class="ims__hint">{{ t.hint }}</p>
@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { visualImageSources } from '../../工具/响应式图片'
 /**
- * 实习海报的连续 sticky 行程：空间入场、收拢、逐张向下擦入由同一滚动坐标决定。
+ * 合成版面示例的连续 sticky 行程：空间入场、收拢、逐张向下擦入由同一滚动坐标决定。
  * 数学节奏在 internshipStackMotion.ts，组件负责测量和写样式，点击只改变文档位置。
  * 帧函数仅在可见且布局已就绪时运行；取消队列、RAF、观察器和监听均由本实例负责。
  */
@@ -54,9 +54,9 @@ import { prepareMotionLayout, requestMotionLayoutRefresh } from '../../工具/�
 const props = defineProps<{ items: readonly VisualAsset[]; lang: Lang }>()
 const emit = defineEmits<{ open: [item: VisualAsset, trigger: HTMLElement] }>()
 const t = computed(() => props.lang === 'zh'
-  ? { label: '实习海报叠层', title: '技术，成为画面', lead: '工程引导 / 激光测量 / 智能草坪', attribution: '实习产出', open: '查看完整实习作品', chapters: '选择实习项目', select: '观看项目', hint: '向下滚动，收拢后逐张观看 · 点击查看完整作品', fold: '向下滚动，收拢叠层 ↓', watch: '继续下滑，逐张观看 ↓', done: '本组已看完，继续下滑 ↓' }
-  : { label: 'Internship poster stack', title: 'Technology, in view', lead: 'Machine guidance / Laser surveying / Smart lawn care', attribution: 'Internship work', open: 'View full internship work', chapters: 'Select internship project', select: 'View project', hint: 'Scroll to gather and explore every card · Click to view the full piece', fold: 'Scroll to gather the stack ↓', watch: 'Scroll to explore each card ↓', done: 'All cards viewed. Continue scrolling ↓' })
-const projectNames = ['EC100', 'V10L', 'VELA']
+  ? { label: '合成版面叠层示例', title: '几何，组成版面', lead: '示例版面 A / B / C', attribution: '合成模板素材', open: '查看完整示例版面', chapters: '选择示例版面', select: '观看示例', hint: '向下滚动，收拢后逐张观看 · 点击查看完整示例', fold: '向下滚动，收拢叠层 ↓', watch: '继续下滑，逐张观看 ↓', done: '本组已看完，继续下滑 ↓' }
+  : { label: 'Synthetic layout stack example', title: 'Geometry, in layout', lead: 'Sample layouts A / B / C', attribution: 'Synthetic template assets', open: 'View full sample layout', chapters: 'Choose a sample layout', select: 'View sample', hint: 'Scroll to gather and explore every card · Click to view the full sample', fold: 'Scroll to gather the stack ↓', watch: 'Scroll to explore each card ↓', done: 'All cards viewed. Continue scrolling ↓' })
+const projectNames = computed(() => props.lang === 'zh' ? ['示例 A', '示例 B', '示例 C'] : ['SAMPLE A', 'SAMPLE B', 'SAMPLE C'])
 const root = ref<HTMLElement | null>(null)
 const stage = ref<HTMLElement | null>(null)
 const heading = ref<HTMLElement | null>(null)
@@ -65,7 +65,7 @@ const media = window.matchMedia('(prefers-reduced-motion: reduce)')
 const reduced = ref(media.matches)
 const compactMedia = window.matchMedia('(max-height: 500px)')
 const compact = ref(compactMedia.matches)
-// 横屏不足500px时，固定页脚和标题会把纸面压得过小，改按流展示原作。
+// 横屏不足500px时，固定页脚和标题会把纸面压得过小，改按流展示完整示例。
 const staticLayout = computed(() => reduced.value || compact.value)
 const active = ref(0)
 const phase = ref('enter')
@@ -129,7 +129,7 @@ function paint(position: number, force = false) {
     // 新页完全覆盖后隐藏旧页，避免不同画幅在亚像素边缘露出细线。
     const covered = gathered && state.reveals.slice(i + 1).some(value => value === 1)
     sheet.style.visibility = reveal > 0 && !covered ? 'visible' : 'hidden'
-    // 覆盖区与页面同色，只擦走旧图；可见纸张的尺寸由真实 PDF 比例决定。
+    // 覆盖区与页面同色，只擦走旧图；可见纸张的尺寸由登记的版面比例决定。
     sheet.style.backgroundColor = gathered ? 'var(--ab-bg)' : 'transparent'
     const image = images[i]
     if (image) image.style.transform = gathered && i > 0

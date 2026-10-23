@@ -87,13 +87,13 @@ const emit = defineEmits<{
 const t = computed(() =>
   props.lang === 'zh'
     ? {
-        before: '原片',
-        after: '排版后',
+        before: '基础示例',
+        after: '版式示例',
         open: (title: string) => `查看完整作品：${title}`,
       }
     : {
-        before: 'Original',
-        after: 'After layout',
+        before: 'Base example',
+        after: 'Layout example',
         open: (title: string) => `View full piece: ${title}`,
       },
 )

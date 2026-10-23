@@ -15,8 +15,8 @@
     <InternshipPosterStack :items="internshipFeatured" :lang="lang" @open="onOpenInternship" />
     <InternshipPosterGallery :groups="internshipGroups" :lang="lang" @open="onOpenInternship" />
     <section class="pp__military-heading" aria-labelledby="military-title">
-      <span>02 / PERSONAL STUDIES</span>
-      <h2 id="military-title">{{ lang === 'zh' ? '军事海报，个人练习' : 'Military posters. Personal studies' }}</h2>
+      <span>02 / TEMPLATE STUDIES</span>
+      <h2 id="military-title">{{ lang === 'zh' ? '几何海报，版式示例' : 'Geometric posters. Layout examples' }}</h2>
       <ReferenceIntroduction :text="MILITARY_INTRO" :label="MILITARY_LABEL" variant="section" />
     </section>
     <PosterPalette :items="posterSeries" :lang="lang" @open="onOpenSeries" />
@@ -110,8 +110,8 @@ if (import.meta.env.DEV) {
 }
 
 const INTRO_LABEL = { zh: '视觉表达', en: 'Visual communication' }
-const MILITARY_LABEL = { zh: '个人练习', en: 'Personal studies' }
-const MILITARY_INTRO = { zh: '以车辆为主体，探索字体、色彩与系列构图', en: 'Studies in type, colour and composition, built around military vehicles' }
+const MILITARY_LABEL = { zh: '合成示例', en: 'Synthetic examples' }
+const MILITARY_INTRO = { zh: '以合成几何图，演示字体、色彩与系列构图', en: 'Synthetic geometry demonstrates type, colour and serial composition' }
 
 /* ---------------- 全局揭幕后的标题入场 ---------------- */
 

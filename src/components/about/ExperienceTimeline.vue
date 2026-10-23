@@ -2,7 +2,7 @@
   <section id="experience" class="exp-section" aria-labelledby="experience-title">
     <header class="exp-section__head">
       <h2 id="experience-title">实习与实践<span lang="en">Internships & practice</span></h2>
-      <p>在真实的项目里，完成从策划到交付的工作<span lang="en">From planning to delivery, through real projects</span></p>
+      <p>用虚构经历，演示从策划到交付的表达<span lang="en">Fictional experience illustrating planning and delivery</span></p>
     </header>
     <div ref="root" class="exp">
       <nav class="exp__index" :aria-label="t.navigation">

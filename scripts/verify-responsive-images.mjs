@@ -25,12 +25,12 @@ for (const [file, size] of Object.entries(records)) {
   groups++
 }
 const portrait = {
-  src: '/portfolio/sky-mirror-1600.webp?v=portrait-v2',
-  thumb: '/portfolio/sky-mirror-400.webp?v=portrait-v2',
-  large: '/portfolio/sky-mirror-2560.webp?v=portrait-v2',
+  src: '/portfolio/sample-photo-02-1600.webp?v=portrait-v2',
+  thumb: '/portfolio/sample-photo-02-400.webp?v=portrait-v2',
+  large: '/portfolio/sample-photo-02-2560.webp?v=portrait-v2',
 }
 const portraitSources = visualImageSources(portrait)
-assert.ok(portraitSources.includes('sky-mirror-400.webp?v=portrait-v2 267w'), '竖图描述符必须使用真实宽度，保留缓存版本')
+assert.ok(portraitSources.includes('sample-photo-02-400.webp?v=portrait-v2 267w'), '竖图描述符必须使用真实宽度，保留缓存版本')
 assert.ok(!portraitSources.includes(' 400w'), '不能将最长边误当作宽度')
 assert.throws(() => visualImageSources({ src: '/missing.webp', thumb: '/missing.webp', large: '/missing.webp' }), /未登记/)
 const portraitImage = visualImageSources({ thumb: '/about/portrait-400.webp', src: '/about/portrait-900.webp', large: '/about/portrait-1448.webp' })

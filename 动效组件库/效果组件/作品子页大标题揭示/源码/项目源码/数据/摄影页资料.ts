@@ -3,7 +3,7 @@
  * 通用页尾的跨章节动作由 WorkContinuation 统一维护，不在这里复制。
  *
  * 与 `visualPortfolio.ts` 的分工（不要互相越界）
- *   · `visualPortfolio.ts` —— 素材本体：id / 标题 / 原始像素尺寸 / alt。
+ *   · `visualPortfolio.ts` —— 素材本体：id / 标题 / 版面比例尺寸 / alt。
  *   · 本文件 —— 把这些素材**编排**成章节与顺序，并持有页面文案。
  *     素材引用一律走 `visualById(id)`，本文件不重复写尺寸或标题。
  *
@@ -11,7 +11,7 @@
  *   01 `PHOTO_SETS`                      —— 色彩章节（`PhotoSets` 全屏固定舞台，
  *                                           标题 / 描述 / 配色都挂在 `PhotoSet` 上，
  *                                           组内走完后遮罩换章）
- *   02 `SECTIONS.notes` + `NOTES`        —— 摄影手记
+ *   02 `SECTIONS.notes` + `NOTES`        —— 示例说明
  *   03 `SECTIONS.gallery` + `photoGallery` —— 完整画廊（26 张，可拖动 / 可点开）
  *
  * ⚠️ 01 段**没有** `SECTIONS` 条目：它不再走 `AboutSection` 的章节头，
@@ -26,45 +26,45 @@ import { photoCollection, visualById, type VisualAsset } from './视觉作品资
 
 export const HERO = {
   big: 'PHOTOGRAPHY',
-  kicker: { zh: '摄影', en: 'Photography' } as Bi,
+  kicker: { zh: '图像展示示例', en: 'Sample image showcase' } as Bi,
   lead: {
-    zh: '循着颜色，走进光里。',
-    en: 'Follow the colour. Step into the light.',
+    zh: '用合成图像，体验完整的展示流程。',
+    en: 'Explore the full showcase with synthetic sample imagery.',
   } as Bi,
 } as const
 
 export const SECTIONS = {
   notes: {
     label: 'NOTES',
-    title: { zh: '摄影手记', en: 'Notes' },
+    title: { zh: '示例说明', en: 'Sample notes' },
     lead: {
-      zh: '先观察光，再决定画面。',
-      en: 'Watch the light first, then decide the frame.',
+      zh: '这里展示版面、滚动与查看器的组合方式。',
+      en: 'Explore how layout, scrolling and the viewer work together.',
     },
   },
   gallery: {
     label: 'GALLERY',
-    title: { zh: '摄影作品', en: 'Photographic works' },
+    title: { zh: '合成图像画廊', en: 'Synthetic image gallery' },
     lead: (n: number): Bi => ({
-      zh: `${n} 次停留，留下风景、人物与光。`,
-      en: `${n} moments held in landscapes, people and light.`,
+      zh: `${n} 张合成图像，演示横竖构图与完整浏览流程。`,
+      en: `${n} synthetic images demonstrate mixed aspect ratios and the full browsing flow.`,
     }),
   },
 } as const
 
-/** 只描述画面和观察，不补写原素材没有提供的器材或拍摄参数。 */
+/** 公开模板只描述合成图像和交互，不声称存在真实摄影、器材或拍摄经历。 */
 export const NOTES: readonly Bi[] = [
   {
-    zh: '这组照片里有山、有雾、有水面的倒影，也有树影和天光。共同点是：光先出现，画面才有形状。',
-    en: 'Mountains, mist, reflections, shadows and sky light. What they share: the light arrives first, and then the frame takes shape.',
+    zh: '所有图像均为合成几何示例，由网格、色块、圆环与短线组成，不含真实人物、地名或摄影作品。',
+    en: 'All images are synthetic geometric samples made from grids, colour blocks, rings and short lines, with no real people, locations or photographs.',
   },
   {
-    zh: '拍的时候我更在意层次：前景压住什么、中景留住什么、远处让什么慢慢退掉。构图是取舍。',
-    en: 'I look for layers: what the foreground holds, what the middle distance keeps, and what the distance lets fade. Composition is a choice.',
+    zh: '横向与竖向图像保留各自的宽高比，用来检查留白、章节切换与不同屏幕上的版面表现。',
+    en: 'Landscape and portrait samples retain their aspect ratios to demonstrate spacing, chapter transitions and layouts across screen sizes.',
   },
   {
-    zh: '把相近的颜色放在一起，原本不同的地方，也会有彼此呼应的片刻。',
-    en: 'Bring similar colours together, and distant places begin to echo one another.',
+    zh: '替换成自己的公开作品时，请同步更新标题、替代文本与尺寸，并检查缩略图和查看器是否仍然对应。',
+    en: 'When adding your own public work, update titles, alt text and dimensions together, then check that thumbnails still match the viewer.',
   },
 ] as const
 
@@ -77,9 +77,9 @@ export interface PhotoSet {
   id: string
   /** 章名：章节标题 */
   name: Bi
-  /** 一句话描述这一章的光（展示在章节标题旁） */
+  /** 一句话介绍章节的示例编排（展示在章节标题旁） */
   description: Bi
-  /** 章节底色、文字和进度线的颜色；不对照片添加滤镜。 */
+  /** 章节底色、文字和进度线的颜色；不对图像添加滤镜。 */
   palette: {
     background: string
     foreground: string
@@ -96,91 +96,85 @@ export interface PhotoSet {
 type PhotoSetPlan = Omit<PhotoSet, 'items'> & { ids: readonly string[] }
 
 /**
- * 五个色彩章节。**顺序就是滚动推进顺序**，从亮到暗再回到浅色：
- *   晴蓝 → 雾青 → 苔绿 → 鎏金 → 银白。
- *
- * ⚠️ 划分依据是**画面的主色与明度**，不是题材或张数：同一章里的照片放在一起
- *    能读出「同一种光」。所以各章张数不齐（7 / 6 / 4 / 7 / 2）—— 完整看图
- *    比凑齐版式重要。
- * ⚠️ `palette` 只给章节底色 / 文字 / 进度线用，**不给照片加滤镜**：
- *    照片一律按原始色彩呈现，调色只发生在页面纸面上。
- * ⚠️ 每张照片**只能出现在一个章节**里（`assertPhotoSets()` 会查重）。
+ * 五个章节保留既有分组与顺序（7 / 6 / 4 / 7 / 2），便于检验完整浏览流程。
+ * 名称表示舞台底色，不把合成图像描述成某处真实风景或个人摄影经历。
+ * palette 只控制舞台、文字与进度线，每张图像必须且只能出现于一章。
  */
 const SET_PLAN: readonly PhotoSetPlan[] = [
   {
     id: 'azure',
-    name: { zh: '晴蓝', en: 'Open blue' },
+    name: { zh: '浅蓝章节', en: 'Light blue chapter' },
     description: {
-      zh: '天空铺开，城市与人向光而立。',
-      en: 'Open skies. Cities and people turning towards the light.',
+      zh: '浅蓝舞台中，体验横竖图像的连续切换。',
+      en: 'A light blue stage demonstrates transitions between landscape and portrait samples.',
     },
     palette: { background: '#BCD5E3', foreground: '#183747', accent: '#416C86' },
     ids: [
-      'pavilion-photo',
-      'pavilion-photo-2',
-      'sunward',
-      'mazu-overlooking-sea',
-      'qingri-molun',
-      'old-village-walk',
-      'campus',
+      'sample-photo-20',
+      'sample-photo-21',
+      'sample-photo-04',
+      'sample-photo-22',
+      'sample-photo-12',
+      'sample-photo-14',
+      'sample-photo-18',
     ],
   },
   {
     id: 'mist',
-    name: { zh: '雾青', en: 'Blue in shadow' },
+    name: { zh: '深青章节', en: 'Deep teal chapter' },
     description: {
-      zh: '山退进云里，轮廓在阴影中留下。',
-      en: 'Mountains recede into cloud. Outlines linger in the shadows.',
+      zh: '深色舞台中，观察几何轮廓与滚动节奏。',
+      en: 'A dark stage highlights geometric outlines and scrolling rhythm.',
     },
     palette: { background: '#263A42', foreground: '#E6EEF0', accent: '#A7C5CD' },
     ids: [
-      'mountain-cloud',
-      'mountain-bird',
-      'zhangjiajie-mountains',
-      'guyong-city',
-      'zhangyuan-panorama',
-      'cave',
+      'sample-photo-01',
+      'sample-photo-11',
+      'sample-photo-10',
+      'sample-photo-16',
+      'sample-photo-19',
+      'sample-photo-03',
     ],
   },
   {
     id: 'moss',
-    name: { zh: '苔绿', en: 'Quiet green' },
+    name: { zh: '浅绿章节', en: 'Light green chapter' },
     description: {
-      zh: '沿着山谷和道路，绿色慢慢抵达远处。',
-      en: 'Through valleys and along roads, green reaches into the distance.',
+      zh: '浅绿舞台中，比较不同图像比例与留白。',
+      en: 'A light green stage demonstrates different image proportions and spacing.',
     },
     palette: { background: '#CCD1B9', foreground: '#29352B', accent: '#61704C' },
-    ids: ['binglang-valley', 'road-to-city', 'urban-village', 'daylight'],
+    ids: ['sample-photo-24', 'sample-photo-17', 'sample-photo-15', 'sample-photo-05'],
   },
   {
     id: 'amber',
-    name: { zh: '鎏金', en: 'Held in gold' },
+    name: { zh: '暖金章节', en: 'Warm gold chapter' },
     description: {
-      zh: '叶片、水面与晚霞，把一年的光留住。',
-      en: 'Leaves, reflections and the last light of a year.',
+      zh: '暖金舞台中，演示较长图组的推进与计数。',
+      en: 'A warm gold stage demonstrates progression and counting through a longer image set.',
     },
     palette: { background: '#D7B05E', foreground: '#392B18', accent: '#77501F' },
     ids: [
-      'ginkgo-road',
-      'ginkgo-road-4',
-      'ginkgo-road-1',
-      'ginkgo-road-2',
-      'sky-mirror',
-      'seaside-sunset',
-      // 拼图包含多种颜色，按占视觉中心的黄橙年号归入暖色章节。
-      'annual-review-2025',
+      'sample-photo-06',
+      'sample-photo-09',
+      'sample-photo-07',
+      'sample-photo-08',
+      'sample-photo-02',
+      'sample-photo-23',
+      // 保留这一槽位，维持章节总数与完整画廊覆盖。
+      'sample-photo-26',
     ],
   },
   {
     id: 'silver',
-    name: { zh: '银白', en: 'Pale light' },
+    name: { zh: '浅灰章节', en: 'Light grey chapter' },
     description: {
-      zh: '花与枝条，在浅色的天光里呼吸。',
-      en: 'Blossoms and branches breathing in the pale light.',
+      zh: '浅灰舞台中，以两张示例完成章节浏览。',
+      en: 'Two samples complete the chapter sequence on a light grey stage.',
     },
     palette: { background: '#E7E1DE', foreground: '#3E3539', accent: '#8E747F' },
 
-    ids: ['purple-leaf-plum', 'tall-tree'],
+    ids: ['sample-photo-25', 'sample-photo-13'],
   },
 ]
 

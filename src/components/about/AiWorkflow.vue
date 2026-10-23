@@ -34,12 +34,12 @@
             <div v-else-if="index === 2" class="frame-study">
               <img :src="photography[frameIndex]!.src" :srcset="visualImageSources(photography[frameIndex]!)" sizes="(max-width: 760px) 40vw, 25vw" :width="photography[frameIndex]!.width" :height="photography[frameIndex]!.height" :alt="pick(photography[frameIndex]!.alt, lang)" />
               <div class="frame-study__choices" role="group" aria-label="画面观察 / Read the frame"><button v-for="(label, i) in frameLabels" :key="label.zh" type="button" :aria-pressed="frameIndex === i" @click="frameIndex = i">{{ label.zh }}<span lang="en">{{ label.en }}</span></button></div>
-              <p class="aiw__material-note">个人摄影，用于画面观察示意<span lang="en">Personal photographs used as visual references</span></p>
+              <p class="aiw__material-note">合成几何图，用于画面观察示意<span lang="en">Synthetic geometry used as visual examples</span></p>
             </div>
             <div v-else-if="index === 3" class="image-study">
               <div class="image-study__frame"><img :src="editorial[layoutIndex]!.src" :srcset="visualImageSources(editorial[layoutIndex]!)" sizes="(max-width: 760px) 40vw, 25vw" :width="editorial[layoutIndex]!.width" :height="editorial[layoutIndex]!.height" :alt="pick(editorial[layoutIndex]!.alt, lang)" /></div>
-              <div class="image-study__choices" role="group" aria-label="原片与排版 / Photograph and layout"><button type="button" :aria-pressed="layoutIndex === 0" @click="layoutIndex = 0">原片<span lang="en">Photograph</span></button><button type="button" :aria-pressed="layoutIndex === 1" @click="layoutIndex = 1">排版练习<span lang="en">Cover study</span></button></div>
-              <p class="aiw__material-note">滕王阁 / 个人摄影与封面练习<span lang="en">Pavilion / Personal photograph & cover study</span></p>
+              <div class="image-study__choices" role="group" aria-label="基础图与版式 / Base image and layout"><button type="button" :aria-pressed="layoutIndex === 0" @click="layoutIndex = 0">基础图<span lang="en">Base image</span></button><button type="button" :aria-pressed="layoutIndex === 1" @click="layoutIndex = 1">版式示例<span lang="en">Layout example</span></button></div>
+              <p class="aiw__material-note">合成几何图 / 版式示例<span lang="en">Synthetic geometry / Layout example</span></p>
             </div>
             <div v-else class="delivery-study">
               <p class="aiw__preview-title">交付前，我会检查<span lang="en">Before handing it over</span></p>
@@ -63,7 +63,7 @@
         <p class="aiw__output">留下什么<span lang="en">What I take forward</span><strong>{{ stage.output.zh }}<span lang="en">{{ stage.output.en }}</span></strong></p>
       </div>
     </div>
-    <p class="aiw__provenance">以上是工作方法说明，画面示例来自个人练习<a href="#work-aigc-drama">实习中的 AIGC 实践 ↗</a><span lang="en">A working-method study with personal visual examples <a href="#work-aigc-drama">Read my AIGC experience ↗</a></span></p>
+    <p class="aiw__provenance">以上为虚构工作流与合成画面示例<a href="#work-aigc-drama">查看虚构项目经历 ↗</a><span lang="en">A fictional workflow with synthetic visual examples <a href="#work-aigc-drama">Explore a fictional project ↗</a></span></p>
   </section>
 </template>
 

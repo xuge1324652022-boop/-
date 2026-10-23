@@ -262,7 +262,8 @@ let viewport = { width: 1, height: 1 }
 let introTimeline: gsap.core.Timeline | null = null
 let orbitTween: gsap.core.Tween | null = null
 let resizeObserver: ResizeObserver | null = null
-let reducedMotion = false
+const motionMedia = window.matchMedia('(prefers-reduced-motion: reduce)')
+let reducedMotion = motionMedia.matches
 let destroyed = false
 let wheelAt = 0
 let wheelLast = 0
@@ -500,6 +501,38 @@ function stopMotion() {
   chapterInstance?.kill()
 }
 
+/** 偏好变化时完成当前动作，保留已选章节；不触碰路由幕布持有的滚动锁。 */
+function onMotionChange(): void {
+  if (destroyed) return
+  reducedMotion = motionMedia.matches
+  if (!reducedMotion) { refreshProximity(); return }
+  if (pointerStart) {
+    orbitTarget = Math.round(state.orbit / 60) * 60
+    state.selected = normalizeIndex(dragStartIndex - Math.round(orbitTarget / 60 - dragStartStep))
+    activeIndex.value = state.selected
+    state.orbit = orbitTarget
+  }
+  pointerStart = null
+  dragTarget = null
+  dragging.value = false
+  suppressClick = false
+  dragSamples = []
+  // progress(1)兑现原有完成回调，不能kill后把相位留在focusing/returning。
+  orbitTween?.progress(1)
+  introTimeline?.progress(1)
+  chapterInstance?.timeline?.progress(1)
+  indexAnimation?.progress(1)
+  pointerAt.inside = false
+  hoverIndex.value = -1
+  drift.x = drift.y = driftTarget.x = driftTarget.y = 0
+  driftRendered.x = driftRendered.y = 0
+  prox.fill(0); proxTarget.fill(0)
+  gsap.ticker.remove(parallaxTick)
+  parallaxAttached = false
+  render()
+  // 卡内由CardVisual监听同一偏好；不能改它的可见性播放状态，否则恢复偏好后仍被暂停。
+}
+
 /** 把画廊落到静止态（entrance=1、focus=0） */
 function settleGallery() {
   stopMotion()
@@ -570,7 +603,6 @@ function runIntro() {
 
   if (reducedMotion) {
     // 减少动态时直接落到关于我，仍按相同的就绪条件进入后续引导。
-    for (const visual of visuals) visual?.pause()
     settleGallery()
     focusChapter(chosen)
     return
@@ -1132,7 +1164,8 @@ watch(
 
 /** 挂载：注册各种监听、启动 ticker，并等待或接管预加载 */
 onMounted(() => {
-  reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  reducedMotion = motionMedia.matches
+  motionMedia.addEventListener('change', onMotionChange)
   resizeObserver = new ResizeObserver(scheduleResize)
   if (rootRef.value) resizeObserver.observe(rootRef.value)
   resize()
@@ -1156,7 +1189,6 @@ onMounted(() => {
     settleGallery()
     focusChapter(normalizeIndex(props.restoreIndex))
   } else if (galleryDebug && reducedMotion) {
-    for (const visual of visuals) visual?.pause()
     settleGallery()
   } else if (props.preloaderDone && !galleryDebug) {
     boot()
@@ -1244,6 +1276,7 @@ onMounted(() => {
 /** 卸载：清理所有监听与时间线 */
 onUnmounted(() => {
   destroyed = true
+  motionMedia.removeEventListener('change', onMotionChange)
   // 离开画廊：把「拖拽 / 锁定」状态交还给全局光标，避免它卡在 drag/locked。
   cursorLockState.value = null
   if (bootTimer !== null) {

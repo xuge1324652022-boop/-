@@ -7,7 +7,7 @@
     <div class="beyond__layout">
       <PhotoRunway :items="photography" :lang="lang" compact @open="(item, trigger) => emit('open', item, trigger)" @change="current = $event.id" />
       <aside class="beyond__note" aria-live="polite" aria-atomic="true">
-        <p class="beyond__category">个人摄影<span lang="en">Personal photography</span></p>
+        <p class="beyond__category">合成图像示例<span lang="en">Synthetic image examples</span></p>
         <Transition name="observation" mode="out-in">
           <div :key="current">
             <h3>{{ observation.title.zh }}<span lang="en">{{ observation.title.en }}</span></h3>
@@ -40,20 +40,20 @@ const route = useRoute()
 const destination = (path: string) => ({ path, query: { from: route.query.from === 'cards' ? 'cards' : 'gallery' } })
 const current = ref(photography[0]!.id)
 const observations: Record<string, { title: Bi; copy: Bi }> = {
-  'mountain-cloud': {
+  'sample-photo-01': {
     title: { zh: '远近之间', en: 'Between the layers' },
-    copy: { zh: '云雾让山脊一层层退向远处。把视线留在明暗变化里，画面就有了深度', en: 'Cloud separates the ridges into receding layers. Changes in light and shade give the frame its depth' },
+    copy: { zh: '用矩形、圆形和网格演示前后层次；所有画面均由程序生成', en: 'Rectangles, circles and a grid demonstrate visual layers. Every image is generated programmatically' },
   },
-  'sky-mirror': {
+  'sample-photo-02': {
     title: { zh: '光与倒影', en: 'Light & reflection' },
-    copy: { zh: '逆光、水面和远处的人影，构成竖幅中的上下呼应。留白让小小的身影也能被看见', en: 'Backlight, water and a distant figure echo across the vertical frame. Open space gives the small silhouette a place to be seen' },
+    copy: { zh: '竖幅示例保留完整圆形与水平色块，用留白比较不同画幅的节奏', en: 'A portrait example retains the circle and level colour blocks, using space to compare image proportions' },
   },
-  cave: {
-    title: { zh: '从暗处望出去', en: 'Looking out from the dark' },
-    copy: { zh: '洞口成为天然的取景框。前景的暗、远处的亮和人物的尺度，一起交代空间', en: 'The cave mouth becomes a natural frame. A dark foreground, distant light and the scale of the figures describe the space' },
+  'sample-photo-03': {
+    title: { zh: '形状与层次', en: 'Shape and layers' },
+    copy: { zh: '深浅色块与圆环构成通用版式，不对应真实拍摄地点、人物或作品', en: 'Light and dark blocks with a ring form a generic layout, without depicting real locations, people or work' },
   },
 }
-const observation = computed(() => observations[current.value] ?? observations['mountain-cloud']!)
+const observation = computed(() => observations[current.value] ?? observations['sample-photo-01']!)
 </script>
 
 <style scoped>

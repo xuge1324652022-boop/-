@@ -14,8 +14,7 @@
 
     ⚠️ 可点区域是覆盖整行的 `<button class="work__hit">`（stretched hit area），
        不是给 `<article>` 挂 click：行里有 `<h3>`，整块当按钮会毁掉标题语义。
-    ⚠️ 封面是本人成片的真实静帧（`public/about/work-0N.webp`），不是占位图；
-       换素材直接覆盖同名文件。
+    封面使用已审核的合成几何示例，更新时须同步公开素材清单。
     ⚠️ 这里**没有**视频：四项曾经都挂 `/color/` 的调色素材，归属不成立（见
        `aboutProfile.ts` 的 `Work` 注释）。未确认之前只展示封面 + 文字案例。
   -->
@@ -86,8 +85,8 @@ import { WORKS, pick, type Lang, type Work } from '../../data/aboutProfile'
 
 const props = defineProps<{ lang: Lang }>()
 const SECTION_LEAD = {
-  zh: '四段经历里能拿出数据的那四件：海外社媒短视频、AIGC 漫剧分镜与成片、3C 与家居账号运营、校园融媒体宣传',
-  en: 'The four pieces with numbers behind them: overseas social video, AIGC comic-drama production, 3C & home account operations, and campus media',
+  zh: '四组虚构经历，演示背景、职责、方法与成果字段的写法；内容与封面均为模板示例',
+  en: 'Four fictional experiences illustrate context, responsibilities, methods and results. All content and covers are template examples',
 }
 
 const t = computed(() =>

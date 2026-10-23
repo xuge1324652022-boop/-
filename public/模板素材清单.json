@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "public/about/portrait-1448.webp",
-      "sha256": "36caace6c4ed5d73da02c829df97aeafe5a9cba65cfc82f297a63b27c243622e",
-      "bytes": 33660,
+      "sha256": "5054b684f833b9eabe81ddfd090d9830560b96fd9e578c91d32ebf357aea41a6",
+      "bytes": 25846,
       "kind": "generated-geometric-image",
       "dimensions": [
         1448,
@@ -13,8 +13,8 @@
     },
     {
       "path": "public/about/portrait-400.webp",
-      "sha256": "d8d964b03cc163f409e1b2fdd65426791168dad1b8831654f816bd7ac1a9b545",
-      "bytes": 9420,
+      "sha256": "75065d4b5a5e862568233281f018e6be1e2360bbc3c8cab261e433d5fff23d6a",
+      "bytes": 7050,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -23,8 +23,8 @@
     },
     {
       "path": "public/about/portrait-900.webp",
-      "sha256": "4bf0c9710bc58a27a473267706f977d314ddf3fc546f789f33b3981602550b87",
-      "bytes": 19292,
+      "sha256": "df241576e55f8cf68c0623da819f94ea358e75b95c366f70e6939afebe5cb507",
+      "bytes": 14484,
       "kind": "generated-geometric-image",
       "dimensions": [
         900,
@@ -33,8 +33,8 @@
     },
     {
       "path": "public/about/portrait.webp",
-      "sha256": "d6bbe4b99741f8eec0fbfcb374f4c70953788b55b39c8b31fab6bd1062148c5f",
-      "bytes": 27200,
+      "sha256": "ac567b302be711f7b338e591194b263091de578cd9b71b75eed93e12bccaaadf",
+      "bytes": 20588,
       "kind": "generated-geometric-image",
       "dimensions": [
         1200,
@@ -43,8 +43,8 @@
     },
     {
       "path": "public/about/work-01.webp",
-      "sha256": "ddaf3007809ef2216a8063c9e11d96e200021118457619848a7d3458cef2532c",
-      "bytes": 21070,
+      "sha256": "3dd290fb28fea3fa1e55b7ae77253a53b735da877e9f6148ce9d04a6f31b6ac4",
+      "bytes": 15024,
       "kind": "generated-geometric-image",
       "dimensions": [
         1200,
@@ -53,8 +53,8 @@
     },
     {
       "path": "public/about/work-02.webp",
-      "sha256": "6383eae364f024834c3490fdaa30908a942e82052b3870b078aa3404488d1966",
-      "bytes": 24960,
+      "sha256": "fc3e760a043553fe0629432cd65a15713645d100b659c0994a9ea3f54f4f08c7",
+      "bytes": 17050,
       "kind": "generated-geometric-image",
       "dimensions": [
         1200,
@@ -63,8 +63,8 @@
     },
     {
       "path": "public/about/work-03.webp",
-      "sha256": "ddaf3007809ef2216a8063c9e11d96e200021118457619848a7d3458cef2532c",
-      "bytes": 21070,
+      "sha256": "3dd290fb28fea3fa1e55b7ae77253a53b735da877e9f6148ce9d04a6f31b6ac4",
+      "bytes": 15024,
       "kind": "generated-geometric-image",
       "dimensions": [
         1200,
@@ -73,8 +73,8 @@
     },
     {
       "path": "public/about/work-04.webp",
-      "sha256": "6383eae364f024834c3490fdaa30908a942e82052b3870b078aa3404488d1966",
-      "bytes": 24960,
+      "sha256": "fc3e760a043553fe0629432cd65a15713645d100b659c0994a9ea3f54f4f08c7",
+      "bytes": 17050,
       "kind": "generated-geometric-image",
       "dimensions": [
         1200,
@@ -83,8 +83,8 @@
     },
     {
       "path": "public/color-previews/clip-1.jpg",
-      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
-      "bytes": 33800,
+      "sha256": "c8c36c1062fa2b42b7068333f9bd32825b9ab442924c57fa0da2f81b409c4abe",
+      "bytes": 28074,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -93,8 +93,8 @@
     },
     {
       "path": "public/color-previews/clip-1.mp4",
-      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
-      "bytes": 20228,
+      "sha256": "9d21cf36e5b8b6532bb4252ba329de16bac26fc2204886129e99d853616cf0d0",
+      "bytes": 14529,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -103,8 +103,8 @@
     },
     {
       "path": "public/color-previews/clip-10.jpg",
-      "sha256": "8eaa6626aa03e60d1f90b7df0e974a55089d6119841a05f42e1a2e8d63bd45fe",
-      "bytes": 32266,
+      "sha256": "bc104f94361ea9b2a9504ef0426f773cd549099947ce5274ee6633744b1bca69",
+      "bytes": 26633,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -113,8 +113,8 @@
     },
     {
       "path": "public/color-previews/clip-10.mp4",
-      "sha256": "f4bf2f8b28a6a5380108e9994caffdb5230a8222b8ef22c1a3a5583fd1bff3da",
-      "bytes": 18258,
+      "sha256": "8b751dd2b8f404715fa12be24be2ba266af3aabb252cc83270dc08cb849a29b8",
+      "bytes": 14354,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -123,8 +123,8 @@
     },
     {
       "path": "public/color-previews/clip-11.jpg",
-      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
-      "bytes": 33800,
+      "sha256": "c8c36c1062fa2b42b7068333f9bd32825b9ab442924c57fa0da2f81b409c4abe",
+      "bytes": 28074,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -133,8 +133,8 @@
     },
     {
       "path": "public/color-previews/clip-11.mp4",
-      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
-      "bytes": 20228,
+      "sha256": "9d21cf36e5b8b6532bb4252ba329de16bac26fc2204886129e99d853616cf0d0",
+      "bytes": 14529,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -143,8 +143,8 @@
     },
     {
       "path": "public/color-previews/clip-12.jpg",
-      "sha256": "9fd7f6fe3bf9508284741113dee3913a4d9cd2228fc696afc26294dd5b79b34a",
-      "bytes": 33958,
+      "sha256": "e3500ea5145b2a2cc943dfa59cd12524ea598b5a433c5203a42e88494d927177",
+      "bytes": 28037,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -153,8 +153,8 @@
     },
     {
       "path": "public/color-previews/clip-12.mp4",
-      "sha256": "d58aaca2cb87616eea8526d8e16605c5d9a0f360ff817b22dbf99382cbb9e4c0",
-      "bytes": 19581,
+      "sha256": "f8ad89af1f596e197c6468af491ab883d3bf6c4e53124288fbd1f8b0e2c8e8b4",
+      "bytes": 14839,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -163,8 +163,8 @@
     },
     {
       "path": "public/color-previews/clip-13.jpg",
-      "sha256": "8eaa6626aa03e60d1f90b7df0e974a55089d6119841a05f42e1a2e8d63bd45fe",
-      "bytes": 32266,
+      "sha256": "bc104f94361ea9b2a9504ef0426f773cd549099947ce5274ee6633744b1bca69",
+      "bytes": 26633,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -173,8 +173,8 @@
     },
     {
       "path": "public/color-previews/clip-13.mp4",
-      "sha256": "f4bf2f8b28a6a5380108e9994caffdb5230a8222b8ef22c1a3a5583fd1bff3da",
-      "bytes": 18258,
+      "sha256": "8b751dd2b8f404715fa12be24be2ba266af3aabb252cc83270dc08cb849a29b8",
+      "bytes": 14354,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -183,8 +183,8 @@
     },
     {
       "path": "public/color-previews/clip-14.jpg",
-      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
-      "bytes": 33800,
+      "sha256": "c8c36c1062fa2b42b7068333f9bd32825b9ab442924c57fa0da2f81b409c4abe",
+      "bytes": 28074,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -193,8 +193,8 @@
     },
     {
       "path": "public/color-previews/clip-14.mp4",
-      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
-      "bytes": 20228,
+      "sha256": "9d21cf36e5b8b6532bb4252ba329de16bac26fc2204886129e99d853616cf0d0",
+      "bytes": 14529,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -203,8 +203,8 @@
     },
     {
       "path": "public/color-previews/clip-15.jpg",
-      "sha256": "8eaa6626aa03e60d1f90b7df0e974a55089d6119841a05f42e1a2e8d63bd45fe",
-      "bytes": 32266,
+      "sha256": "bc104f94361ea9b2a9504ef0426f773cd549099947ce5274ee6633744b1bca69",
+      "bytes": 26633,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -213,8 +213,8 @@
     },
     {
       "path": "public/color-previews/clip-15.mp4",
-      "sha256": "f4bf2f8b28a6a5380108e9994caffdb5230a8222b8ef22c1a3a5583fd1bff3da",
-      "bytes": 18258,
+      "sha256": "8b751dd2b8f404715fa12be24be2ba266af3aabb252cc83270dc08cb849a29b8",
+      "bytes": 14354,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -223,8 +223,8 @@
     },
     {
       "path": "public/color-previews/clip-2.jpg",
-      "sha256": "7781189ed980a10bd6b90e6380a673ea761f3fe03fb57f912309bcb3953885d1",
-      "bytes": 37245,
+      "sha256": "5c72422d9118ad2a6e04d2ebf37cea698328cf93c45f58080be403c2e9a56f14",
+      "bytes": 30516,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -233,8 +233,8 @@
     },
     {
       "path": "public/color-previews/clip-2.mp4",
-      "sha256": "5b4c86f8ba9c169a439886fb82b2e1115d776cd655743026abbb5647af148af6",
-      "bytes": 22492,
+      "sha256": "2d1cb13a2664acb78f5055a61301eb9c30570b9c5f97aef3229b977579affe88",
+      "bytes": 16696,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -243,8 +243,8 @@
     },
     {
       "path": "public/color-previews/clip-3.jpg",
-      "sha256": "8eaa6626aa03e60d1f90b7df0e974a55089d6119841a05f42e1a2e8d63bd45fe",
-      "bytes": 32266,
+      "sha256": "bc104f94361ea9b2a9504ef0426f773cd549099947ce5274ee6633744b1bca69",
+      "bytes": 26633,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -253,8 +253,8 @@
     },
     {
       "path": "public/color-previews/clip-3.mp4",
-      "sha256": "f4bf2f8b28a6a5380108e9994caffdb5230a8222b8ef22c1a3a5583fd1bff3da",
-      "bytes": 18258,
+      "sha256": "8b751dd2b8f404715fa12be24be2ba266af3aabb252cc83270dc08cb849a29b8",
+      "bytes": 14354,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -263,8 +263,8 @@
     },
     {
       "path": "public/color-previews/clip-4.jpg",
-      "sha256": "7781189ed980a10bd6b90e6380a673ea761f3fe03fb57f912309bcb3953885d1",
-      "bytes": 37245,
+      "sha256": "5c72422d9118ad2a6e04d2ebf37cea698328cf93c45f58080be403c2e9a56f14",
+      "bytes": 30516,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -273,8 +273,8 @@
     },
     {
       "path": "public/color-previews/clip-4.mp4",
-      "sha256": "5b4c86f8ba9c169a439886fb82b2e1115d776cd655743026abbb5647af148af6",
-      "bytes": 22492,
+      "sha256": "2d1cb13a2664acb78f5055a61301eb9c30570b9c5f97aef3229b977579affe88",
+      "bytes": 16696,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -283,8 +283,8 @@
     },
     {
       "path": "public/color-previews/clip-5.jpg",
-      "sha256": "9fd7f6fe3bf9508284741113dee3913a4d9cd2228fc696afc26294dd5b79b34a",
-      "bytes": 33958,
+      "sha256": "e3500ea5145b2a2cc943dfa59cd12524ea598b5a433c5203a42e88494d927177",
+      "bytes": 28037,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -293,8 +293,8 @@
     },
     {
       "path": "public/color-previews/clip-5.mp4",
-      "sha256": "d58aaca2cb87616eea8526d8e16605c5d9a0f360ff817b22dbf99382cbb9e4c0",
-      "bytes": 19581,
+      "sha256": "f8ad89af1f596e197c6468af491ab883d3bf6c4e53124288fbd1f8b0e2c8e8b4",
+      "bytes": 14839,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -303,8 +303,8 @@
     },
     {
       "path": "public/color-previews/clip-6.jpg",
-      "sha256": "9fd7f6fe3bf9508284741113dee3913a4d9cd2228fc696afc26294dd5b79b34a",
-      "bytes": 33958,
+      "sha256": "e3500ea5145b2a2cc943dfa59cd12524ea598b5a433c5203a42e88494d927177",
+      "bytes": 28037,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -313,8 +313,8 @@
     },
     {
       "path": "public/color-previews/clip-6.mp4",
-      "sha256": "d58aaca2cb87616eea8526d8e16605c5d9a0f360ff817b22dbf99382cbb9e4c0",
-      "bytes": 19581,
+      "sha256": "f8ad89af1f596e197c6468af491ab883d3bf6c4e53124288fbd1f8b0e2c8e8b4",
+      "bytes": 14839,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -323,8 +323,8 @@
     },
     {
       "path": "public/color-previews/clip-7.jpg",
-      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
-      "bytes": 33800,
+      "sha256": "c8c36c1062fa2b42b7068333f9bd32825b9ab442924c57fa0da2f81b409c4abe",
+      "bytes": 28074,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -333,8 +333,8 @@
     },
     {
       "path": "public/color-previews/clip-7.mp4",
-      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
-      "bytes": 20228,
+      "sha256": "9d21cf36e5b8b6532bb4252ba329de16bac26fc2204886129e99d853616cf0d0",
+      "bytes": 14529,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -343,8 +343,8 @@
     },
     {
       "path": "public/color-previews/clip-8.jpg",
-      "sha256": "7781189ed980a10bd6b90e6380a673ea761f3fe03fb57f912309bcb3953885d1",
-      "bytes": 37245,
+      "sha256": "5c72422d9118ad2a6e04d2ebf37cea698328cf93c45f58080be403c2e9a56f14",
+      "bytes": 30516,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -353,8 +353,8 @@
     },
     {
       "path": "public/color-previews/clip-8.mp4",
-      "sha256": "5b4c86f8ba9c169a439886fb82b2e1115d776cd655743026abbb5647af148af6",
-      "bytes": 22492,
+      "sha256": "2d1cb13a2664acb78f5055a61301eb9c30570b9c5f97aef3229b977579affe88",
+      "bytes": 16696,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -363,8 +363,8 @@
     },
     {
       "path": "public/color-previews/clip-9.jpg",
-      "sha256": "72780c880b9bb704621130b10aeca168f0d31056f6373356da3b5e85b8faf338",
-      "bytes": 33800,
+      "sha256": "c8c36c1062fa2b42b7068333f9bd32825b9ab442924c57fa0da2f81b409c4abe",
+      "bytes": 28074,
       "kind": "generated-geometric-image",
       "dimensions": [
         640,
@@ -373,8 +373,8 @@
     },
     {
       "path": "public/color-previews/clip-9.mp4",
-      "sha256": "a51a3f187d0cedec79fb1b8b84ce0552ea774af3409b5e2951c1b1942df55517",
-      "bytes": 20228,
+      "sha256": "9d21cf36e5b8b6532bb4252ba329de16bac26fc2204886129e99d853616cf0d0",
+      "bytes": 14529,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         640,
@@ -383,8 +383,8 @@
     },
     {
       "path": "public/color/color grade-1.mp4",
-      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
-      "bytes": 52302,
+      "sha256": "91033d0df4c93f16faeed97de635e933d5b80c8ead888104411f0987cfd70ffe",
+      "bytes": 33411,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -393,8 +393,8 @@
     },
     {
       "path": "public/color/color grade-10.mp4",
-      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
-      "bytes": 52302,
+      "sha256": "91033d0df4c93f16faeed97de635e933d5b80c8ead888104411f0987cfd70ffe",
+      "bytes": 33411,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -403,8 +403,8 @@
     },
     {
       "path": "public/color/color grade-11.mp4",
-      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
-      "bytes": 52302,
+      "sha256": "91033d0df4c93f16faeed97de635e933d5b80c8ead888104411f0987cfd70ffe",
+      "bytes": 33411,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -413,8 +413,8 @@
     },
     {
       "path": "public/color/color grade-12.mp4",
-      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
-      "bytes": 52629,
+      "sha256": "2620854b762f2ea3c80847cf8a796b5ec2b96f58999e0743ffc8d21c845fd127",
+      "bytes": 33632,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -423,8 +423,8 @@
     },
     {
       "path": "public/color/color grade-13.mp4",
-      "sha256": "521d63b25aa6ae9aad34748f31526afe30109086eb0fb11de192ee13c7df3e7a",
-      "bytes": 50248,
+      "sha256": "c5d4d53def05831f55320c428cc971505785ae9a64a626aed8454a8dcd94753b",
+      "bytes": 35424,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -433,8 +433,8 @@
     },
     {
       "path": "public/color/color grade-14.mp4",
-      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
-      "bytes": 52302,
+      "sha256": "91033d0df4c93f16faeed97de635e933d5b80c8ead888104411f0987cfd70ffe",
+      "bytes": 33411,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -443,8 +443,8 @@
     },
     {
       "path": "public/color/color grade-15.mp4",
-      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
-      "bytes": 52629,
+      "sha256": "2620854b762f2ea3c80847cf8a796b5ec2b96f58999e0743ffc8d21c845fd127",
+      "bytes": 33632,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -453,8 +453,8 @@
     },
     {
       "path": "public/color/color grade-2.mp4",
-      "sha256": "521d63b25aa6ae9aad34748f31526afe30109086eb0fb11de192ee13c7df3e7a",
-      "bytes": 50248,
+      "sha256": "c5d4d53def05831f55320c428cc971505785ae9a64a626aed8454a8dcd94753b",
+      "bytes": 35424,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -463,8 +463,8 @@
     },
     {
       "path": "public/color/color grade-3.mp4",
-      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
-      "bytes": 52629,
+      "sha256": "2620854b762f2ea3c80847cf8a796b5ec2b96f58999e0743ffc8d21c845fd127",
+      "bytes": 33632,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -473,8 +473,8 @@
     },
     {
       "path": "public/color/color grade-4.mp4",
-      "sha256": "5141cfb535bc7d65ec3b26efb6fb8bbf64aa7fae8dfc718f93e9cc42f60c40b6",
-      "bytes": 57700,
+      "sha256": "5d3b846b3cdab312e880c6679a9dd386c7c4646d2b9d3bc95502bd41b0e97d04",
+      "bytes": 35600,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -483,8 +483,8 @@
     },
     {
       "path": "public/color/color grade-5.mp4",
-      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
-      "bytes": 52302,
+      "sha256": "91033d0df4c93f16faeed97de635e933d5b80c8ead888104411f0987cfd70ffe",
+      "bytes": 33411,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -493,8 +493,8 @@
     },
     {
       "path": "public/color/color grade-6.mp4",
-      "sha256": "36d77669bcfc5079975a19d5e393ea9f018ba595e2a75a2a6fb75feb861efe4f",
-      "bytes": 52302,
+      "sha256": "91033d0df4c93f16faeed97de635e933d5b80c8ead888104411f0987cfd70ffe",
+      "bytes": 33411,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -503,8 +503,8 @@
     },
     {
       "path": "public/color/color grade-7.mp4",
-      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
-      "bytes": 52629,
+      "sha256": "2620854b762f2ea3c80847cf8a796b5ec2b96f58999e0743ffc8d21c845fd127",
+      "bytes": 33632,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -513,8 +513,8 @@
     },
     {
       "path": "public/color/color grade-8.mp4",
-      "sha256": "5141cfb535bc7d65ec3b26efb6fb8bbf64aa7fae8dfc718f93e9cc42f60c40b6",
-      "bytes": 57700,
+      "sha256": "5d3b846b3cdab312e880c6679a9dd386c7c4646d2b9d3bc95502bd41b0e97d04",
+      "bytes": 35600,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -523,8 +523,8 @@
     },
     {
       "path": "public/color/color grade-9.mp4",
-      "sha256": "6e84db44061d971180561efb6e900e858574c9e3c12826ef48c746b7758c7947",
-      "bytes": 52629,
+      "sha256": "2620854b762f2ea3c80847cf8a796b5ec2b96f58999e0743ffc8d21c845fd127",
+      "bytes": 33632,
       "kind": "generated-silent-geometric-video",
       "dimensions": [
         1920,
@@ -533,8 +533,8 @@
     },
     {
       "path": "public/internship-clean/demo-garden-01-1600.webp",
-      "sha256": "3ca840fbe636075317372a0fe3ea478d186969909d24c6fbd69c7cdd47a8c116",
-      "bytes": 42520,
+      "sha256": "c474cf2fda8642b33bc837b9e50cca179f9bd3d954535c49dbc069a53d511c31",
+      "bytes": 29960,
       "kind": "generated-geometric-image",
       "dimensions": [
         1178,
@@ -543,8 +543,8 @@
     },
     {
       "path": "public/internship-clean/demo-garden-01-2560.webp",
-      "sha256": "603a57189614a00e9229f4e0b981472b78c40b2e43824576b1e85ac123d87e22",
-      "bytes": 71290,
+      "sha256": "0ce9786ead9c5f658672f93f220d0c95175b6ed58fea3a8723731298c8cbe100",
+      "bytes": 50698,
       "kind": "generated-geometric-image",
       "dimensions": [
         1885,
@@ -553,8 +553,8 @@
     },
     {
       "path": "public/internship-clean/demo-garden-01-400.webp",
-      "sha256": "7ba5fad5fcf943b935d6dfa7c80b7f3fe909d640681d90cd130f453cbd6c741e",
-      "bytes": 10504,
+      "sha256": "cd5073ce319192526a454dcf01b6bdf882cd64806fb1fc8632e47617e9585980",
+      "bytes": 7440,
       "kind": "generated-geometric-image",
       "dimensions": [
         295,
@@ -563,8 +563,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-01-1600.webp",
-      "sha256": "37b3ee813176e2af28769c8fa718c2d5a8fbb6672d56c36499310637e6a26c8c",
-      "bytes": 30776,
+      "sha256": "f8058211ecf94e58be2ffaee6c8db004de69a0ac9d70742b61f1379d7d54513c",
+      "bytes": 20326,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -573,8 +573,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-01-2560.webp",
-      "sha256": "208aba3e670e8478893113258565808e78f16e1040f551bae041e478f7c27c92",
-      "bytes": 53674,
+      "sha256": "21fa5507344edfb9f4d4f66f6b9a40012de46f695cc59bffbc37c3621414324e",
+      "bytes": 36522,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -583,8 +583,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-01-400.webp",
-      "sha256": "5d762b0f8bbd97be8404302b376ba1d5e34ea9347a6e9f53b1ae2f26d24ad4a7",
-      "bytes": 9324,
+      "sha256": "683d54f735da86b7b434f0aa64e972e807bf9f17b673604614860f16233bcabd",
+      "bytes": 6136,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -593,8 +593,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-02-1600.webp",
-      "sha256": "87e9085f19bbb7f0e36aa118baa07f12b4cb5db86c91f066b44180189a6e57a9",
-      "bytes": 25936,
+      "sha256": "f8058211ecf94e58be2ffaee6c8db004de69a0ac9d70742b61f1379d7d54513c",
+      "bytes": 20326,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -603,8 +603,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-02-2560.webp",
-      "sha256": "defb3064fe99fe5050e3f3e388ce7c44a559a5769e7cd57dca859b75b14acaf2",
-      "bytes": 46050,
+      "sha256": "21fa5507344edfb9f4d4f66f6b9a40012de46f695cc59bffbc37c3621414324e",
+      "bytes": 36522,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -613,8 +613,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-02-400.webp",
-      "sha256": "6119236fb7a5f80a5641738d96b05df10f06aa79d5a3f1e9560dc814e201c1bc",
-      "bytes": 7674,
+      "sha256": "683d54f735da86b7b434f0aa64e972e807bf9f17b673604614860f16233bcabd",
+      "bytes": 6136,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -623,8 +623,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-03-1600.webp",
-      "sha256": "104583425c2336181b88977c7ef0ba929fde7495b9cb79d2bcbb92f1486a0cdb",
-      "bytes": 26258,
+      "sha256": "f8058211ecf94e58be2ffaee6c8db004de69a0ac9d70742b61f1379d7d54513c",
+      "bytes": 20326,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -633,8 +633,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-03-2560.webp",
-      "sha256": "721b0c509dc9f8b99186de17ba41bb4548d8678705ac95cc505886f1771bcfda",
-      "bytes": 47278,
+      "sha256": "21fa5507344edfb9f4d4f66f6b9a40012de46f695cc59bffbc37c3621414324e",
+      "bytes": 36522,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -643,8 +643,8 @@
     },
     {
       "path": "public/internship-clean/demo-guidance-03-400.webp",
-      "sha256": "fdbc7d5feb71f6a4696370b0963f135b4bcbc925abc4df91a70763713a0d4cfe",
-      "bytes": 8074,
+      "sha256": "683d54f735da86b7b434f0aa64e972e807bf9f17b673604614860f16233bcabd",
+      "bytes": 6136,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -653,8 +653,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-01-1600.webp",
-      "sha256": "c3dc5321678ee54b2a5966c70109b9fa9b3de70d8e66bc2f3a9a51b2b966c1fc",
-      "bytes": 44418,
+      "sha256": "fbb8225b2501da0bc5a5d6e5c7828a9627412fbca78e4bb15a5d490d58bfbad1",
+      "bytes": 34538,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -663,8 +663,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-01-2560.webp",
-      "sha256": "d50cb33439e0fecff6e03556e179e6ed5a1e7e75a5fdc8573e0519d3d9212e43",
-      "bytes": 73858,
+      "sha256": "ec2a059e9a4df2fc9c038e8eac68ac9e726728838fe11e13a34d4250cd3d4dc3",
+      "bytes": 58732,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -673,8 +673,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-01-400.webp",
-      "sha256": "b7f5b472d852d4bfbf674a969e3b6439c86648c0ee19d06fbd631830882708ef",
-      "bytes": 11434,
+      "sha256": "a2fda852ef359bc45f492fcfacb87ba0ba42ae92bba954915292e432736176d6",
+      "bytes": 8936,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -683,8 +683,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-02-1600.webp",
-      "sha256": "c60c3c229209ba762cffca10dae1cddb3b840b27d1b7db6f8b2c23b29f21e306",
-      "bytes": 45542,
+      "sha256": "8b832247842e4517155d05055dc17acd10cfd7a38a83aa676ba94cf1bcaabe66",
+      "bytes": 36170,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -693,8 +693,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-02-2560.webp",
-      "sha256": "e4112751cd210e28b10205a66ca418e08827882ed5430026330c9a37f6a8d6b4",
-      "bytes": 76604,
+      "sha256": "01d388977f3b1ba04882a8c8e4765add68cfa136b521d69ca9c5d5b6fe944a0e",
+      "bytes": 63366,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -703,8 +703,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-02-400.webp",
-      "sha256": "06cbcaba1b62a38c2a2e52b3609302bcd1fcf0dc31b345e29797a5c7a49c987c",
-      "bytes": 11232,
+      "sha256": "81ae6370c1aced8c2ffa90010e490d699b204aed937b36cfe298ecc5d164f2ed",
+      "bytes": 9520,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -713,8 +713,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-03-1600.webp",
-      "sha256": "eb6aa181ad7f82b0ecddc4616e54a04fc0116b2b5a216cd0155ecad58ed576e6",
-      "bytes": 51612,
+      "sha256": "afa95062e653e06f2dbb048a67c8c4d63df7bd9b92fc15b795d850864f84c574",
+      "bytes": 34578,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -723,8 +723,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-03-2560.webp",
-      "sha256": "a62c425fd7750c9d8ce84eea296e8a40f9b907cb533bbfeb42b4d5a780655310",
-      "bytes": 88324,
+      "sha256": "168ccc78e4931d3477d6be198960292561dda11cc91cc2121f1fcc82c2cde8a7",
+      "bytes": 58324,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -733,8 +733,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-03-400.webp",
-      "sha256": "6c6c02f089d9559f7eeddc30b2ad79b41609ca83550d655b8521cfd75c461648",
-      "bytes": 13166,
+      "sha256": "8496c7fd52d2e106f668ccbfe751e40116e97be4ecd72cad71e6afeac7054b33",
+      "bytes": 8590,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -743,8 +743,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-12-1600.webp",
-      "sha256": "c3dc5321678ee54b2a5966c70109b9fa9b3de70d8e66bc2f3a9a51b2b966c1fc",
-      "bytes": 44418,
+      "sha256": "fbb8225b2501da0bc5a5d6e5c7828a9627412fbca78e4bb15a5d490d58bfbad1",
+      "bytes": 34538,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -753,8 +753,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-12-2560.webp",
-      "sha256": "d50cb33439e0fecff6e03556e179e6ed5a1e7e75a5fdc8573e0519d3d9212e43",
-      "bytes": 73858,
+      "sha256": "ec2a059e9a4df2fc9c038e8eac68ac9e726728838fe11e13a34d4250cd3d4dc3",
+      "bytes": 58732,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -763,8 +763,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-12-400.webp",
-      "sha256": "b7f5b472d852d4bfbf674a969e3b6439c86648c0ee19d06fbd631830882708ef",
-      "bytes": 11434,
+      "sha256": "a2fda852ef359bc45f492fcfacb87ba0ba42ae92bba954915292e432736176d6",
+      "bytes": 8936,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -773,8 +773,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-13-1600.webp",
-      "sha256": "dda93ca63916ed46be68bda963e5f42eb41fa462e0f44bab3070de675031add1",
-      "bytes": 46708,
+      "sha256": "fbb8225b2501da0bc5a5d6e5c7828a9627412fbca78e4bb15a5d490d58bfbad1",
+      "bytes": 34538,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -783,8 +783,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-13-2560.webp",
-      "sha256": "93e818ba94376f1170c29920e0c794ce2435b4eb728f965f9c15a381cab53228",
-      "bytes": 77056,
+      "sha256": "ec2a059e9a4df2fc9c038e8eac68ac9e726728838fe11e13a34d4250cd3d4dc3",
+      "bytes": 58732,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -793,8 +793,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-13-400.webp",
-      "sha256": "15076dca98c4d505c7951429793e80c9e61d886d3c960512fcab365660db2f87",
-      "bytes": 11368,
+      "sha256": "a2fda852ef359bc45f492fcfacb87ba0ba42ae92bba954915292e432736176d6",
+      "bytes": 8936,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -803,8 +803,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-14-1600.webp",
-      "sha256": "c3dc5321678ee54b2a5966c70109b9fa9b3de70d8e66bc2f3a9a51b2b966c1fc",
-      "bytes": 44418,
+      "sha256": "fbb8225b2501da0bc5a5d6e5c7828a9627412fbca78e4bb15a5d490d58bfbad1",
+      "bytes": 34538,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -813,8 +813,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-14-2560.webp",
-      "sha256": "d50cb33439e0fecff6e03556e179e6ed5a1e7e75a5fdc8573e0519d3d9212e43",
-      "bytes": 73858,
+      "sha256": "ec2a059e9a4df2fc9c038e8eac68ac9e726728838fe11e13a34d4250cd3d4dc3",
+      "bytes": 58732,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -823,8 +823,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-14-400.webp",
-      "sha256": "b7f5b472d852d4bfbf674a969e3b6439c86648c0ee19d06fbd631830882708ef",
-      "bytes": 11434,
+      "sha256": "a2fda852ef359bc45f492fcfacb87ba0ba42ae92bba954915292e432736176d6",
+      "bytes": 8936,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -833,8 +833,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-15-1600.webp",
-      "sha256": "c60c3c229209ba762cffca10dae1cddb3b840b27d1b7db6f8b2c23b29f21e306",
-      "bytes": 45542,
+      "sha256": "ddeaf7ca09701d3717e60bb026436bb262e330218b3ac5d4412e497b7c4d922e",
+      "bytes": 36082,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -843,8 +843,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-15-2560.webp",
-      "sha256": "e4112751cd210e28b10205a66ca418e08827882ed5430026330c9a37f6a8d6b4",
-      "bytes": 76604,
+      "sha256": "4a73006d845530964134b581c0126233043642c4ee06017ad39cc8f4e2f273f7",
+      "bytes": 60102,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -853,8 +853,8 @@
     },
     {
       "path": "public/internship-clean/demo-measure-15-400.webp",
-      "sha256": "06cbcaba1b62a38c2a2e52b3609302bcd1fcf0dc31b345e29797a5c7a49c987c",
-      "bytes": 11232,
+      "sha256": "8cd413335914707e090b50b3df212576e6cc48774a5bc764ba4a88985506d6fe",
+      "bytes": 8786,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -862,99 +862,39 @@
       ]
     },
     {
-      "path": "public/portfolio/aft-09-1600.webp",
-      "sha256": "d43a4803467a36bdc94b39819138965082b282ca87443f054e15382f58e4fe51",
-      "bytes": 35596,
+      "path": "public/portfolio/sample-photo-01-1600.webp",
+      "sha256": "d86ae0267fe7dd4f8999153a63cd85da6ba6416d9ef04e25866deee72c4878e4",
+      "bytes": 27842,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
-        1000
+        1067
       ]
     },
     {
-      "path": "public/portfolio/aft-09-2560.webp",
-      "sha256": "c0fd1b5b41375bbcbffcf6041783b58fc47dfcc9c34ef42512a1dedb9e6b9bcc",
-      "bytes": 59278,
+      "path": "public/portfolio/sample-photo-01-2560.webp",
+      "sha256": "8b444b0940df274f46b66d4b82e12e1c38e2ac4ccd4a8a818ed4b4339ee86f45",
+      "bytes": 42672,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
-        1600
+        1707
       ]
     },
     {
-      "path": "public/portfolio/aft-09-400.webp",
-      "sha256": "47af3008a467d1ba413ec953bc9556edc5caf24ccb174d34efcfd50315dc5cf9",
-      "bytes": 10040,
+      "path": "public/portfolio/sample-photo-01-400.webp",
+      "sha256": "1ee148f838d9e04d0296edb656b52c5a59d8579eafd284ec6e4450d28091e082",
+      "bytes": 7578,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
-        250
+        267
       ]
     },
     {
-      "path": "public/portfolio/annual-review-2025-1600.webp",
-      "sha256": "2d0ffa26966b1cb76a336a985b0d7564313236356cebc37bfc51455cdcea4343",
-      "bytes": 28238,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        876
-      ]
-    },
-    {
-      "path": "public/portfolio/annual-review-2025-2560.webp",
-      "sha256": "c0482ca83a32bc73bed0bb8131cf241ebedc1f32602de633a0fb43669f3575c3",
-      "bytes": 49320,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1402
-      ]
-    },
-    {
-      "path": "public/portfolio/annual-review-2025-400.webp",
-      "sha256": "6eadeb75b0b2f28207b68a5cccc03a2bc35b17e1ca448c115f113ef98ed4147d",
-      "bytes": 8058,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        219
-      ]
-    },
-    {
-      "path": "public/portfolio/binglang-valley-1600.webp",
-      "sha256": "020dfb1d6deb94a0b1fc4dadc132ad967f392a9699e3a40ecc3b28cdb34ee67a",
-      "bytes": 27482,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        900
-      ]
-    },
-    {
-      "path": "public/portfolio/binglang-valley-2560.webp",
-      "sha256": "0e3e97dc1e49021f1917377795a44a206f0433d3ae018b2c0058fdc2830387c9",
-      "bytes": 46332,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1440
-      ]
-    },
-    {
-      "path": "public/portfolio/binglang-valley-400.webp",
-      "sha256": "c0c7b7d4e7097cec65a195fb02a887a7635e876c9f8ba611792ffb000d2e082e",
-      "bytes": 7758,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        225
-      ]
-    },
-    {
-      "path": "public/portfolio/campus-1600.webp",
-      "sha256": "42b0bb910d112dc00e1e0683eb07da2f2eb1570622236e9e2acc2c6a93102bf6",
-      "bytes": 35324,
+      "path": "public/portfolio/sample-photo-02-1600.webp",
+      "sha256": "a46df68245bdb9b68aae9130799ea947692c408e17bbabdf76670dfc082b458b",
+      "bytes": 27672,
       "kind": "generated-geometric-image",
       "dimensions": [
         1067,
@@ -962,9 +902,9 @@
       ]
     },
     {
-      "path": "public/portfolio/campus-2560.webp",
-      "sha256": "06746257e137d5c72753918c6f972db937db8d28d2293c9df04682882b41e0fa",
-      "bytes": 56456,
+      "path": "public/portfolio/sample-photo-02-2560.webp",
+      "sha256": "cd59af05f713c27ce8bcf610a9df418cd8fdbd07bb5a3c8e79a30ac432178487",
+      "bytes": 42422,
       "kind": "generated-geometric-image",
       "dimensions": [
         1707,
@@ -972,9 +912,9 @@
       ]
     },
     {
-      "path": "public/portfolio/campus-400.webp",
-      "sha256": "6020695d6374a07a9809f24dea0ffb212fc9944cfb6ae2381e41637a1ea72175",
-      "bytes": 8758,
+      "path": "public/portfolio/sample-photo-02-400.webp",
+      "sha256": "a387e14e0f781c7ca8025b34369c1e27118aff8eb7970ac2a1cb715844938059",
+      "bytes": 6530,
       "kind": "generated-geometric-image",
       "dimensions": [
         267,
@@ -982,9 +922,9 @@
       ]
     },
     {
-      "path": "public/portfolio/cave-1600.webp",
-      "sha256": "4d57b6896d49b31b81d3541b4a3a18fed5306f07a621ec2d752d18fb1674e3ba",
-      "bytes": 33332,
+      "path": "public/portfolio/sample-photo-03-1600.webp",
+      "sha256": "e26e26f6fc3702ad06c049813ca836ce56e7444c92644989b68908e597257ae2",
+      "bytes": 26728,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -992,9 +932,9 @@
       ]
     },
     {
-      "path": "public/portfolio/cave-2560.webp",
-      "sha256": "b6be09d637fb64f992d8d3dca84b28b98ecefd52ac00a68b32cbcb078d4ba207",
-      "bytes": 53438,
+      "path": "public/portfolio/sample-photo-03-2560.webp",
+      "sha256": "2f24c3b6b911dc4cbb74ce97ad23d4aa4d12e7ba9b783cb55569a17d77a3e419",
+      "bytes": 42846,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1002,9 +942,9 @@
       ]
     },
     {
-      "path": "public/portfolio/cave-400.webp",
-      "sha256": "f784b20aa64b30ae6dc3bc3dd561b7f5f93c231396adaec500a6f755021452ec",
-      "bytes": 8670,
+      "path": "public/portfolio/sample-photo-03-400.webp",
+      "sha256": "dd7220be5916f1b312b055c10627e90373ae153d6228ef102c25c73fd43492b2",
+      "bytes": 6884,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1012,9 +952,39 @@
       ]
     },
     {
-      "path": "public/portfolio/daylight-1600.webp",
-      "sha256": "3018d53ec56bf238a02465eb66a85d9140961f6e140880cc8e9c0eb4f6a918bd",
-      "bytes": 34572,
+      "path": "public/portfolio/sample-photo-04-1600.webp",
+      "sha256": "efdaa79ccf36e93ef5535017f3b3c9972ad3568aa15e86bfb6b974ff29297e77",
+      "bytes": 28372,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-04-2560.webp",
+      "sha256": "86f9103fcf3145125c5dcc3c0049d508d5e25c5a8e4fd0e1d80fd9bd22dfb7b7",
+      "bytes": 43678,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-04-400.webp",
+      "sha256": "a4ae5068ffdc265225ae31519e8b8ac363dba462f2df757f6f5961ce28298b66",
+      "bytes": 6568,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-05-1600.webp",
+      "sha256": "f1efad59a10db677f2e05bc88347925b57b287a199a9f6b7dd7e665ebb6287b1",
+      "bytes": 25960,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1022,9 +992,9 @@
       ]
     },
     {
-      "path": "public/portfolio/daylight-2560.webp",
-      "sha256": "bca10a18471a2e1919fe31acc3019647e27eb31e9944db9bbe4245ca0e040356",
-      "bytes": 54846,
+      "path": "public/portfolio/sample-photo-05-2560.webp",
+      "sha256": "75fe12a0124f501f2c678346d6b804fdece438b9f38ef4584015b0b7876a8a1e",
+      "bytes": 42016,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1032,9 +1002,9 @@
       ]
     },
     {
-      "path": "public/portfolio/daylight-400.webp",
-      "sha256": "8eb48c0c707e2c2c353efc7e4afac5547f4eadbefaf177d2ac6d77836298a075",
-      "bytes": 9074,
+      "path": "public/portfolio/sample-photo-05-400.webp",
+      "sha256": "ce265fb496fc54c90e411523a207910026b66798c20847c87582128027bb2efe",
+      "bytes": 6766,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1042,9 +1012,39 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-1-1600.webp",
-      "sha256": "8efc4d333ade23a917e99a22d3f596a13af6de2c7274dededb42effc6f1ccab7",
-      "bytes": 32852,
+      "path": "public/portfolio/sample-photo-06-1600.webp",
+      "sha256": "e26e26f6fc3702ad06c049813ca836ce56e7444c92644989b68908e597257ae2",
+      "bytes": 26728,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-06-2560.webp",
+      "sha256": "2f24c3b6b911dc4cbb74ce97ad23d4aa4d12e7ba9b783cb55569a17d77a3e419",
+      "bytes": 42846,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-06-400.webp",
+      "sha256": "dd7220be5916f1b312b055c10627e90373ae153d6228ef102c25c73fd43492b2",
+      "bytes": 6884,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-07-1600.webp",
+      "sha256": "2406500782de1eceb7c0212c14771ebd7696a39c7d9db848cc4c2bcfb3243538",
+      "bytes": 21098,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1052,9 +1052,9 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-1-2560.webp",
-      "sha256": "af18906f15c3a4947bac87f64ddd5a5dbbaf46585a3ac7e05e22a29f00a86051",
-      "bytes": 53158,
+      "path": "public/portfolio/sample-photo-07-2560.webp",
+      "sha256": "6068f41def7e354dd2b91a94ac67eb5295edc71781cd8af9568d860badb250eb",
+      "bytes": 34956,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1062,9 +1062,9 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-1-400.webp",
-      "sha256": "405895b7bccd708f37ce50cd01360ecf43c85d4ad10d44e494eb9de69a5fc552",
-      "bytes": 9682,
+      "path": "public/portfolio/sample-photo-07-400.webp",
+      "sha256": "d1e6f38fca9ca24f14f44a4c6cbbfbcd3e2f016879bd5d49e6df62f355857cc2",
+      "bytes": 6342,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1072,19 +1072,9 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-1600.webp",
-      "sha256": "5ab2d12dd0829d69ebdc31ae2c9f55b164ddb171bf68c411964c989f85249b4f",
-      "bytes": 39832,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1067
-      ]
-    },
-    {
-      "path": "public/portfolio/ginkgo-road-2-1600.webp",
-      "sha256": "fcdeda93be89262deae9b8a3fbf899473382a8ece9ee62d103e8bd906beb52c7",
-      "bytes": 29074,
+      "path": "public/portfolio/sample-photo-08-1600.webp",
+      "sha256": "08f9f99006d37bbdefc448513be71aa52e800b673cb7a259347f63133e64dad4",
+      "bytes": 22156,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1092,9 +1082,9 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-2-2560.webp",
-      "sha256": "7fa84844680431db944047e784135899c7b83be3c1e7fb2b49e8868d6cab9469",
-      "bytes": 46312,
+      "path": "public/portfolio/sample-photo-08-2560.webp",
+      "sha256": "f80f5e79b31bf804b5c93ad1efadbf96da021466abbcc1cfb4f7746e9d8468c0",
+      "bytes": 36068,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1102,9 +1092,9 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-2-400.webp",
-      "sha256": "60ad9cc8e20375392aa513c72ae6da5d82425d44a821705723eec294e32907c8",
-      "bytes": 8138,
+      "path": "public/portfolio/sample-photo-08-400.webp",
+      "sha256": "0e46c652d9769a23ec41cb186dcade50463134363f7ea808d55bf5ba40f31f66",
+      "bytes": 6428,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1112,19 +1102,9 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-2560.webp",
-      "sha256": "020f6b3c776969256232b6428be3de83de20b7cef92be00da5523d915ca535a8",
-      "bytes": 61180,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1707
-      ]
-    },
-    {
-      "path": "public/portfolio/ginkgo-road-4-1600.webp",
-      "sha256": "b81bc2f0e610524de5401025fb3a59ac3cf39ec13ce667a2aad7019d7cd0f69a",
-      "bytes": 34736,
+      "path": "public/portfolio/sample-photo-09-1600.webp",
+      "sha256": "d86ae0267fe7dd4f8999153a63cd85da6ba6416d9ef04e25866deee72c4878e4",
+      "bytes": 27842,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1132,9 +1112,9 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-4-2560.webp",
-      "sha256": "b6d22ba5fbda7b3979bc49d6ba62c07b20fc2ebc3c28241626dc2c1b8d269f94",
-      "bytes": 55346,
+      "path": "public/portfolio/sample-photo-09-2560.webp",
+      "sha256": "8b444b0940df274f46b66d4b82e12e1c38e2ac4ccd4a8a818ed4b4339ee86f45",
+      "bytes": 42672,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1142,9 +1122,9 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-4-400.webp",
-      "sha256": "983291d1c5997c137f03d9d688ba2d15ef7b9188db9208ac6345eac38b1815af",
-      "bytes": 8764,
+      "path": "public/portfolio/sample-photo-09-400.webp",
+      "sha256": "1ee148f838d9e04d0296edb656b52c5a59d8579eafd284ec6e4450d28091e082",
+      "bytes": 7578,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1152,9 +1132,89 @@
       ]
     },
     {
-      "path": "public/portfolio/ginkgo-road-400.webp",
-      "sha256": "33e8eb5c760903da83e0f169a39c0191aa4fc602588f3e3b1d3456234cafafdd",
-      "bytes": 10458,
+      "path": "public/portfolio/sample-photo-10-1600.webp",
+      "sha256": "08f9f99006d37bbdefc448513be71aa52e800b673cb7a259347f63133e64dad4",
+      "bytes": 22156,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-10-2560.webp",
+      "sha256": "f80f5e79b31bf804b5c93ad1efadbf96da021466abbcc1cfb4f7746e9d8468c0",
+      "bytes": 36068,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-10-400.webp",
+      "sha256": "0e46c652d9769a23ec41cb186dcade50463134363f7ea808d55bf5ba40f31f66",
+      "bytes": 6428,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-11-1600.webp",
+      "sha256": "5ce0282ee59011f534ecf77ec2f26cfce0e04c36e588c0b13f1aabcc9d291212",
+      "bytes": 27914,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-11-2560.webp",
+      "sha256": "369562089ca8e64543c4b692833540df460c8692721e25008145590ec8e92750",
+      "bytes": 43328,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-11-400.webp",
+      "sha256": "4ebd6ce0cc76a1aa65819870976965076051856f6e007c2ef4e942fed7ee45f8",
+      "bytes": 7454,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-12-1600.webp",
+      "sha256": "d86ae0267fe7dd4f8999153a63cd85da6ba6416d9ef04e25866deee72c4878e4",
+      "bytes": 27842,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-12-2560.webp",
+      "sha256": "8b444b0940df274f46b66d4b82e12e1c38e2ac4ccd4a8a818ed4b4339ee86f45",
+      "bytes": 42672,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-12-400.webp",
+      "sha256": "1ee148f838d9e04d0296edb656b52c5a59d8579eafd284ec6e4450d28091e082",
+      "bytes": 7578,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1162,9 +1222,99 @@
       ]
     },
     {
-      "path": "public/portfolio/guyong-city-1600.webp",
-      "sha256": "761a016a5b83bc45bff1b315a0454652f53a78c74d3ab339ecc9e229e797aae9",
-      "bytes": 25986,
+      "path": "public/portfolio/sample-photo-13-1600.webp",
+      "sha256": "5ce0282ee59011f534ecf77ec2f26cfce0e04c36e588c0b13f1aabcc9d291212",
+      "bytes": 27914,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-13-2560.webp",
+      "sha256": "369562089ca8e64543c4b692833540df460c8692721e25008145590ec8e92750",
+      "bytes": 43328,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-13-400.webp",
+      "sha256": "4ebd6ce0cc76a1aa65819870976965076051856f6e007c2ef4e942fed7ee45f8",
+      "bytes": 7454,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-14-1600.webp",
+      "sha256": "a46df68245bdb9b68aae9130799ea947692c408e17bbabdf76670dfc082b458b",
+      "bytes": 27672,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-14-2560.webp",
+      "sha256": "cd59af05f713c27ce8bcf610a9df418cd8fdbd07bb5a3c8e79a30ac432178487",
+      "bytes": 42422,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-14-400.webp",
+      "sha256": "a387e14e0f781c7ca8025b34369c1e27118aff8eb7970ac2a1cb715844938059",
+      "bytes": 6530,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-15-1600.webp",
+      "sha256": "2406500782de1eceb7c0212c14771ebd7696a39c7d9db848cc4c2bcfb3243538",
+      "bytes": 21098,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-15-2560.webp",
+      "sha256": "6068f41def7e354dd2b91a94ac67eb5295edc71781cd8af9568d860badb250eb",
+      "bytes": 34956,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-15-400.webp",
+      "sha256": "d1e6f38fca9ca24f14f44a4c6cbbfbcd3e2f016879bd5d49e6df62f355857cc2",
+      "bytes": 6342,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        225
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-16-1600.webp",
+      "sha256": "056e88428886d32f1b71d3e3a1213a0f99c452346c5f2d3f1c34c2b2d8512859",
+      "bytes": 17732,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1172,9 +1322,9 @@
       ]
     },
     {
-      "path": "public/portfolio/guyong-city-2560.webp",
-      "sha256": "138c59affa672787e321680ee4fa159ee08f8d9847dc3fee340293ca40e00e79",
-      "bytes": 48254,
+      "path": "public/portfolio/sample-photo-16-2560.webp",
+      "sha256": "b22c7c54ba4cb0271f80a1ab6a35a6781b8609249e6a65261752b61fc9844530",
+      "bytes": 34534,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1182,9 +1332,9 @@
       ]
     },
     {
-      "path": "public/portfolio/guyong-city-400.webp",
-      "sha256": "a22cbaa037b639d64deea3477e7d17b40c7ef88f81ac5265955aee89fef6e00e",
-      "bytes": 7800,
+      "path": "public/portfolio/sample-photo-16-400.webp",
+      "sha256": "b5124847432eb6acfa3c523676d936932eb5216954b7f27c3bd8ee6f2c066fc9",
+      "bytes": 5960,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1192,99 +1342,9 @@
       ]
     },
     {
-      "path": "public/portfolio/mazu-overlooking-sea-1600.webp",
-      "sha256": "f517c0e047d2d879f243af5385b655906b25faa725179e0edbdb00484b7fe387",
-      "bytes": 34786,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1067,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/mazu-overlooking-sea-2560.webp",
-      "sha256": "8ff172dc2177234fa8f88b3bdc7ebed56f700ad6461ec83114add01352ef209f",
-      "bytes": 53858,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1707,
-        2560
-      ]
-    },
-    {
-      "path": "public/portfolio/mazu-overlooking-sea-400.webp",
-      "sha256": "56f68d0dac88e5d0166114b70807ff5debaf49c5f8226d56d9ac2e8e64bb056f",
-      "bytes": 8464,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        267,
-        400
-      ]
-    },
-    {
-      "path": "public/portfolio/mbt-2000-1600.webp",
-      "sha256": "5c3d5f3e04be49eee2406dab476ace3cb8369e9d42f504d534487d34b0b9b108",
-      "bytes": 30876,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1000
-      ]
-    },
-    {
-      "path": "public/portfolio/mbt-2000-2560.webp",
-      "sha256": "eedd93b16ab508f6e3bc2f1498ad87b41dc3e5510f66fb4f93c804850c946fd1",
-      "bytes": 53302,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/mbt-2000-400.webp",
-      "sha256": "e5b5f22e50b6203fb39c56af2715bb3a010fd7d42b69ad13d28af250c1477267",
-      "bytes": 8468,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        250
-      ]
-    },
-    {
-      "path": "public/portfolio/mountain-bird-1600.webp",
-      "sha256": "f517c0e047d2d879f243af5385b655906b25faa725179e0edbdb00484b7fe387",
-      "bytes": 34786,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1067,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/mountain-bird-2560.webp",
-      "sha256": "8ff172dc2177234fa8f88b3bdc7ebed56f700ad6461ec83114add01352ef209f",
-      "bytes": 53858,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1707,
-        2560
-      ]
-    },
-    {
-      "path": "public/portfolio/mountain-bird-400.webp",
-      "sha256": "56f68d0dac88e5d0166114b70807ff5debaf49c5f8226d56d9ac2e8e64bb056f",
-      "bytes": 8464,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        267,
-        400
-      ]
-    },
-    {
-      "path": "public/portfolio/mountain-cloud-1600.webp",
-      "sha256": "4d57b6896d49b31b81d3541b4a3a18fed5306f07a621ec2d752d18fb1674e3ba",
-      "bytes": 33332,
+      "path": "public/portfolio/sample-photo-17-1600.webp",
+      "sha256": "d86ae0267fe7dd4f8999153a63cd85da6ba6416d9ef04e25866deee72c4878e4",
+      "bytes": 27842,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1292,9 +1352,9 @@
       ]
     },
     {
-      "path": "public/portfolio/mountain-cloud-2560.webp",
-      "sha256": "b6be09d637fb64f992d8d3dca84b28b98ecefd52ac00a68b32cbcb078d4ba207",
-      "bytes": 53438,
+      "path": "public/portfolio/sample-photo-17-2560.webp",
+      "sha256": "8b444b0940df274f46b66d4b82e12e1c38e2ac4ccd4a8a818ed4b4339ee86f45",
+      "bytes": 42672,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1302,9 +1362,9 @@
       ]
     },
     {
-      "path": "public/portfolio/mountain-cloud-400.webp",
-      "sha256": "f784b20aa64b30ae6dc3bc3dd561b7f5f93c231396adaec500a6f755021452ec",
-      "bytes": 8670,
+      "path": "public/portfolio/sample-photo-17-400.webp",
+      "sha256": "1ee148f838d9e04d0296edb656b52c5a59d8579eafd284ec6e4450d28091e082",
+      "bytes": 7578,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1312,9 +1372,9 @@
       ]
     },
     {
-      "path": "public/portfolio/old-village-walk-1600.webp",
-      "sha256": "8207c7d7d6f3ac77a0abf5fd862be8fa740bc3af6b64200817794fce18bc7901",
-      "bytes": 40450,
+      "path": "public/portfolio/sample-photo-18-1600.webp",
+      "sha256": "5ce0282ee59011f534ecf77ec2f26cfce0e04c36e588c0b13f1aabcc9d291212",
+      "bytes": 27914,
       "kind": "generated-geometric-image",
       "dimensions": [
         1067,
@@ -1322,9 +1382,9 @@
       ]
     },
     {
-      "path": "public/portfolio/old-village-walk-2560.webp",
-      "sha256": "1f3028491150bb6dce318af716f4d3bfb3620625422146050e8f99fadcc580a1",
-      "bytes": 61620,
+      "path": "public/portfolio/sample-photo-18-2560.webp",
+      "sha256": "369562089ca8e64543c4b692833540df460c8692721e25008145590ec8e92750",
+      "bytes": 43328,
       "kind": "generated-geometric-image",
       "dimensions": [
         1707,
@@ -1332,9 +1392,9 @@
       ]
     },
     {
-      "path": "public/portfolio/old-village-walk-400.webp",
-      "sha256": "593321d7c1b3a8973466af9d1e5c5e5fbe879d5223b3ba80ff3549f25eb69b5a",
-      "bytes": 10208,
+      "path": "public/portfolio/sample-photo-18-400.webp",
+      "sha256": "4ebd6ce0cc76a1aa65819870976965076051856f6e007c2ef4e942fed7ee45f8",
+      "bytes": 7454,
       "kind": "generated-geometric-image",
       "dimensions": [
         267,
@@ -1342,9 +1402,39 @@
       ]
     },
     {
-      "path": "public/portfolio/pavilion-cover-1600.webp",
-      "sha256": "8efc4d333ade23a917e99a22d3f596a13af6de2c7274dededb42effc6f1ccab7",
-      "bytes": 32852,
+      "path": "public/portfolio/sample-photo-19-1600.webp",
+      "sha256": "d86ae0267fe7dd4f8999153a63cd85da6ba6416d9ef04e25866deee72c4878e4",
+      "bytes": 27842,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1067
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-19-2560.webp",
+      "sha256": "8b444b0940df274f46b66d4b82e12e1c38e2ac4ccd4a8a818ed4b4339ee86f45",
+      "bytes": 42672,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1707
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-19-400.webp",
+      "sha256": "1ee148f838d9e04d0296edb656b52c5a59d8579eafd284ec6e4450d28091e082",
+      "bytes": 7578,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        267
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-20-1600.webp",
+      "sha256": "08f9f99006d37bbdefc448513be71aa52e800b673cb7a259347f63133e64dad4",
+      "bytes": 22156,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1352,9 +1442,9 @@
       ]
     },
     {
-      "path": "public/portfolio/pavilion-cover-2560.webp",
-      "sha256": "af18906f15c3a4947bac87f64ddd5a5dbbaf46585a3ac7e05e22a29f00a86051",
-      "bytes": 53158,
+      "path": "public/portfolio/sample-photo-20-2560.webp",
+      "sha256": "f80f5e79b31bf804b5c93ad1efadbf96da021466abbcc1cfb4f7746e9d8468c0",
+      "bytes": 36068,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1362,9 +1452,9 @@
       ]
     },
     {
-      "path": "public/portfolio/pavilion-cover-400.webp",
-      "sha256": "405895b7bccd708f37ce50cd01360ecf43c85d4ad10d44e494eb9de69a5fc552",
-      "bytes": 9682,
+      "path": "public/portfolio/sample-photo-20-400.webp",
+      "sha256": "0e46c652d9769a23ec41cb186dcade50463134363f7ea808d55bf5ba40f31f66",
+      "bytes": 6428,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1372,19 +1462,9 @@
       ]
     },
     {
-      "path": "public/portfolio/pavilion-photo-1600.webp",
-      "sha256": "fcdeda93be89262deae9b8a3fbf899473382a8ece9ee62d103e8bd906beb52c7",
-      "bytes": 29074,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        900
-      ]
-    },
-    {
-      "path": "public/portfolio/pavilion-photo-2-1600.webp",
-      "sha256": "9886952ae9e86f6714edf7dc56f511dd9bcea717c1db4ec99a6a38e842b48d1f",
-      "bytes": 24266,
+      "path": "public/portfolio/sample-photo-21-1600.webp",
+      "sha256": "5bb50b8e0698dd95129073ee65802c7a3c1c46c1493e14c5a9a2a4aeac7b79f4",
+      "bytes": 19196,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1392,9 +1472,9 @@
       ]
     },
     {
-      "path": "public/portfolio/pavilion-photo-2-2560.webp",
-      "sha256": "9a840197f6bdcdcea4bbbbfb18981374b5aea077fb4560c3b5e08187db0ebc1a",
-      "bytes": 44518,
+      "path": "public/portfolio/sample-photo-21-2560.webp",
+      "sha256": "9fd114df1f0299b9fc37bef5ab99a4e3f117196f7022f1dcd82b36d9bf6329ab",
+      "bytes": 35758,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1402,9 +1482,9 @@
       ]
     },
     {
-      "path": "public/portfolio/pavilion-photo-2-400.webp",
-      "sha256": "060b7526b4c81bcc8e37a29d3dc6851fa347836eb1027ee713b1704c711599eb",
-      "bytes": 7126,
+      "path": "public/portfolio/sample-photo-21-400.webp",
+      "sha256": "dca55dc526a898b7b3b3767bcf6ce3ac80536074521d272b97cdb568651423bc",
+      "bytes": 6226,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1412,149 +1492,9 @@
       ]
     },
     {
-      "path": "public/portfolio/pavilion-photo-2560.webp",
-      "sha256": "7fa84844680431db944047e784135899c7b83be3c1e7fb2b49e8868d6cab9469",
-      "bytes": 46312,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1440
-      ]
-    },
-    {
-      "path": "public/portfolio/pavilion-photo-400.webp",
-      "sha256": "60ad9cc8e20375392aa513c72ae6da5d82425d44a821705723eec294e32907c8",
-      "bytes": 8138,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        225
-      ]
-    },
-    {
-      "path": "public/portfolio/pg4-04a-1600.webp",
-      "sha256": "5c3d5f3e04be49eee2406dab476ace3cb8369e9d42f504d534487d34b0b9b108",
-      "bytes": 30876,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1000
-      ]
-    },
-    {
-      "path": "public/portfolio/pg4-04a-2560.webp",
-      "sha256": "eedd93b16ab508f6e3bc2f1498ad87b41dc3e5510f66fb4f93c804850c946fd1",
-      "bytes": 53302,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/pg4-04a-400.webp",
-      "sha256": "e5b5f22e50b6203fb39c56af2715bb3a010fd7d42b69ad13d28af250c1477267",
-      "bytes": 8468,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        250
-      ]
-    },
-    {
-      "path": "public/portfolio/pgz-09-1600.webp",
-      "sha256": "846412dc39090aad511a6993a41273e13d52b5f0694338459fc0c2acdd886577",
-      "bytes": 30474,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1000
-      ]
-    },
-    {
-      "path": "public/portfolio/pgz-09-2560.webp",
-      "sha256": "eb0d5041796100a5408831a37c9ca847e88aece414a045fe21f401bab6a72193",
-      "bytes": 51876,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/pgz-09-400.webp",
-      "sha256": "a4f595593f68eb2b1d063a7503e41eb0187dcd17fbf1d65810c548996ac726d0",
-      "bytes": 8214,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        250
-      ]
-    },
-    {
-      "path": "public/portfolio/plz-02-1600.webp",
-      "sha256": "846412dc39090aad511a6993a41273e13d52b5f0694338459fc0c2acdd886577",
-      "bytes": 30474,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1000
-      ]
-    },
-    {
-      "path": "public/portfolio/plz-02-2560.webp",
-      "sha256": "eb0d5041796100a5408831a37c9ca847e88aece414a045fe21f401bab6a72193",
-      "bytes": 51876,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/plz-02-400.webp",
-      "sha256": "a4f595593f68eb2b1d063a7503e41eb0187dcd17fbf1d65810c548996ac726d0",
-      "bytes": 8214,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        250
-      ]
-    },
-    {
-      "path": "public/portfolio/plz-05-1600.webp",
-      "sha256": "21dae45df6dba5f56f5dcc1b941a302a73ffea8c4065add4d06550b04dea26d7",
-      "bytes": 31424,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1000
-      ]
-    },
-    {
-      "path": "public/portfolio/plz-05-2560.webp",
-      "sha256": "6a642520c31659ba998b9c6ed69bc026e754375bcca85606749ea733a318074f",
-      "bytes": 54146,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/plz-05-400.webp",
-      "sha256": "56e6bca443cd912ab82c34c5f4484da531af5897e0ad3fd999069c54ab17b559",
-      "bytes": 8374,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        250
-      ]
-    },
-    {
-      "path": "public/portfolio/purple-leaf-plum-1600.webp",
-      "sha256": "f517c0e047d2d879f243af5385b655906b25faa725179e0edbdb00484b7fe387",
-      "bytes": 34786,
+      "path": "public/portfolio/sample-photo-22-1600.webp",
+      "sha256": "a46df68245bdb9b68aae9130799ea947692c408e17bbabdf76670dfc082b458b",
+      "bytes": 27672,
       "kind": "generated-geometric-image",
       "dimensions": [
         1067,
@@ -1562,9 +1502,9 @@
       ]
     },
     {
-      "path": "public/portfolio/purple-leaf-plum-2560.webp",
-      "sha256": "8ff172dc2177234fa8f88b3bdc7ebed56f700ad6461ec83114add01352ef209f",
-      "bytes": 53858,
+      "path": "public/portfolio/sample-photo-22-2560.webp",
+      "sha256": "cd59af05f713c27ce8bcf610a9df418cd8fdbd07bb5a3c8e79a30ac432178487",
+      "bytes": 42422,
       "kind": "generated-geometric-image",
       "dimensions": [
         1707,
@@ -1572,9 +1512,9 @@
       ]
     },
     {
-      "path": "public/portfolio/purple-leaf-plum-400.webp",
-      "sha256": "56f68d0dac88e5d0166114b70807ff5debaf49c5f8226d56d9ac2e8e64bb056f",
-      "bytes": 8464,
+      "path": "public/portfolio/sample-photo-22-400.webp",
+      "sha256": "a387e14e0f781c7ca8025b34369c1e27118aff8eb7970ac2a1cb715844938059",
+      "bytes": 6530,
       "kind": "generated-geometric-image",
       "dimensions": [
         267,
@@ -1582,69 +1522,9 @@
       ]
     },
     {
-      "path": "public/portfolio/qingri-molun-1600.webp",
-      "sha256": "4d57b6896d49b31b81d3541b4a3a18fed5306f07a621ec2d752d18fb1674e3ba",
-      "bytes": 33332,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1067
-      ]
-    },
-    {
-      "path": "public/portfolio/qingri-molun-2560.webp",
-      "sha256": "b6be09d637fb64f992d8d3dca84b28b98ecefd52ac00a68b32cbcb078d4ba207",
-      "bytes": 53438,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1707
-      ]
-    },
-    {
-      "path": "public/portfolio/qingri-molun-400.webp",
-      "sha256": "f784b20aa64b30ae6dc3bc3dd561b7f5f93c231396adaec500a6f755021452ec",
-      "bytes": 8670,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        267
-      ]
-    },
-    {
-      "path": "public/portfolio/road-to-city-1600.webp",
-      "sha256": "b81bc2f0e610524de5401025fb3a59ac3cf39ec13ce667a2aad7019d7cd0f69a",
-      "bytes": 34736,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1067
-      ]
-    },
-    {
-      "path": "public/portfolio/road-to-city-2560.webp",
-      "sha256": "b6d22ba5fbda7b3979bc49d6ba62c07b20fc2ebc3c28241626dc2c1b8d269f94",
-      "bytes": 55346,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1707
-      ]
-    },
-    {
-      "path": "public/portfolio/road-to-city-400.webp",
-      "sha256": "983291d1c5997c137f03d9d688ba2d15ef7b9188db9208ac6345eac38b1815af",
-      "bytes": 8764,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        267
-      ]
-    },
-    {
-      "path": "public/portfolio/seaside-sunset-1600.webp",
-      "sha256": "42b0bb910d112dc00e1e0683eb07da2f2eb1570622236e9e2acc2c6a93102bf6",
-      "bytes": 35324,
+      "path": "public/portfolio/sample-photo-23-1600.webp",
+      "sha256": "884b5583f773ca44b7b0ccd328723ffc8ee7a131e4fab9fffa807b264cdea932",
+      "bytes": 26854,
       "kind": "generated-geometric-image",
       "dimensions": [
         1067,
@@ -1652,9 +1532,9 @@
       ]
     },
     {
-      "path": "public/portfolio/seaside-sunset-2560.webp",
-      "sha256": "06746257e137d5c72753918c6f972db937db8d28d2293c9df04682882b41e0fa",
-      "bytes": 56456,
+      "path": "public/portfolio/sample-photo-23-2560.webp",
+      "sha256": "466acc9dc86b9d3afacdb63743d08ebf5c8988e0b967126114c095322aa911e9",
+      "bytes": 42016,
       "kind": "generated-geometric-image",
       "dimensions": [
         1707,
@@ -1662,9 +1542,9 @@
       ]
     },
     {
-      "path": "public/portfolio/seaside-sunset-400.webp",
-      "sha256": "6020695d6374a07a9809f24dea0ffb212fc9944cfb6ae2381e41637a1ea72175",
-      "bytes": 8758,
+      "path": "public/portfolio/sample-photo-23-400.webp",
+      "sha256": "ce3f94a4eb11c16ebe02bb78ac61bc6acb1757be647134621e757859ef6765eb",
+      "bytes": 6544,
       "kind": "generated-geometric-image",
       "dimensions": [
         267,
@@ -1672,99 +1552,9 @@
       ]
     },
     {
-      "path": "public/portfolio/sky-mirror-1600.webp",
-      "sha256": "f517c0e047d2d879f243af5385b655906b25faa725179e0edbdb00484b7fe387",
-      "bytes": 34786,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1067,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/sky-mirror-2560.webp",
-      "sha256": "8ff172dc2177234fa8f88b3bdc7ebed56f700ad6461ec83114add01352ef209f",
-      "bytes": 53858,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1707,
-        2560
-      ]
-    },
-    {
-      "path": "public/portfolio/sky-mirror-400.webp",
-      "sha256": "56f68d0dac88e5d0166114b70807ff5debaf49c5f8226d56d9ac2e8e64bb056f",
-      "bytes": 8464,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        267,
-        400
-      ]
-    },
-    {
-      "path": "public/portfolio/sunward-1600.webp",
-      "sha256": "42b0bb910d112dc00e1e0683eb07da2f2eb1570622236e9e2acc2c6a93102bf6",
-      "bytes": 35324,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1067,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/sunward-2560.webp",
-      "sha256": "06746257e137d5c72753918c6f972db937db8d28d2293c9df04682882b41e0fa",
-      "bytes": 56456,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1707,
-        2560
-      ]
-    },
-    {
-      "path": "public/portfolio/sunward-400.webp",
-      "sha256": "6020695d6374a07a9809f24dea0ffb212fc9944cfb6ae2381e41637a1ea72175",
-      "bytes": 8758,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        267,
-        400
-      ]
-    },
-    {
-      "path": "public/portfolio/tall-tree-1600.webp",
-      "sha256": "570029e6167f0a8a56d11c4e3cf9fcfec434f5ebb00559265f86d4f948e83a86",
-      "bytes": 36426,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1067,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/tall-tree-2560.webp",
-      "sha256": "25ac082ecfc4c452723a43ce92c757bdfce27f48938e8220bb647d5275319e20",
-      "bytes": 56364,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1707,
-        2560
-      ]
-    },
-    {
-      "path": "public/portfolio/tall-tree-400.webp",
-      "sha256": "7e8303cf5d833d4ba4407964fc904982483b9d33ae97765c6697903f8d71a20f",
-      "bytes": 8692,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        267,
-        400
-      ]
-    },
-    {
-      "path": "public/portfolio/urban-village-1600.webp",
-      "sha256": "fcdeda93be89262deae9b8a3fbf899473382a8ece9ee62d103e8bd906beb52c7",
-      "bytes": 29074,
+      "path": "public/portfolio/sample-photo-24-1600.webp",
+      "sha256": "8643955a5f1425c5e36e8b970cd222ad754402ed45d989b68766f41707bae1b3",
+      "bytes": 22118,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1772,9 +1562,9 @@
       ]
     },
     {
-      "path": "public/portfolio/urban-village-2560.webp",
-      "sha256": "7fa84844680431db944047e784135899c7b83be3c1e7fb2b49e8868d6cab9469",
-      "bytes": 46312,
+      "path": "public/portfolio/sample-photo-24-2560.webp",
+      "sha256": "30b92b61687bbce68bf9be919789eb680682a239df28c351d3ea67e54dedfcf0",
+      "bytes": 36104,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1782,9 +1572,9 @@
       ]
     },
     {
-      "path": "public/portfolio/urban-village-400.webp",
-      "sha256": "60ad9cc8e20375392aa513c72ae6da5d82425d44a821705723eec294e32907c8",
-      "bytes": 8138,
+      "path": "public/portfolio/sample-photo-24-400.webp",
+      "sha256": "a5c94b4a5ee228c9a1c473bbf4eb60835bc4840412c0eef0d16db478c9e15a9a",
+      "bytes": 7148,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
@@ -1792,9 +1582,339 @@
       ]
     },
     {
-      "path": "public/portfolio/zhangjiajie-mountains-1600.webp",
-      "sha256": "020dfb1d6deb94a0b1fc4dadc132ad967f392a9699e3a40ecc3b28cdb34ee67a",
-      "bytes": 27482,
+      "path": "public/portfolio/sample-photo-25-1600.webp",
+      "sha256": "efdaa79ccf36e93ef5535017f3b3c9972ad3568aa15e86bfb6b974ff29297e77",
+      "bytes": 28372,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1067,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-25-2560.webp",
+      "sha256": "86f9103fcf3145125c5dcc3c0049d508d5e25c5a8e4fd0e1d80fd9bd22dfb7b7",
+      "bytes": 43678,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1707,
+        2560
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-25-400.webp",
+      "sha256": "a4ae5068ffdc265225ae31519e8b8ac363dba462f2df757f6f5961ce28298b66",
+      "bytes": 6568,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        267,
+        400
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-26-1600.webp",
+      "sha256": "e7da4ffa97238d73bd6690f2a69779684bf97c050a1590ff5b19927c3f3055c1",
+      "bytes": 20536,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        876
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-26-2560.webp",
+      "sha256": "2211e3a9b01a2486747cf7cde2f1a36edaf2aac6c5e4d6a500abf3d9c97bffb0",
+      "bytes": 35916,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1402
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-photo-26-400.webp",
+      "sha256": "0ba0b7a04c1d41e5660433e109e7540765a285f9c0b42adf60061cf24467011c",
+      "bytes": 6524,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        219
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-01-1600.webp",
+      "sha256": "963bc481dfdec8fe7ad6e3aff2749f9f8a8fd63dd5b93e9a50caa9172171538c",
+      "bytes": 23902,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-01-2560.webp",
+      "sha256": "8934299d55dd29eab189549bd1a1a85f23b9b7a5c007d9f3c99252dd755b3654",
+      "bytes": 41216,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-01-400.webp",
+      "sha256": "9d7b9b4bab1144b10600839b835b932543c506667f9c4b04b5790be664a8c776",
+      "bytes": 7000,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-02-1600.webp",
+      "sha256": "c7d758c533f67396943b690ed0f69805971ff20a0d54f06daaa59c12c04f6079",
+      "bytes": 23384,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-02-2560.webp",
+      "sha256": "a489de1b2b1a0e6645cb25bb90e3251712f229f9f539508beb48677525e4efac",
+      "bytes": 41744,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-02-400.webp",
+      "sha256": "f5c6b08bb79503b5673d8cdd838a105875d6d6329ece2081c79407e8c174c932",
+      "bytes": 6292,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-03-1600.webp",
+      "sha256": "b87db8be6f6b01d1dc32b2b4aec1e0868ac6de25ef60d4d958ccc13d2347f916",
+      "bytes": 22694,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-03-2560.webp",
+      "sha256": "0b05c0179eb1bf42bae198dca1aa721f7358ac52c7a2835add82e35b12f1d872",
+      "bytes": 39878,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-03-400.webp",
+      "sha256": "398f56a0f359c848db3ffcd49900efaff5c0f989da9d13e33f72861fa07fe838",
+      "bytes": 5976,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-04-1600.webp",
+      "sha256": "963bc481dfdec8fe7ad6e3aff2749f9f8a8fd63dd5b93e9a50caa9172171538c",
+      "bytes": 23902,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-04-2560.webp",
+      "sha256": "8934299d55dd29eab189549bd1a1a85f23b9b7a5c007d9f3c99252dd755b3654",
+      "bytes": 41216,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-04-400.webp",
+      "sha256": "9d7b9b4bab1144b10600839b835b932543c506667f9c4b04b5790be664a8c776",
+      "bytes": 7000,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-05-1600.webp",
+      "sha256": "b87db8be6f6b01d1dc32b2b4aec1e0868ac6de25ef60d4d958ccc13d2347f916",
+      "bytes": 22694,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-05-2560.webp",
+      "sha256": "0b05c0179eb1bf42bae198dca1aa721f7358ac52c7a2835add82e35b12f1d872",
+      "bytes": 39878,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-05-400.webp",
+      "sha256": "398f56a0f359c848db3ffcd49900efaff5c0f989da9d13e33f72861fa07fe838",
+      "bytes": 5976,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-06-1600.webp",
+      "sha256": "963bc481dfdec8fe7ad6e3aff2749f9f8a8fd63dd5b93e9a50caa9172171538c",
+      "bytes": 23902,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-06-2560.webp",
+      "sha256": "8934299d55dd29eab189549bd1a1a85f23b9b7a5c007d9f3c99252dd755b3654",
+      "bytes": 41216,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-06-400.webp",
+      "sha256": "9d7b9b4bab1144b10600839b835b932543c506667f9c4b04b5790be664a8c776",
+      "bytes": 7000,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-07-1600.webp",
+      "sha256": "c7d758c533f67396943b690ed0f69805971ff20a0d54f06daaa59c12c04f6079",
+      "bytes": 23384,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-07-2560.webp",
+      "sha256": "a489de1b2b1a0e6645cb25bb90e3251712f229f9f539508beb48677525e4efac",
+      "bytes": 41744,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-07-400.webp",
+      "sha256": "f5c6b08bb79503b5673d8cdd838a105875d6d6329ece2081c79407e8c174c932",
+      "bytes": 6292,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-08-1600.webp",
+      "sha256": "b87db8be6f6b01d1dc32b2b4aec1e0868ac6de25ef60d4d958ccc13d2347f916",
+      "bytes": 22694,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-08-2560.webp",
+      "sha256": "0b05c0179eb1bf42bae198dca1aa721f7358ac52c7a2835add82e35b12f1d872",
+      "bytes": 39878,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-08-400.webp",
+      "sha256": "398f56a0f359c848db3ffcd49900efaff5c0f989da9d13e33f72861fa07fe838",
+      "bytes": 5976,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-09-1600.webp",
+      "sha256": "963bc481dfdec8fe7ad6e3aff2749f9f8a8fd63dd5b93e9a50caa9172171538c",
+      "bytes": 23902,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-09-2560.webp",
+      "sha256": "8934299d55dd29eab189549bd1a1a85f23b9b7a5c007d9f3c99252dd755b3654",
+      "bytes": 41216,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        2560,
+        1600
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-09-400.webp",
+      "sha256": "9d7b9b4bab1144b10600839b835b932543c506667f9c4b04b5790be664a8c776",
+      "bytes": 7000,
+      "kind": "generated-geometric-image",
+      "dimensions": [
+        400,
+        250
+      ]
+    },
+    {
+      "path": "public/portfolio/sample-poster-10-1600.webp",
+      "sha256": "dd491b1f64badb24c42d7e9814b04197689a47201365c8d95598bf69f9e151d7",
+      "bytes": 21172,
       "kind": "generated-geometric-image",
       "dimensions": [
         1600,
@@ -1802,9 +1922,9 @@
       ]
     },
     {
-      "path": "public/portfolio/zhangjiajie-mountains-2560.webp",
-      "sha256": "0e3e97dc1e49021f1917377795a44a206f0433d3ae018b2c0058fdc2830387c9",
-      "bytes": 46332,
+      "path": "public/portfolio/sample-poster-10-2560.webp",
+      "sha256": "8a0b56c78a6516e9facd040255b280f01f95b832b0580f3aa14846afbf876c56",
+      "bytes": 36864,
       "kind": "generated-geometric-image",
       "dimensions": [
         2560,
@@ -1812,133 +1932,13 @@
       ]
     },
     {
-      "path": "public/portfolio/zhangjiajie-mountains-400.webp",
-      "sha256": "c0c7b7d4e7097cec65a195fb02a887a7635e876c9f8ba611792ffb000d2e082e",
-      "bytes": 7758,
+      "path": "public/portfolio/sample-poster-10-400.webp",
+      "sha256": "646d6d1e1fd7b01c93791ca534859027ecfea395dfdb4ca97e9a538596ebb5b6",
+      "bytes": 5872,
       "kind": "generated-geometric-image",
       "dimensions": [
         400,
         225
-      ]
-    },
-    {
-      "path": "public/portfolio/zhangyuan-panorama-1600.webp",
-      "sha256": "4d57b6896d49b31b81d3541b4a3a18fed5306f07a621ec2d752d18fb1674e3ba",
-      "bytes": 33332,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1067
-      ]
-    },
-    {
-      "path": "public/portfolio/zhangyuan-panorama-2560.webp",
-      "sha256": "b6be09d637fb64f992d8d3dca84b28b98ecefd52ac00a68b32cbcb078d4ba207",
-      "bytes": 53438,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1707
-      ]
-    },
-    {
-      "path": "public/portfolio/zhangyuan-panorama-400.webp",
-      "sha256": "f784b20aa64b30ae6dc3bc3dd561b7f5f93c231396adaec500a6f755021452ec",
-      "bytes": 8670,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        267
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-59-1600.webp",
-      "sha256": "5c3d5f3e04be49eee2406dab476ace3cb8369e9d42f504d534487d34b0b9b108",
-      "bytes": 30876,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1000
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-59-2560.webp",
-      "sha256": "eedd93b16ab508f6e3bc2f1498ad87b41dc3e5510f66fb4f93c804850c946fd1",
-      "bytes": 53302,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-59-400.webp",
-      "sha256": "e5b5f22e50b6203fb39c56af2715bb3a010fd7d42b69ad13d28af250c1477267",
-      "bytes": 8468,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        250
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-96-1600.webp",
-      "sha256": "846412dc39090aad511a6993a41273e13d52b5f0694338459fc0c2acdd886577",
-      "bytes": 30474,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1000
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-96-2560.webp",
-      "sha256": "eb0d5041796100a5408831a37c9ca847e88aece414a045fe21f401bab6a72193",
-      "bytes": 51876,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-96-400.webp",
-      "sha256": "a4f595593f68eb2b1d063a7503e41eb0187dcd17fbf1d65810c548996ac726d0",
-      "bytes": 8214,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        250
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-96a-1600.webp",
-      "sha256": "5c3d5f3e04be49eee2406dab476ace3cb8369e9d42f504d534487d34b0b9b108",
-      "bytes": 30876,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        1600,
-        1000
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-96a-2560.webp",
-      "sha256": "eedd93b16ab508f6e3bc2f1498ad87b41dc3e5510f66fb4f93c804850c946fd1",
-      "bytes": 53302,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        2560,
-        1600
-      ]
-    },
-    {
-      "path": "public/portfolio/ztz-96a-400.webp",
-      "sha256": "e5b5f22e50b6203fb39c56af2715bb3a010fd7d42b69ad13d28af250c1477267",
-      "bytes": 8468,
-      "kind": "generated-geometric-image",
-      "dimensions": [
-        400,
-        250
       ]
     },
     {
@@ -1950,8 +1950,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-01.jpg",
-      "sha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
-      "bytes": 28192,
+      "sha256": "39f80a2ac1c6a700722c64ab1e044cfcdfe59e5f80f2df9d754b06a0ce7eaf85",
+      "bytes": 22761,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -1960,8 +1960,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-02.jpg",
-      "sha256": "2345c964dd6c54b32c9bfed9b77b2431beda6f4b0531e395564b9b9301690749",
-      "bytes": 24918,
+      "sha256": "b43cdbc2d78138ebd25fc8d03ee8f4ef52195a2bdc09ad1c9d9824d08a11ba28",
+      "bytes": 20325,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -1970,8 +1970,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-03.jpg",
-      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
-      "bytes": 25096,
+      "sha256": "a217143872d4d37faaf4ade995e36a11ae9f9feb00f615b3ed196982c6091d44",
+      "bytes": 20401,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -1980,8 +1980,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-04.jpg",
-      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
-      "bytes": 25096,
+      "sha256": "a217143872d4d37faaf4ade995e36a11ae9f9feb00f615b3ed196982c6091d44",
+      "bytes": 20401,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -1990,8 +1990,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-05.jpg",
-      "sha256": "2345c964dd6c54b32c9bfed9b77b2431beda6f4b0531e395564b9b9301690749",
-      "bytes": 24918,
+      "sha256": "b43cdbc2d78138ebd25fc8d03ee8f4ef52195a2bdc09ad1c9d9824d08a11ba28",
+      "bytes": 20325,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2000,8 +2000,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-06.jpg",
-      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
-      "bytes": 25096,
+      "sha256": "a217143872d4d37faaf4ade995e36a11ae9f9feb00f615b3ed196982c6091d44",
+      "bytes": 20401,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2010,8 +2010,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-07.jpg",
-      "sha256": "ed5097d84205895233cc44e2e191c55d8e17d6a60670db6d874d9b96fc2e4cb8",
-      "bytes": 28192,
+      "sha256": "39f80a2ac1c6a700722c64ab1e044cfcdfe59e5f80f2df9d754b06a0ce7eaf85",
+      "bytes": 22761,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2020,8 +2020,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-08.jpg",
-      "sha256": "9dc2b51106c25c3de7a684716c9f935b18914b3ba43494e49aef269f440a1350",
-      "bytes": 23775,
+      "sha256": "282e858a2ea9e414f614fc23f567ba1540b1d19519385f716c6576a9dff6988a",
+      "bytes": 19371,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2030,8 +2030,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-09.jpg",
-      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
-      "bytes": 25096,
+      "sha256": "a217143872d4d37faaf4ade995e36a11ae9f9feb00f615b3ed196982c6091d44",
+      "bytes": 20401,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2040,8 +2040,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-10.jpg",
-      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
-      "bytes": 25096,
+      "sha256": "a217143872d4d37faaf4ade995e36a11ae9f9feb00f615b3ed196982c6091d44",
+      "bytes": 20401,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2050,8 +2050,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-11.jpg",
-      "sha256": "2345c964dd6c54b32c9bfed9b77b2431beda6f4b0531e395564b9b9301690749",
-      "bytes": 24918,
+      "sha256": "b43cdbc2d78138ebd25fc8d03ee8f4ef52195a2bdc09ad1c9d9824d08a11ba28",
+      "bytes": 20325,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2060,8 +2060,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-12.jpg",
-      "sha256": "9dc2b51106c25c3de7a684716c9f935b18914b3ba43494e49aef269f440a1350",
-      "bytes": 23775,
+      "sha256": "282e858a2ea9e414f614fc23f567ba1540b1d19519385f716c6576a9dff6988a",
+      "bytes": 19371,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2070,8 +2070,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-13.jpg",
-      "sha256": "24b0fd05b88f102c4b6281874cddd77ec71b4fff507ed27fbef53ff8c2d022df",
-      "bytes": 25096,
+      "sha256": "a217143872d4d37faaf4ade995e36a11ae9f9feb00f615b3ed196982c6091d44",
+      "bytes": 20401,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,
@@ -2080,8 +2080,8 @@
     },
     {
       "path": "src/assets/color-frames/frame-14.jpg",
-      "sha256": "2345c964dd6c54b32c9bfed9b77b2431beda6f4b0531e395564b9b9301690749",
-      "bytes": 24918,
+      "sha256": "b43cdbc2d78138ebd25fc8d03ee8f4ef52195a2bdc09ad1c9d9824d08a11ba28",
+      "bytes": 20325,
       "kind": "generated-geometric-image",
       "dimensions": [
         480,

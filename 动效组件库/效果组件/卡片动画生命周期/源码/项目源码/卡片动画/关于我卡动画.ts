@@ -4,10 +4,8 @@ import { BaseAnimation, type CardTimeline } from './卡片动画基础'
 /**
  * 01 / ABOUT —— 聚焦入场的活钩子。
  *
- * 历史：这个类原本驱动 Q / X / Y 三个旋转字母的指针响应和环境漂移
- * （详细见 git 历史）。2026-09 第二十二轮把 about 整个区域替换为
- * src/components/about/AboutExperience.vue：指针视差、环境动画、DEMO
- * 扫描线全在那里独立实现。这个文件只剩一件事 —— 在 gallery → detail
+ * src/components/about/AboutExperience.vue 独立实现指针视差、环境动画和示例扫描线。
+ * 本模块在 gallery → detail
  * 的过渡里给 .card-visual 跑一段轻微的淡入 + 缩放 + 落定入场（被
  * src/components/ThreeHome.vue 的 visuals[chosen]?.restart() 调用）。
  *
@@ -34,12 +32,23 @@ export class AboutAnimation extends BaseAnimation {
   restart(): void {
     if (this.host) {
       gsap.killTweensOf(this.host)
-      gsap.fromTo(
+      if (this.reduced()) gsap.set(this.host, { clearProps: 'transform,opacity' })
+      else gsap.fromTo(
         this.host,
         { scale: 0.94, y: 14, opacity: 0 },
         { scale: 1, y: 0, opacity: 1, duration: 0.75, ease: 'power2.out' },
       )
     }
     super.restart()
+  }
+
+  destroy(): void {
+    if (this.host) {
+      gsap.killTweensOf(this.host)
+      // resize也会销毁后重挂载；宿主入场不属于基类intro，必须撤掉半途的淡入/位移。
+      // 只还原.card-visual自身，父级卡片几何和内部ABOUT三层视差分别由各自持有者管理。
+      gsap.set(this.host, { clearProps: 'transform,opacity' })
+    }
+    super.destroy()
   }
 }

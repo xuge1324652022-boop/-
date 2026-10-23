@@ -3,6 +3,7 @@
 原件逐文件保存到忽略目录“本机私有资料/公开素材原件”，先校验 SHA-256
 再替换；重复运行只接受已经登记的生成结果，避免覆盖未识别的新原件。
 视频使用 --ffmpeg 指定的现有工具编码，绝不从原视频读取画面或音轨。
+使用 --static-images-only 可只刷新已登记的合成图片，不改动 PDF 和视频。
 """
 from __future__ import annotations
 
@@ -92,8 +93,9 @@ def geometric_image(size: tuple[int, int], seed: int, phase: float = 0) -> Image
     for y in range(0, height, spacing):
         draw.line((0, y, width, y), fill="#354148", width=max(1, round(unit / 700)))
     sweep = math.sin(phase * math.tau) * 0.035
-    draw.polygon(((width * .08, height * .22), (width * (.76 + sweep), height * .08),
-                  (width * .92, height * .72), (width * .23, height * .91)), fill=primary)
+    # 横竖图共用水平、垂直边界；避免按宽高分别拉伸斜边而产生不同倾角。
+    draw.rectangle((width * (.08 + sweep), height * .16,
+                    width * (.92 + sweep), height * .86), fill=primary)
     center_x, center_y = width * (.59 + sweep), height * .45
     radius = unit * .225
     draw.ellipse((center_x - radius, center_y - radius, center_x + radius, center_y + radius), fill=dark)
@@ -105,8 +107,10 @@ def geometric_image(size: tuple[int, int], seed: int, phase: float = 0) -> Image
     draw.rectangle((width * .12, height * .67, width * .43, height * .69), fill=dark)
     draw.rectangle((width * .12, height * .71, width * .32, height * .725), fill=dark)
     font = ImageFont.load_default(size=max(10, round(unit * .045)))
-    draw.text((width * .06, height * .04), "SAMPLE / TEMPLATE", font=font, fill=pale)
-    draw.text((width * .06, height * .92), "GEOMETRY STUDY", font=font, fill=pale)
+    # 摄影舞台沿用 3:2 cover；宽图两侧可能裁切，标签留在居中的安全画幅内。
+    label_x = max(width * .06, (width - min(width, height * 1.5)) / 2 + unit * .06)
+    draw.text((label_x, height * .04), "SAMPLE / TEMPLATE", font=font, fill=pale)
+    draw.text((label_x, height * .92), "GEOMETRY STUDY", font=font, fill=pale)
     return art
 
 
@@ -130,6 +134,19 @@ def replace_image(path: Path, records: dict) -> None:
     record.update(generatedSha256=digest(path), generatedBytes=path.stat().st_size,
                   dimensions=list(size), kind="generated-geometric-image")
     save_receipt(records)
+
+
+def verify_registered_images(paths: list[Path], records: dict) -> None:
+    """整批预检，仅允许重建已登记的程序图片，不接收新原片或未知修改。"""
+    for path in paths:
+        relative = path.relative_to(ROOT).as_posix()
+        record = records.get(relative, {})
+        if (record.get("kind") != "generated-geometric-image"
+                or digest(path) != record.get("generatedSha256")):
+            raise RuntimeError(f"图片未登记或出现未知修改，保留现场：{relative}")
+        archive = PRIVATE / record.get("originalPath", relative)
+        if not archive.is_file() or digest(archive) != record.get("originalSha256"):
+            raise RuntimeError(f"原件归档校验失败，保留现场：{relative}")
 
 
 def read_mp4_dimensions(path: Path) -> tuple[int, int]:
@@ -279,24 +296,30 @@ def export_public_manifest(records: dict) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ffmpeg", default=shutil.which("ffmpeg"))
-    parser.add_argument("--images-only", action="store_true", help="先替换图片与 PDF，稍后提供 ffmpeg 再处理视频")
-    parser.add_argument("--videos-only", action="store_true", help="只生成视频，不重复处理已完成的图片和 PDF")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--images-only", action="store_true", help="先替换图片与 PDF，稍后提供 ffmpeg 再处理视频")
+    modes.add_argument("--videos-only", action="store_true", help="只生成视频，不重复处理已完成的图片和 PDF")
+    modes.add_argument("--static-images-only", action="store_true",
+                       help="仅刷新已登记的合成静态图片，不改动 PDF、视频或私人原件")
     args = parser.parse_args()
-    if args.images_only and args.videos_only:
-        parser.error("--images-only 与 --videos-only 不可同时使用")
-    if not args.images_only and not args.ffmpeg:
-        parser.error("找不到 ffmpeg；请传入 --ffmpeg，或先用 --images-only")
+    if not (args.images_only or args.static_images_only) and not args.ffmpeg:
+        parser.error("找不到 ffmpeg；请传入 --ffmpeg，或使用 --images-only / --static-images-only")
     records = json.loads(RECEIPT.read_text(encoding="utf-8")) if RECEIPT.exists() else {}
     image_count = 0
+    pdf_pages = 0
     if not args.videos_only:
-        for folder in IMAGE_FOLDERS:
-            for path in sorted((ROOT / folder).glob("*")):
-                if path.is_file() and path.suffix.lower() in {".webp", ".jpg", ".jpeg", ".png"}:
-                    replace_image(path, records)
-                    image_count += 1
-        replace_resume(records)
+        images = [path for folder in IMAGE_FOLDERS for path in sorted((ROOT / folder).glob("*"))
+                  if path.is_file() and path.suffix.lower() in {".webp", ".jpg", ".jpeg", ".png"}]
+        if args.static_images_only:
+            verify_registered_images(images, records)
+        for path in images:
+            replace_image(path, records)
+            image_count += 1
+        if not args.static_images_only:
+            replace_resume(records)
+            pdf_pages = 2
     video_count = 0
-    if not args.images_only:
+    if not (args.images_only or args.static_images_only):
         previews = sorted((ROOT / "public/color-previews").glob("*.mp4"))
         for path in previews:
             replace_video(path, records, args.ffmpeg)
@@ -313,7 +336,7 @@ def main() -> int:
                           args.ffmpeg, new_size=(1920, 1080))
             video_count += 1
     export_public_manifest(records)
-    print(json.dumps({"images": image_count, "pdfPages": 2, "videos": video_count,
+    print(json.dumps({"images": image_count, "pdfPages": pdf_pages, "videos": video_count,
                       "originalsVerified": sum("originalSha256" in value for value in records.values()),
                       "videoPending": args.images_only}, ensure_ascii=False))
     return 0

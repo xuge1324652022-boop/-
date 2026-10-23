@@ -94,7 +94,7 @@ export abstract class BaseAnimation implements CardAnimation {
       return
     }
     // 已经建立过一次：直接跳到完成后的构图，而不是在 resize 之后重放一遍
-    if (this.introDone) it.progress(1)
+    if (this.introDone || this.reduced()) it.progress(1).pause()
     this.intro = it
   }
 
@@ -115,12 +115,18 @@ export abstract class BaseAnimation implements CardAnimation {
    * 状态（构图之外），直到章节真正被打开。
    */
   play(): void {
+    if (this.reduced()) {
+      this.intro?.progress(1).pause()
+      this.tl?.pause()
+      return
+    }
     this.tl?.play()
   }
 
   /** 同时冻结入场与环境循环（章节收起、页面隐藏时调用）。 */
   pause(): void {
-    this.intro?.pause()
+    if (this.reduced()) this.intro?.progress(1).pause()
+    else this.intro?.pause()
     this.tl?.pause()
   }
 
@@ -137,6 +143,11 @@ export abstract class BaseAnimation implements CardAnimation {
    * 而不是再让用户干等一段。
    */
   restart(): void {
+    if (this.reduced()) {
+      this.intro?.progress(1).pause()
+      this.tl?.pause(0)
+      return
+    }
     if (this.intro) this.intro.restart(false, true)
     if (this.tl) {
       this.tl.pause(0)
@@ -153,6 +164,8 @@ export abstract class BaseAnimation implements CardAnimation {
    * 想再用必须重新 `mount()`。
    */
   destroy(): void {
+    // 尺寸/偏好重建会复用实例；已开始的显影完成后再撤销，不能回到被遮住的初态。
+    if (this.intro && (!this.intro.paused() || this.intro.progress() > 0)) this.intro.progress(1).pause()
     this.kill()
     this.host = null
   }

@@ -74,7 +74,8 @@ useSmoothScroll(
   position: fixed;
   bottom: 8px;
   left: 50%;
-  z-index: 10000;
+  /* 提示属于正文；索引、看图层与幕布必须完整盖住它。 */
+  z-index: 50;
   transform: translateX(-50%);
   margin: 0;
   padding: 5px 12px;

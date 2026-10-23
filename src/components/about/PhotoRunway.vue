@@ -1,6 +1,6 @@
 <template>
   <!--
-    摄影精选主画面：保留 sticky 滚动展开，叠加独立的指针视差与拖动翻图。
+    合成图像示例主画面：保留 sticky 滚动展开，叠加独立的指针视差与拖动翻图。
 
     `.runway__frame` 管滚动裁剪，surface 管指针视差，track 管拖动，item 管切图。
     章节文字仍交给 useAboutReveal，避免多个控制器写同一个节点的属性。
@@ -104,16 +104,16 @@ const t = computed(() =>
     ? {
         prev: '上一张',
         next: '下一张',
-        open: (title: string) => `查看完整作品：${title}`,
-        selectLabel: '选择照片',
+        open: (title: string) => `查看完整示例：${title}`,
+        selectLabel: '选择合成图像',
         select: (title: string) => `切换到：${title}`,
         hint: '拖动切换 · 点击查看',
       }
     : {
         prev: 'Previous',
         next: 'Next',
-        open: (title: string) => `View full piece: ${title}`,
-        selectLabel: 'Choose a photograph',
+        open: (title: string) => `View full sample: ${title}`,
+        selectLabel: 'Choose a synthetic image',
         select: (title: string) => `Show ${title}`,
         hint: 'Drag to browse · Click to view',
       },
@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
 
 /*
  * ⚠️ `contain` 不是 `cover`：方案要求保留原始比例，这组里有一张竖构图
- *    （《天空之镜》3712×5568），用 cover 在宽取景框里会只剩中间一条。
+ *    （示例比例 3712×5568），用 cover 在宽取景框里会只剩中间一条。
  */
 .runway__img {
   display: block;
