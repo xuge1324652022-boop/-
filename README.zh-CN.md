@@ -18,7 +18,7 @@ npm run build:cloudflare
 
 先读取 [组件索引](./动效组件库/组件索引.json)，再读取每个效果文件夹中的介绍与解析 JSON。修改原始源码后运行 `npm run build:motion` 与 `npm run check:motion`，确保所有副本一致。
 
-GitHub Packages 的 `@xuge1324652022-boop/animation-source-package` 是供复制和 agent 读取的源码资料包，不是开箱运行的组件依赖。安装方式见 [源码资料包说明](./发布配置/源码资料包/安装与读取说明.md)。当前准备版本为 0.2.2。
+GitHub Packages 的 `@xuge1324652022-boop/animation-source-package` 是供复制和 agent 读取的源码资料包，不是开箱运行的组件依赖。安装方式见 [源码资料包说明](./发布配置/源码资料包/安装与读取说明.md)。0.2.2 已发布；已核验的网站源码、中文动效组件源码、发布元数据及校验表见 [Release v0.2.2](https://github.com/xuge1324652022-boop/job-application-template/releases/tag/v0.2.2)。
 
 ## 结构与部署
 
