@@ -24,7 +24,7 @@
           </div>
           <div class="end__actions">
             <RouterLink class="end__action" :to="workTo"><span class="end__action-copy"><span class="end__action-title">查看作品</span><span class="end__action-translation" lang="en">View work</span></span><svg class="end__action-arrow" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M6 26 26 6M6 6h20v20" /></svg></RouterLink>
-            <a class="end__action" :href="CONTACT.resume" :download="lang === 'zh' ? '示例求职者-简历.pdf' : 'Example-Candidate-resume.pdf'"><span class="end__action-copy"><span class="end__action-title">查看简历 PDF</span><span class="end__action-translation" lang="en">Résumé PDF</span></span><svg class="end__action-arrow" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 4v22M7 17l9 9 9-9" /></svg></a>
+            <a class="end__action" :href="CONTACT.resume" :download="lang === 'zh' ? '示例求职者-简历.pdf' : 'Example-Candidate-resume.pdf'"><span class="end__action-copy"><span class="end__action-title">查看示例简历 PDF</span><span class="end__action-translation" lang="en">Sample résumé PDF</span></span><svg class="end__action-arrow" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 4v22M7 17l9 9 9-9" /></svg></a>
           </div>
         </div>
         <div class="end__base"><RouterLink class="end__next" :to="nextTo"><span>继续看剪辑<span lang="en">Explore editing</span></span><span aria-hidden="true">↗</span></RouterLink><button class="end__top" type="button" @click="toTop"><span>{{ lang === 'zh' ? '回到顶部' : 'Back to top' }}</span><span aria-hidden="true">↑</span></button></div>

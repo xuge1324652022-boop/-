@@ -9,6 +9,8 @@ name: 发布源码资料包
       - '发布配置/源码资料包/**'
       - 'scripts/打包源码资料包.mjs'
       - 'scripts/发布源码资料包.mjs'
+      - '项目协作署名.json'
+      - 'docs/项目协作署名.md'
 
 permissions:
   contents: read

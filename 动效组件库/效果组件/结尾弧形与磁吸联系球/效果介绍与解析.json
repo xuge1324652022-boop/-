@@ -229,10 +229,10 @@
       "original": "src/components/about/ContactEnd.vue",
       "path": "源码/项目源码/组件/人物与作品/结尾联系球.vue",
       "role": "entry",
-      "originalSha256": "9b682e0ec46e69c9823f65f908467f46563fe7b672898e7fb2db307d301270e7",
-      "originalBytes": 16017,
-      "sha256": "f06ae1b982dd3ce01929b06624580a5dee64a71a9798950facbefbf609641cd0",
-      "bytes": 16026
+      "originalSha256": "ce2d1eb3819950fe9b7f449ecbb7399d7450349407ed862d1779ad2624d1d8ad",
+      "originalBytes": 16030,
+      "sha256": "02bd54d1b7c5deacb745e32171ccc7269345fafbe7dab31bd54f0b9c305cd7b4",
+      "bytes": 16039
     },
     {
       "original": "src/data/aboutProfile.ts",

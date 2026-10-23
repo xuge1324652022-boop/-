@@ -1,7 +1,7 @@
 {
   "name": "portfolio-vue",
   "private": true,
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "求职应聘模板与动效源码包，包含 Vue 3、TypeScript、GSAP 遮罩、转场与滚动动效。",
   "license": "MIT",
   "type": "module",

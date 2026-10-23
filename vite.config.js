@@ -7,11 +7,8 @@ import { sendMediaFile } from './scripts/media-http.mjs'
 import { routePages } from './scripts/route-pages.mjs'
 
 /**
- * 真实调色素材的静态服务（dev + preview 两用）。
- *
- * 原片统一放在 `作品/调色-成片/`；网页压缩版放在 `media/color/`。
- * 优先读未过期的网页版本，没有时读原片，URL 始终保持 `/color/<文件名>`。
- * 视频不进 public / dist，也不重复拷贝原片；部署时需单独提供这些媒体 URL。
+ * 已审核的合成调色视频服务（dev + preview 两用）。
+ * 只读取 public/color，生产构建会将同一份示例复制进 dist。
  */
 const ROOT = dirname(fileURLToPath(import.meta.url))
 // 公开模板只读取已审核的合成示例，绝不自动读取本机作品或私人媒体。
@@ -20,7 +17,7 @@ const COLOR_WEB_DIR = resolve(ROOT, 'public/color')
 const COLOR_PREFIX = '/color/'
 
 function serveColorMedia() {
-  // 中间件与原始作品目录是本机开发能力；静态部署需另行映射 /color/ 媒体地址。
+  // 本地预览保留 Range 支持，静态部署使用相同的公开示例路径。
   const middleware = (req, res, next) => {
     const url = (req.url || '').split('?')[0]
     if (!url.startsWith(COLOR_PREFIX)) return next()

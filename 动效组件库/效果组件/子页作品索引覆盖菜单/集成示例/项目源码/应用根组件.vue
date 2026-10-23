@@ -29,6 +29,7 @@
     -->
     <CustomCursor />
     <SubpageIndex v-if="isSubpage" />
+    <p class="template-notice">模板演示 · 虚构资料与合成素材</p>
   </div>
 </template>
 
@@ -67,6 +68,23 @@ useSmoothScroll(
   */
   min-height: 100vh;
   background: #0a0a0a;
+}
+
+.template-notice {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  z-index: 10000;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 5px 12px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 999px;
+  background: rgb(20 20 20 / 88%);
+  color: #fff;
+  font: 11px/1.4 system-ui, sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 /* ========== 全局转场输入锁 ========== */

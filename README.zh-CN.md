@@ -2,6 +2,14 @@
 
 Vue 3、TypeScript 与 GSAP 实现的求职展示模板，配套 38 个中文动效目录、源码副本、集成说明和 agent 可读 JSON。网站只使用明确虚构的人物、经历、保留示例邮箱和程序生成的几何素材，不包含发布者的私人简历或肖像。
 
+**[查看匿名模板演示站](https://job-application-template-demo.famousbull256.chatgpt.site)**：只展示虚构求职资料与合成示例素材。
+
+## 项目撰写与 AI 协作
+
+**Template Contributors · ChatGPT · Codex · DeepSeek**
+
+维护者负责需求、设计判断与最终审核；ChatGPT 辅助方案讨论、文档和检查；Codex 辅助代码实现、重构、测试与发布。依维护者确认，将 DeepSeek 作为本项目的 AI 协作工具署名，不编造具体提交或代码归属。完整说明见 [项目协作署名](./docs/项目协作署名.md)，工具可读取根目录的 [项目协作署名.json](./项目协作署名.json)。
+
 ## 使用
 
 支持 Node 22.16+ 的 22.x 与 Node 24.x。
@@ -18,7 +26,7 @@ npm run build:cloudflare
 
 先读取 [组件索引](./动效组件库/组件索引.json)，再读取每个效果文件夹中的介绍与解析 JSON。修改原始源码后运行 `npm run build:motion` 与 `npm run check:motion`，确保所有副本一致。
 
-GitHub Packages 的 `@xuge1324652022-boop/animation-source-package` 是供复制和 agent 读取的源码资料包，不是开箱运行的组件依赖。安装方式见 [源码资料包说明](./发布配置/源码资料包/安装与读取说明.md)。0.2.2 已发布；已核验的网站源码、中文动效组件源码、发布元数据及校验表见 [Release v0.2.2](https://github.com/xuge1324652022-boop/job-application-template/releases/tag/v0.2.2)。
+GitHub Packages 的 `@xuge1324652022-boop/animation-source-package` 是供复制和 agent 读取的源码资料包，不是开箱运行的组件依赖。安装方式见 [源码资料包说明](./发布配置/源码资料包/安装与读取说明.md)。0.2.3 已发布；已核验的网站源码、中文动效组件源码、发布元数据及校验表见 [Release v0.2.3](https://github.com/xuge1324652022-boop/job-application-template/releases/tag/v0.2.3)。
 
 ## 结构与部署
 

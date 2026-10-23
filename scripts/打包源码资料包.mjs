@@ -14,7 +14,7 @@ const normalize = value => value.split(path.sep).join('/')
 const digest = value => createHash('sha256').update(value).digest('hex')
 const readJSON = file => JSON.parse(readFileSync(file, 'utf8').replace(/^\uFEFF/u, ''))
 const normalizedText = file => Buffer.from(readFileSync(file, 'utf8').replace(/^\uFEFF/u, '').replace(/\r\n/gu, '\n'))
-const expectedFiles = ['动效组件库/', 'LICENSE', 'NOTICE.md', 'docs/AI工具图标来源.md', 'README.md']
+const expectedFiles = ['动效组件库/', 'LICENSE', 'NOTICE.md', 'docs/AI工具图标来源.md', '项目协作署名.json', 'docs/项目协作署名.md', 'README.md']
 const packageConfig = readJSON(path.join(root, '发布配置/源码资料包/包配置.json'))
 const allowedKeys = new Set(['name', 'version', 'description', 'license', 'repository', 'homepage', 'bugs', 'keywords', 'files', 'publishConfig'])
 if (Object.keys(packageConfig).some(key => !allowedKeys.has(key))) throw new Error('包配置含白名单以外的字段')
@@ -147,7 +147,7 @@ if (sourceDigest !== catalog.sourceDigest || originalHashes.size !== catalog.uni
 
 const copies = new Map()
 for (const relative of libraryFiles) copies.set(`动效组件库/${relative}`, readFileSync(checkedPath(library, relative)))
-for (const relative of ['LICENSE', 'NOTICE.md', 'docs/AI工具图标来源.md']) copies.set(relative, normalizedText(checkedPath(root, relative)))
+for (const relative of ['LICENSE', 'NOTICE.md', 'docs/AI工具图标来源.md', '项目协作署名.json', 'docs/项目协作署名.md']) copies.set(relative, normalizedText(checkedPath(root, relative)))
 copies.set('package.json', Buffer.from(`${JSON.stringify(packageConfig, null, 2)}\n`))
 copies.set('README.md', normalizedText(checkedPath(root, '发布配置/源码资料包/安装与读取说明.md')))
 
